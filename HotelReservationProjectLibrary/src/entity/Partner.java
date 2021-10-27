@@ -22,6 +22,8 @@ public class Partner implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partnerId;
+    private String userName;
+    private String password;
 
     public Long getPartnerId() {
         return partnerId;
@@ -54,6 +56,34 @@ public class Partner implements Serializable {
     @Override
     public String toString() {
         return "entity.Partner[ id=" + partnerId + " ]";
+    }
+
+    /**
+     * @return the userName
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * @param userName the userName to set
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
     
 }
