@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.EntityInstanceMissingInCollectionException;
 
 /**
  *
@@ -42,7 +44,7 @@ public class RoomType implements Serializable {
     }
 
     
-    public void addToListOfRoomRate(RoomRate roomRate) throws EntityInstanceExistsInCollectionException() {
+    public void addToListOfRoomRate(RoomRate roomRate) throws EntityInstanceExistsInCollectionException {
         if (!listOfRoomRates.contains(roomRate)) {
             listOfRoomRates.add(roomRate);
         } else {
@@ -50,7 +52,7 @@ public class RoomType implements Serializable {
         }
     }
     
-    public void deleteFromListOfRoomRate(RoomRate roomRate) throws EntityInstanceMissingInCollectionException() {
+    public void deleteFromListOfRoomRate(RoomRate roomRate) throws EntityInstanceMissingInCollectionException {
         if (listOfRoomRates.contains(roomRate)) {
             listOfRoomRates.remove(roomRate);
         } else {
