@@ -7,10 +7,14 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -25,7 +29,16 @@ public class Booking implements Serializable {
     private Long bookingId;
     private Date checkInDate;
     private Date checkOutDate;
+    
+    // many to one relationship with customer
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Customer customer;
 
+    // one to many relationship with rooms
+    @OneToMany
+    private List<Room> rooms;
+    
     public Long getBookingId() {
         return bookingId;
     }
