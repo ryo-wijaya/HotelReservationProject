@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import util.enumeration.EmployeeType;
+import util.enumeration.EmployeeRole;
 
 /**
  *
@@ -25,12 +25,12 @@ public class Employee implements Serializable {
     private Long employeeId;
     private String username;
     private String password;
-    private EmployeeType role;
+    private EmployeeRole role;
 
     public Employee() {
     }
 
-    public Employee(String username, String password, EmployeeType role) {
+    public Employee(String username, String password, EmployeeRole role) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -52,11 +52,11 @@ public class Employee implements Serializable {
         this.password = password;
     }
 
-    public EmployeeType getRole() {
+    public EmployeeRole getRole() {
         return role;
     }
 
-    public void setRole(EmployeeType role) {
+    public void setRole(EmployeeRole role) {
         this.role = role;
     }
     

@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,6 +33,7 @@ public class RoomType implements Serializable {
     private List<RoomRate> listOfRoomRates;
 
     public RoomType() {
+        listOfRoomRates = new ArrayList<RoomRate>();
     }
 
     public RoomType(String roomName, Double price) {
@@ -39,7 +41,23 @@ public class RoomType implements Serializable {
         this.price = price;
     }
 
+    /*
+    public void addToListOfRoomRate(RoomRate roomRate) throws EntityInstanceExistsInCollectionException() {
+        if (!listOfRoomRates.contains(roomRate)) {
+            listOfRoomRates.add(roomRate);
+        } else {
+            throw new EntityInstanceExistsInCollectionException();
+        }
+    }
     
+    public void deleteFromListOfRoomRate(RoomRate roomRate) throws EntityInstanceMissingInCollectionException() {
+        if (listOfRoomRates.contains(roomRate)) {
+            listOfRoomRates.remove(roomRate);
+        } else {
+            throw new EntityInstanceMissingInCollectionException();
+        }
+    }
+*/
     
     public String getRoomName() {
         return roomName;

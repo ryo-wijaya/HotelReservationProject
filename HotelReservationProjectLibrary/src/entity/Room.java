@@ -6,6 +6,9 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,16 +28,16 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rooomId;
     private String roomNumber;
-    private Boolean status;
+    private Map<Date, Boolean> schedule;
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private RoomType roomType;
 
     public Room() {
+        schedule = new HashMap<Date, Boolean>();
     }
 
-    public Room(String roomNumber, Boolean status) {
+    public Room(String roomNumber) {
         this.roomNumber = roomNumber;
-        this.status = status;
     }
     
     public String getRoomNumber() {
@@ -43,17 +46,7 @@ public class Room implements Serializable {
 
     public void setRoomNumber(String roomNumber) {
         this.roomNumber = roomNumber;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-    
-    
+    }    
 
     public Long getRooomId() {
         return rooomId;

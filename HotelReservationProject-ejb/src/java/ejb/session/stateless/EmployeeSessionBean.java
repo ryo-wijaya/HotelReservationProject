@@ -44,6 +44,15 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
         }
     }
     
+    public Employee getEmployeeById(Long id) throws EmployeeNotFoundException {
+        Employee employee = em.find(Employee.class, id);
+        if (employee != null) {
+            return employee;
+        } else {
+            throw new EmployeeNotFoundException();
+        }
+    }
+    
     @Override
     public Employee getEmployeeByUsername(String username) throws EmployeeNotFoundException {
         Query query = em.createQuery("SELECT e FROM Employee e WHERE e.username = :inUsername");
