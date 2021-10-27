@@ -7,9 +7,11 @@ package entity;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -24,6 +26,8 @@ public class Room implements Serializable {
     private Long rooomId;
     private String roomNumber;
     private Boolean status;
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    private RoomType roomType;
 
     public Room() {
     }
