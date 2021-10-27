@@ -41,7 +41,7 @@ public class RoomType implements Serializable {
         this.price = price;
     }
 
-    /*
+    
     public void addToListOfRoomRate(RoomRate roomRate) throws EntityInstanceExistsInCollectionException() {
         if (!listOfRoomRates.contains(roomRate)) {
             listOfRoomRates.add(roomRate);
@@ -57,7 +57,7 @@ public class RoomType implements Serializable {
             throw new EntityInstanceMissingInCollectionException();
         }
     }
-*/
+
     
     public String getRoomName() {
         return roomName;
