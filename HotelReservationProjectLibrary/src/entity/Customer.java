@@ -31,8 +31,7 @@ public class Customer implements Serializable {
     private String phoneNumber;
     private String passportNumber;
     
-    //many to many relationship with booking
-    
+    //One to many relationship with booking
     @OneToMany(mappedBy = "Customer", fetch = FetchType.LAZY)
     private List<Booking> bookings;
 
@@ -137,6 +136,20 @@ public class Customer implements Serializable {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * @return the bookings
+     */
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    /**
+     * @param bookings the bookings to set
+     */
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
     }
     
 }
