@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.EntityInstanceMissingInCollectionException;
 
 /**
  *
@@ -35,6 +38,20 @@ public class Customer implements Serializable {
     @OneToMany(mappedBy = "Customer", fetch = FetchType.LAZY)
     private List<Booking> bookings;
 
+    public Customer() {
+        bookings = new ArrayList<>();
+    }
+
+    public Customer(String email, String userName, String password, String phoneNumber, String passportNumber) {
+        this.email = email;
+        this.userName = userName;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.passportNumber = passportNumber;
+    }
+
+    
+    
     public Long getCustomerId() {
         return CustomerId;
     }
@@ -150,6 +167,30 @@ public class Customer implements Serializable {
      */
     public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
+    }
+    
+    public void addBooking(Booking booking) throws EntityInstanceExistsInCollectionException
+    {
+        if(!this.bookings.contains(booking))
+        {
+            this.bookings.add(booking);
+        }
+        else
+        {
+            throw new EntityInstanceExistsInCollectionException("Booking already exist");
+        }
+    }
+    
+    public void removeBooking(Booking booking) throws EntityInstanceMissingInCollectionException
+    {
+        if(this.bookings.contains(booking))
+        {
+            this.bookings.remove(booking);
+        }
+        else
+        {
+            throw new EntityInstanceMissingInCollectionException("Booking does not exist");
+        }
     }
     
 }
