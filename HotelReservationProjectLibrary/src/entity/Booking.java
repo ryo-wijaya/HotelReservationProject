@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -15,6 +16,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.EntityInstanceMissingInCollectionException;
 
 /**
  *
@@ -27,7 +31,9 @@ public class Booking implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date checkInDate;
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date checkOutDate;
     
     // many to one relationship with customer
@@ -38,6 +44,18 @@ public class Booking implements Serializable {
     // one to many relationship with rooms
     @OneToMany
     private List<Room> rooms;
+
+    public Booking() {
+        this.rooms = new ArrayList<>();
+    }
+
+    public Booking(Date checkInDate, Date checkOutDate, Customer customer) {
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.customer = customer;
+    }
+    
+    
     
     public Long getBookingId() {
         return bookingId;
@@ -126,6 +144,30 @@ public class Booking implements Serializable {
      */
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+    
+    public void addRoom(Room room) throws EntityInstanceExistsInCollectionException
+    {
+        if(!this.rooms.contains(room))
+        {
+            this.getRooms().add(room);
+        }
+        else
+        {
+            throw new EntityInstanceExistsInCollectionException("Booking already exist");
+        }
+    }
+    
+    public void removeRoom(Room room) throws EntityInstanceMissingInCollectionException
+    {
+        if(this.getRooms().contains(room))
+        {
+            this.getRooms().remove(room);
+        }
+        else
+        {
+            throw new EntityInstanceMissingInCollectionException("Booking does not exist");
+        }
     }
     
 }
