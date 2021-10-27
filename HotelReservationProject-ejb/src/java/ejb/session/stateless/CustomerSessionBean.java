@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exceptions.LoginCredentialsInvalidException;
 
 /**
  *
@@ -72,19 +73,25 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
     }
     
     @Override
-    public Customer customerLogin(String username, String password)
+    public Customer customerLogin(String username, String password) throws LoginCredentialsInvalidException
     {
-        Customer customer = retrieveCustomerByUsername(username);
+        try
+        {
+            Customer customer = retrieveCustomerByUsername(username);
         
-        if(customer.getPassword().equals(password))
-        {
-            customer.getBookings().size();
-            return customer;
+            if(customer.getPassword().equals(password))
+            {
+                customer.getBookings().size();
+                return customer;
+            }
+            else 
+            {
+                throw new LoginCredentialsInvalidException("Username does not exist or invalid password!");
+            }
         }
-        else 
+        catch(LoginCredentialsInvalidException ex)
         {
-            //throw new LoginCredentialsInvalidException("Username does not exist or invalid password!");
-            return null;
+            throw new LoginCredentialsInvalidException("Username does not exist or invalid password!");
         }
     }
     

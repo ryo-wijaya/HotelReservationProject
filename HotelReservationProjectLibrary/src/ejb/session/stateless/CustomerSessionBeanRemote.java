@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Customer;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exceptions.LoginCredentialsInvalidException;
 
 /**
  *
@@ -24,6 +25,6 @@ public interface CustomerSessionBeanRemote {
     
     public Customer retrieveCustomerByUsername(String username);
     
-    public Customer customerLogin(String username, String password);
+    public Customer customerLogin(String username, String password)throws LoginCredentialsInvalidException;
     
 }
