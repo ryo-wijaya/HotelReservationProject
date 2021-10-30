@@ -8,7 +8,9 @@ package hotelreservationprojectmanagementclient;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
+import entity.Employee;
 import java.util.Scanner;
+import util.exceptions.LoginCredentialsInvalidException;
 
 /**
  *
@@ -18,6 +20,10 @@ public class HoRSClientModule {
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
+    
+    private FrontOfficeModule frontOfficeModule;
+    private SystemAdministrationModule systemAdministrationModule;
+    private HotelOperationModule hotelOperationModule;
 
     public HoRSClientModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
@@ -25,13 +31,62 @@ public class HoRSClientModule {
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
     }
     
-    public void runEmployeeLoginPage() {
+    public void runEmployeeLoginPage(){
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please Login with your username and password!");
-        
-        
-        
+        Integer response = 0;
+            
+            while(true){
+                System.out.println("*** Welcome to HoRS management client System ***\n");
+                System.out.println("1: Login");
+                System.out.println("2: Exit\n");
+                response = 0;               
+                while (response < 1 || response > 2){
+                    System.out.print("> ");      
+                    response = sc.nextInt();        
+                    if(response == 1){
+                        try {
+                            Employee employee = doLogin();
+                            System.out.print("Login successful!\n");
+                            frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote);
+                            //systemAdministrationModule = 
+                            
+                        }
+                        catch (LoginCredentialsInvalidException ex) {
+                            System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
+                        }                  
+                    }
+                    else if(response == 2){
+                        break;
+                    }
+                    else {
+                        System.out.println("Invalid option, please try again!\n");
+                    }
+                }
+                if (response == 2) {
+                    break;
+                }
+            }
         //if correct credentials are given, instantiate the required client class (check enum type), pass in the remote beans, and call the runMainMenu() method of each class.
         //dont forget to also pass in the EmployeeEntity
+    }
+    
+    public Employee doLogin() throws LoginCredentialsInvalidException{
+        Scanner sc = new Scanner(System.in);
+        String username = "";
+        String password = "";
+        System.out.println("*** HoRS management client System :: Login ***\n");
+        System.out.print("Enter username> ");
+        username = sc.nextLine().trim();
+        System.out.print("Enter password> ");
+        password = sc.nextLine().trim();
+        
+        if(username.length() > 0 && password.length() > 0) {
+            Employee employee = employeeSessionBeanRemote.login(username, password);
+            return employee;
+        } 
+        else {
+            throw new LoginCredentialsInvalidException("Invalid login credential!");
+        }
+        
     }
 }

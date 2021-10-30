@@ -5,10 +5,23 @@
  */
 package hotelreservationprojectmanagementclient;
 
+import ejb.session.stateless.EmployeeSessionBeanRemote;
+
 /**
  *
  * @author ryo20
  */
 public class FrontOfficeModule {
+    
+    private EmployeeSessionBeanRemote employeeSessionBeanRemote;
+
+    public FrontOfficeModule() {
+    }
+
+    public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+        this.employeeSessionBeanRemote = employeeSessionBeanRemote;
+    }
+    
+    
     
 }
