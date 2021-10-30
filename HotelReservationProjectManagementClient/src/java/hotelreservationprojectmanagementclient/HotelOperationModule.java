@@ -22,10 +22,11 @@ public class HotelOperationModule {
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
+    private HotelReservationBeanRemote hotelReservationBeanRemote;
     private Employee currentEmployee;
 
     public HotelOperationModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote,
-            PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
+            HotelReservationBeanRemote hotelReservationBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
@@ -178,7 +179,7 @@ public class HotelOperationModule {
         System.out.println("Please enter a Room Type name");
         String name = sc.nextLine();
         RoomType newRoomType = new RoomType(name);
-        
+        hotelReservationBeanRemote.createNewRoomType(newRoomType);
     }
 
     private void updateARoomType(Scanner sc) {

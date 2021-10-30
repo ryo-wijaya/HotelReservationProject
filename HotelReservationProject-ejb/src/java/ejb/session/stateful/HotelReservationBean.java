@@ -5,7 +5,11 @@
  */
 package ejb.session.stateful;
 
+import ejb.session.stateless.BookingSessionBeanLocal;
 import ejb.session.stateless.RoomRateSessionBeanLocal;
+import ejb.session.stateless.RoomSessionBeanLocal;
+import ejb.session.stateless.RoomTypeSessionBeanLocal;
+import entity.RoomType;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
@@ -17,7 +21,18 @@ import javax.ejb.Stateful;
 public class HotelReservationBean implements HotelReservationBeanRemote {
 
     @EJB
-    private RoomRateSessionBeanLocal roomRateSessionBean;
+    private BookingSessionBeanLocal bookingSessionBeanLocal;
 
-    
+    @EJB
+    private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
+
+    @EJB
+    private RoomSessionBeanLocal roomSessionBeanLocal;
+
+    @EJB
+    private RoomRateSessionBeanLocal roomRateSessionBeanLocal;
+
+    public void createNewRoomType(RoomType roomType) {
+        roomTypeSessionBeanLocal.createNewRoomType(roomType);
+    }
 }
