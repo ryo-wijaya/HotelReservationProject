@@ -5,6 +5,7 @@
  */
 package ejb.session.stateful;
 
+import entity.RoomType;
 import javax.ejb.Remote;
 
 /**
@@ -13,5 +14,7 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface HotelReservationBeanRemote {
+
+    public void createNewRoomType(RoomType roomType);
     
 }

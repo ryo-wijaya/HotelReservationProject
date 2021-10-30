@@ -30,6 +30,7 @@ public class HotelOperationModule {
             HotelReservationBeanRemote hotelReservationBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
+        this.hotelReservationBeanRemote = hotelReservationBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.currentEmployee = employee;
     }
@@ -184,7 +185,11 @@ public class HotelOperationModule {
     }
 
     private void updateARoomType(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("You are now updating a Room Type");
+        System.out.println("Select a Room Type to update");
+        
+        RoomType newRoomType = new RoomType(name);
+        hotelReservationBeanRemote.createNewRoomType(newRoomType);
     }
 
     private void deleteARoomType(Scanner sc) {
