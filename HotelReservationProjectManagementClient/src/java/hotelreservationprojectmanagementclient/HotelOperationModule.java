@@ -10,6 +10,7 @@ import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import entity.Employee;
+import entity.Room;
 import entity.RoomType;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
@@ -30,6 +31,7 @@ public class HotelOperationModule {
             HotelReservationBeanRemote hotelReservationBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
+        this.hotelReservationBeanRemote = hotelReservationBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.currentEmployee = employee;
     }
@@ -200,6 +202,15 @@ public class HotelOperationModule {
     }
 
     private void createNewRoom(Scanner sc) {
+        System.out.println("You are now creating a Room");
+        System.out.println("Please enter a floor");
+        String floor = sc.nextLine();
+        System.out.println("Please enter a room number");
+        String number = sc.nextLine();
+        String roomNumber = String.join(floor, number);
+        System.out.println("Please enter select a room Tpye");
+        String roomType = sc.nextLine();
+        //Room room = new Room(roomNumber, roomType);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
