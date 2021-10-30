@@ -5,6 +5,7 @@
  */
 package hotelreservationprojectmanagementclient;
 
+import ejb.session.stateful.HotelReservationBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
@@ -24,6 +25,7 @@ public class HoRSClientModule {
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
+    private HotelReservationBeanRemote hotelReservationBeanRemote;
     
     private FrontOfficeModule frontOfficeModule;
     private SystemAdministrationModule systemAdministrationModule;
@@ -31,10 +33,11 @@ public class HoRSClientModule {
     
     private Employee currentEmployee;
 
-    public HoRSClientModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote) {
+    public HoRSClientModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, HotelReservationBeanRemote hotelReservationBeanRemote) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
+        this.hotelReservationBeanRemote = hotelReservationBeanRemote;
     }
     
     public void runEmployeeLoginPage(){
@@ -58,7 +61,7 @@ public class HoRSClientModule {
                                 systemAdministrationModule.runMainMenu();
                             } 
                             else if(currentEmployee.getErole() == OPERATIONMANAGER || currentEmployee.getErole() == SALESMANAGER){
-                                hotelOperationModule = new HotelOperationModule(customerSessionBeanRemote, employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
+                                hotelOperationModule = new HotelOperationModule(customerSessionBeanRemote, employeeSessionBeanRemote, hotelReservationBeanRemote, partnerSessionBeanRemote, currentEmployee);
                                 hotelOperationModule.runMainMenu();
                             }
                             else if(currentEmployee.getErole() == GUESTRELATIONSOFFICER){
