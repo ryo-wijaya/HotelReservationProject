@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.RoomType;
 import javax.ejb.Remote;
 
 /**
@@ -13,5 +14,7 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface HotelManagementBeanRemote {
+
+    public RoomType getRoomTypeByName(String roomType);
     
 }

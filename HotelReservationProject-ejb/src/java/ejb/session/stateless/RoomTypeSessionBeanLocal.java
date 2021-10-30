@@ -26,5 +26,7 @@ public interface RoomTypeSessionBeanLocal {
     public void updateRoomType(Long id, String newName) throws RoomTypeNotFoundException;
 
     public void deleteRoomType(Long id) throws RoomTypeNotFoundException;
+
+    public RoomType getRoomTypeByName(String roomName);
     
 }

@@ -31,4 +31,10 @@ public class HotelManagementBean implements HotelManagementBeanRemote {
     public void createNewRoomType(RoomType roomType) {
         roomTypeSessionBeanLocal.createNewRoomType(roomType);
     }
+    
+    @Override
+    public RoomType getRoomTypeByName(String roomType) {
+        return roomTypeSessionBeanLocal.getRoomTypeByName(roomType);
+    }
+    
 }

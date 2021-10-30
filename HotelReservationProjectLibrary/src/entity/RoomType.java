@@ -29,6 +29,7 @@ public class RoomType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
     private String roomName;
+    private Integer ranking;
     
     @OneToMany(fetch = FetchType.LAZY)
     private List<RoomRate> listOfRoomRates;
@@ -107,6 +108,20 @@ public class RoomType implements Serializable {
     @Override
     public String toString() {
         return "entity.RoomType[ id=" + roomTypeId + " ]";
+    }
+
+    /**
+     * @return the ranking
+     */
+    public Integer getRanking() {
+        return ranking;
+    }
+
+    /**
+     * @param ranking the ranking to set
+     */
+    public void setRanking(Integer ranking) {
+        this.ranking = ranking;
     }
     
 }

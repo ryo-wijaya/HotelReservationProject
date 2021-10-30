@@ -213,9 +213,11 @@ public class HotelOperationModule {
         System.out.println("Please enter a room number");
         String number = sc.nextLine();
         String roomNumber = String.join(floor, number);
+        viewAllRoomTypes(sc);
         System.out.println("Please enter select a room Tpye");
-        String roomType = sc.nextLine();
-        //Room room = new Room(roomNumber, roomType);
+        String roomTypeName = sc.nextLine();
+        RoomType roomType = hotelManagementBeanRemote.getRoomTypeByName(roomTypeName);
+        Room room = new Room(roomNumber, roomType);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
