@@ -5,6 +5,7 @@
  */
 package hotelreservationprojectmanagementclient;
 
+import ejb.session.stateful.HotelReservationBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
