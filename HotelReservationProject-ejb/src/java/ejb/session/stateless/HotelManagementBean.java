@@ -38,4 +38,9 @@ public class HotelManagementBean implements HotelManagementBeanRemote {
     public List<RoomType> viewAllRoomTypes() throws RoomTypeNotFoundException { 
         return roomTypeSessionBeanLocal.retrieveRoomTypes();
     }
+    @Override
+    public RoomType getRoomTypeByName(String roomType) {
+        return roomTypeSessionBeanLocal.getRoomTypeByName(roomType);
+    }
+    
 }

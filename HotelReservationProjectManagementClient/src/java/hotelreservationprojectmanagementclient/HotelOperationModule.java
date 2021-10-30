@@ -115,7 +115,11 @@ public class HotelOperationModule {
 
                     switch (option) {
                         case 1:
-                            this.createNewRoom(sc);
+                            try {
+                                this.createNewRoom(sc);
+                            } catch (RoomTypeNotFoundException ex) {
+                                System.out.println("Room Type not found!");
+                            }
                             break;
                         case 2:
                             this.updateARoom(sc);
@@ -213,16 +217,18 @@ public class HotelOperationModule {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void createNewRoom(Scanner sc) {
+    private void createNewRoom(Scanner sc) throws RoomTypeNotFoundException {
         System.out.println("You are now creating a Room");
         System.out.println("Please enter a floor");
         String floor = sc.nextLine();
         System.out.println("Please enter a room number");
         String number = sc.nextLine();
         String roomNumber = String.join(floor, number);
+        this.viewAllRoomTypes();
         System.out.println("Please enter select a room Tpye");
-        String roomType = sc.nextLine();
-        //Room room = new Room(roomNumber, roomType);
+        String roomTypeName = sc.nextLine();
+        RoomType roomType = hotelManagementBeanRemote.getRoomTypeByName(roomTypeName);
+        Room room = new Room(roomNumber, roomType);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

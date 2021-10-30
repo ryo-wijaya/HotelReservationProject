@@ -13,7 +13,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import util.enumeration.RatePerNight;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
@@ -59,6 +58,13 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal {
         }
     }
 
+    @Override
+    public RoomType getRoomTypeByName(String roomName) {
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomName");
+        query.setParameter("inRoomName", roomName);
+        return (RoomType)query.getSingleResult();
+    }
+    
     //no merge needed as this is a managed context
     public void updateRoomType(Long id, String newName) throws RoomTypeNotFoundException {
         try {

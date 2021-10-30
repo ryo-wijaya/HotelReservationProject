@@ -20,5 +20,6 @@ public interface HotelManagementBeanRemote {
     public void createNewRoomType(RoomType roomType);
 
     public List<RoomType> viewAllRoomTypes() throws RoomTypeNotFoundException;
-    
+
+    public RoomType getRoomTypeByName(String roomType);
 }
