@@ -6,14 +6,13 @@
 package ejb.session.stateless;
 
 import entity.Booking;
-import entity.Customer;
-import entity.Room;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import util.exceptions.CustomerNotFoundException;
-import util.exceptions.EntityInstanceExistsInCollectionException;
+import javax.persistence.Query;
+import util.exceptions.BookingNotFoundException;
 
 /**
  *
@@ -34,13 +33,29 @@ public class BookingSessionBean implements BookingSessionBeanLocal {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     
-    public Booking createNewBooking(Long customerId, Booking booking, Room room) throws CustomerNotFoundException, EntityInstanceExistsInCollectionException{
-        /*Customer customer = customerSessionBean.retrieveCustomerByCustomerId(customerId);
-        booking.setCustomer(customer);
-        customer.addBooking(booking);
-        em.persist(booking);*/
-        
+    @Override
+    public Booking createNewBooking(Booking booking) {
+        em.persist(booking);
+        em.flush();
         return booking;
+        //
+    }
+    
+    @Override
+    public List<Booking> retrieveAllProducts(){
+        Query query = em.createQuery("SELECT b FROM Booking b");
+        return query.getResultList();
+    }
+    
+    @Override
+    public Booking retrieveBookingByBookingId(Long bookingId) throws BookingNotFoundException{
+        Booking booking = em.find(Booking.class, bookingId);
+        if(booking != null){
+            return booking;
+        }
+        else {
+            throw new BookingNotFoundException("Booking ID" + bookingId + " does not exist!");
+        }
     }
     
 }
