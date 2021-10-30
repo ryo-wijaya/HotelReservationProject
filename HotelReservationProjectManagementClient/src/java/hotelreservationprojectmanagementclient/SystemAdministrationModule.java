@@ -129,7 +129,7 @@ public class SystemAdministrationModule {
         List<Employee> listOfEmployees = employeeSessionBeanRemote.retrieveAllEmployees();
         System.out.println("Viewing a list of Employees");
         for (Employee e : listOfEmployees) {
-            System.out.println("Name: " + e.getName() + " | Username: " + e.getUsername() + " | Role: " + e.getRole());
+            System.out.println("Name: " + e.getName() + " | Username: " + e.getUsername() + " | Role: " + e.getErole());
         }
     }
     

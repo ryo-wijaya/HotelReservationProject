@@ -26,7 +26,7 @@ public class Employee implements Serializable {
     private String name;
     private String username;
     private String password;
-    private EmployeeRole role;
+    private EmployeeRole Erole;
 
     public Employee() {
     }
@@ -35,7 +35,7 @@ public class Employee implements Serializable {
         this.name = name;
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.Erole = role;
     }
 
     public String getName() {
@@ -62,12 +62,12 @@ public class Employee implements Serializable {
         this.password = password;
     }
 
-    public EmployeeRole getRole() {
-        return role;
+    public EmployeeRole getErole() {
+        return Erole;
     }
 
-    public void setRole(EmployeeRole role) {
-        this.role = role;
+    public void setErole(EmployeeRole Erole) {
+        this.Erole = Erole;
     }
     
     
