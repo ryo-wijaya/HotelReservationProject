@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Customer;
 import java.util.List;
 import javax.ejb.Local;
+import util.exceptions.CustomerNotFoundException;
 import util.exceptions.LoginCredentialsInvalidException;
 
 /**
@@ -17,7 +18,7 @@ import util.exceptions.LoginCredentialsInvalidException;
 @Local
 public interface CustomerSessionBeanLocal {
 
-    public Customer retrieveCustomerByCustomerId(Long customerId);
+    public Customer retrieveCustomerByCustomerId(Long customerId)throws CustomerNotFoundException;
 
     public Customer registerAsCustomer(Customer newCustomer);
 
