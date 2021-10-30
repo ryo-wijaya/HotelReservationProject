@@ -29,7 +29,6 @@ public class RoomType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
     private String roomName;
-    private Double price;
     
     @OneToMany(fetch = FetchType.LAZY)
     private List<RoomRate> listOfRoomRates;
@@ -40,7 +39,6 @@ public class RoomType implements Serializable {
 
     public RoomType(String roomName, Double price) {
         this.roomName = roomName;
-        this.price = price;
     }
 
     
@@ -69,15 +67,14 @@ public class RoomType implements Serializable {
         this.roomName = roomName;
     }
 
-    public Double getPrice() {
-        return price;
+    public List<RoomRate> getListOfRoomRates() {
+        return listOfRoomRates;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setListOfRoomRates(List<RoomRate> listOfRoomRates) {
+        this.listOfRoomRates = listOfRoomRates;
     }
-    
-    
+
 
     public Long getRoomTypeId() {
         return roomTypeId;

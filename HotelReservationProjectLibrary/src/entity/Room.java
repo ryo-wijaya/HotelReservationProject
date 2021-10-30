@@ -76,6 +76,14 @@ public class Room implements Serializable {
         return true;
     }
 
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
     @Override
     public String toString() {
         return "entity.Room[ id=" + rooomId + " ]";
