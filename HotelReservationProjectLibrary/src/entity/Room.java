@@ -8,13 +8,18 @@ package entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.EntityInstanceMissingInCollectionException;
 
 /**
  *
@@ -28,15 +33,72 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
     private String roomNumber;
-    private Map<Date, Boolean> schedule;
     
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private RoomType roomType;
 
+    @OneToMany()
+    private List<Booking> preBookings;
+    
+    @ManyToMany()
+    private List<Booking> bookings;
+
+    public Room(String roomNumber, RoomType roomType) {
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
+    }
+    
     public Room() {
-        schedule = new HashMap<Date, Boolean>();
     }
 
+    public void addPreBookings(Booking booking) throws EntityInstanceExistsInCollectionException
+    {
+        if(!this.preBookings.contains(booking))
+        {
+            this.getPreBookings().add(booking);
+        }
+        else
+        {
+            throw new EntityInstanceExistsInCollectionException("PreBooking already exist");
+        }
+    }
+    
+    public void removePreBookings(Booking booking) throws EntityInstanceMissingInCollectionException
+    {
+        if(this.getPreBookings().contains(booking))
+        {
+            this.getPreBookings().remove(booking);
+        }
+        else
+        {
+            throw new EntityInstanceMissingInCollectionException("PreBooking does not exist");
+        }
+    }
+    
+    public void addBookings(Booking booking) throws EntityInstanceExistsInCollectionException
+    {
+        if(!this.bookings.contains(booking))
+        {
+            this.getBookings().add(booking);
+        }
+        else
+        {
+            throw new EntityInstanceExistsInCollectionException("Booking already exist");
+        }
+    }
+    
+    public void removeBookings(Booking booking) throws EntityInstanceMissingInCollectionException
+    {
+        if(this.getBookings().contains(booking))
+        {
+            this.getBookings().remove(booking);
+        }
+        else
+        {
+            throw new EntityInstanceMissingInCollectionException("Booking does not exist");
+        }
+    }
+    
     public Room(String roomNumber) {
         this.roomNumber = roomNumber;
     }
@@ -88,6 +150,34 @@ public class Room implements Serializable {
     @Override
     public String toString() {
         return "entity.Room[ id=" + roomId + " ]";
+    }
+
+    /**
+     * @return the preBookings
+     */
+    public List<Booking> getPreBookings() {
+        return preBookings;
+    }
+
+    /**
+     * @param preBookings the preBookings to set
+     */
+    public void setPreBookings(List<Booking> preBookings) {
+        this.preBookings = preBookings;
+    }
+
+    /**
+     * @return the bookings
+     */
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    /**
+     * @param bookings the bookings to set
+     */
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
     }
     
 }
