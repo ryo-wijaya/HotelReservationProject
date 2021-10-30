@@ -27,10 +27,10 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     private EntityManager em;
     
     @Override
-    public Employee createNewEmployee(Employee employee) {
+    public Long createNewEmployee(Employee employee) {
         em.persist(employee);
         em.flush();
-        return employee;
+        return employee.getEmployeeId();
     }
     
     @Override

@@ -18,7 +18,7 @@ import util.exceptions.LoginCredentialsInvalidException;
 @Local
 public interface EmployeeSessionBeanLocal {
 
-    public Employee createNewEmployee(Employee employee);
+    public Long createNewEmployee(Employee employee);
 
     public List<Employee> retrieveAllEmployees() throws EmployeeNotFoundException;
 
