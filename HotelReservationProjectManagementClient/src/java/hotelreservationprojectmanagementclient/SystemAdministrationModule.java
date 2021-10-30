@@ -9,8 +9,13 @@ import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import entity.Employee;
+import entity.Partner;
+import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
+import util.enumeration.EmployeeType;
+import util.exceptions.EmployeeNotFoundException;
+import util.exceptions.partnerNotFoundException;
 
 /**
  *
@@ -49,13 +54,21 @@ public class SystemAdministrationModule {
                     this.createNewEmployee();
                     break;
                 case 2:
-                    this.viewAllEmployees();
+                    try {
+                        this.viewAllEmployees();
+                    } catch (EmployeeNotFoundException ex) {
+                        System.out.println("No Employees exist in the database!");
+                    }
                     break;
                 case 3:
                     this.createNewPartner();
                     break;
                 case 4:
-                    this.viewAllPartners();
+                    try {
+                        this.viewAllPartners();
+                    } catch (partnerNotFoundException ex) {
+                        System.out.println("No Partners exists in the database!");
+                    }
                     break;
                 default:
                     System.out.println("Please input a valid choice");
@@ -64,11 +77,14 @@ public class SystemAdministrationModule {
     }
 
     public void createNewEmployee() {
+        String name;
         String username;
         String password;
         EmployeeRole role = null;
 
         Scanner sc = new Scanner(System.in);
+        System.out.println("Enter a full name");
+        name = sc.nextLine();
         System.out.print("Enter a username>");
         username = sc.next();
         System.out.print("Enter a password>");
@@ -104,19 +120,66 @@ public class SystemAdministrationModule {
             }
         }
         //At this point we have all the data we need to create a new employee
-        Employee newEmployee = new Employee(username, password, role);
+        Employee newEmployee = new Employee(name, username, password, role);
         employeeSessionBeanRemote.createNewEmployee(newEmployee);
     }
     
-    public void viewAllEmployees() {
-        
+
+    public void viewAllEmployees() throws EmployeeNotFoundException {
+        List<Employee> listOfEmployees = employeeSessionBeanRemote.retrieveAllEmployees();
+        System.out.println("Viewing a list of Employees");
+        for (Employee e : listOfEmployees) {
+            System.out.println("Name: " + e.getName() + " | Username: " + e.getUsername() + " | Role: " + e.getRole());
+        }
     }
     
+
     public void createNewPartner() {
-        
+        String name;
+        String username;
+        String password;
+        EmployeeType type = null;
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter a full name");
+        name = sc.nextLine();
+        System.out.print("Enter a username>");
+        username = sc.next();
+        System.out.print("Enter a password>");
+        password = sc.next();
+        boolean roleSettled = false;
+
+        while (roleSettled == false) {
+            System.out.println("Enter a partner type, these are your choices");
+            for (int i = 0; i < EmployeeType.values().length; i++) {
+                System.out.println((i + 1) + ". " + EmployeeType.values()[i]);
+            }
+            int roleChoice = sc.nextInt();
+
+            switch (roleChoice) {
+                case 1:
+                    type = EmployeeType.PARTNEREMPLOYEE;
+                    roleSettled = true;
+                    break;
+                case 2:
+                    type = EmployeeType.PARTNERRESERVATIONMANAGER;
+                    roleSettled = true;
+                    break;
+                default:
+                    System.out.println("Please enter a valid choice!");
+            }
+        }
+        //At this point we have all the data we need to create a new partner
+        Partner partner = new Partner(name, username, password, type);
+        partnerSessionBeanRemote.createNewPartner(partner);
     }
     
-    public void viewAllPartners() {
-        
+
+    public void viewAllPartners() throws partnerNotFoundException {
+        List<Partner> listOfPartners = partnerSessionBeanRemote.retrieveAllPartners();
+        System.out.println("Viewing a list of Partners");
+        for (Partner p : listOfPartners) {
+            System.out.println("Name: " + p.getName() + " | Username: " + p.getUserName() + " | PartnerType: " + p.getEmployeeType());
+        }
     }
 }

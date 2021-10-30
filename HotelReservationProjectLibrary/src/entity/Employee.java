@@ -23,17 +23,27 @@ public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
+    private String name;
     private String username;
     private String password;
-    private EmployeeRole erole;
+    private EmployeeRole role;
 
     public Employee() {
     }
 
-    public Employee(String username, String password, EmployeeRole role) {
+    public Employee(String name, String username, String password, EmployeeRole role) {
+        this.name = name;
         this.username = username;
         this.password = password;
-        this.erole = role;
+        this.role = role;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     
     public String getUsername() {
@@ -52,12 +62,12 @@ public class Employee implements Serializable {
         this.password = password;
     }
 
-    public EmployeeRole getErole() {
-        return erole;
+    public EmployeeRole getRole() {
+        return role;
     }
 
-    public void setErole(EmployeeRole erole) {
-        this.erole = erole;
+    public void setRole(EmployeeRole role) {
+        this.role = role;
     }
     
     

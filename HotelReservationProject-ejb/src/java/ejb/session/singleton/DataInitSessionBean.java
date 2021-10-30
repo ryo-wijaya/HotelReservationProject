@@ -39,7 +39,7 @@ public class DataInitSessionBean {
     }
     
     public void loadData() {
-        Employee admin = new Employee("admin", "password", SYSTEMADMINISTRATOR);
+        Employee admin = new Employee("randomname", "admin", "password", SYSTEMADMINISTRATOR);
         employeeSessionBeanLocal.createNewEmployee(admin);
     }
 }
