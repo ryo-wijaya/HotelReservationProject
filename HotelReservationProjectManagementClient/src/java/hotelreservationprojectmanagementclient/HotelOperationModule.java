@@ -8,6 +8,7 @@ package hotelreservationprojectmanagementclient;
 import ejb.session.stateful.HotelReservationBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.HotelManagementBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
@@ -24,14 +25,14 @@ public class HotelOperationModule {
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
-    private HotelReservationBeanRemote hotelReservationBeanRemote;
+    private HotelManagementBeanRemote hotelMangementBeanRemote;
     private Employee currentEmployee;
 
     public HotelOperationModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote,
-            HotelReservationBeanRemote hotelReservationBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
+            HotelManagementBeanRemote hotelManagementBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
-        this.hotelReservationBeanRemote = hotelReservationBeanRemote;
+        this.hotelMangementBeanRemote = hotelManagementBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.currentEmployee = employee;
     }
