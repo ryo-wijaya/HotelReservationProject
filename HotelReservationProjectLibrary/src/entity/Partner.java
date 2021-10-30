@@ -23,10 +23,31 @@ public class Partner implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partnerId;
+    private String name;
     private String userName;
     private String password;
     private EmployeeType employeeType;
 
+    public Partner() {
+    }
+
+    public Partner(String name, String userName, String password, EmployeeType employeeType) {
+        this.name = name;
+        this.userName = userName;
+        this.password = password;
+        this.employeeType = employeeType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
+    
     public Long getPartnerId() {
         return partnerId;
     }
