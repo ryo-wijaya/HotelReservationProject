@@ -10,6 +10,10 @@ import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import entity.Employee;
 import java.util.Scanner;
+import static util.enumeration.EmployeeRole.GUESTRELATIONSOFFICER;
+import static util.enumeration.EmployeeRole.OPERATIONMANAGER;
+import static util.enumeration.EmployeeRole.SALESMANAGER;
+import static util.enumeration.EmployeeRole.SYSTEMADMINISTRATOR;
 import util.exceptions.LoginCredentialsInvalidException;
 
 /**
@@ -24,6 +28,8 @@ public class HoRSClientModule {
     private FrontOfficeModule frontOfficeModule;
     private SystemAdministrationModule systemAdministrationModule;
     private HotelOperationModule hotelOperationModule;
+    
+    private Employee currentEmployee;
 
     public HoRSClientModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
@@ -45,11 +51,20 @@ public class HoRSClientModule {
                     response = sc.nextInt();        
                     if(response == 1){
                         try {
-                            Employee employee = doLogin();
+                            doLogin();
                             System.out.print("Login successful!\n");
-                            frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote);
-                            //systemAdministrationModule = 
-                            
+                            if(currentEmployee.getErole() == SYSTEMADMINISTRATOR){
+                                systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
+                                systemAdministrationModule.runMainMenu();
+                            } 
+                            else if(currentEmployee.getErole() == OPERATIONMANAGER || currentEmployee.getErole() == SALESMANAGER){
+                                hotelOperationModule = new HotelOperationModule(customerSessionBeanRemote, employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
+                                hotelOperationModule.runMainMenu();
+                            }
+                            else if(currentEmployee.getErole() == GUESTRELATIONSOFFICER){
+                                frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote, currentEmployee);
+                                frontOfficeModule.runMainMenu();
+                            }
                         }
                         catch (LoginCredentialsInvalidException ex) {
                             System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
@@ -70,7 +85,7 @@ public class HoRSClientModule {
         //dont forget to also pass in the EmployeeEntity
     }
     
-    public Employee doLogin() throws LoginCredentialsInvalidException{
+    public void doLogin() throws LoginCredentialsInvalidException{
         Scanner sc = new Scanner(System.in);
         String username = "";
         String password = "";
@@ -81,8 +96,7 @@ public class HoRSClientModule {
         password = sc.nextLine().trim();
         
         if(username.length() > 0 && password.length() > 0) {
-            Employee employee = employeeSessionBeanRemote.login(username, password);
-            return employee;
+            currentEmployee = employeeSessionBeanRemote.login(username, password);
         } 
         else {
             throw new LoginCredentialsInvalidException("Invalid login credential!");

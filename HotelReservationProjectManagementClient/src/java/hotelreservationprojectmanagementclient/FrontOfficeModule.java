@@ -6,6 +6,7 @@
 package hotelreservationprojectmanagementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import entity.Employee;
 
 /**
  *
@@ -14,14 +15,17 @@ import ejb.session.stateless.EmployeeSessionBeanRemote;
 public class FrontOfficeModule {
     
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
-
+    private Employee employee;
+    
     public FrontOfficeModule() {
     }
 
-    public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+    public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, Employee employee) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
+        this.employee = employee;
     }
-    
-    
-    
+
+    public void runMainMenu() {
+        
+    }
 }
