@@ -18,7 +18,7 @@ import util.exceptions.LoginCredentialsInvalidException;
 @Remote
 public interface EmployeeSessionBeanRemote {
     
-    public Employee createNewEmployee(Employee employee);
+    public Long createNewEmployee(Employee employee);
 
     public List<Employee> retrieveAllEmployees() throws EmployeeNotFoundException;
 

@@ -69,7 +69,8 @@ public class RoomSessionBean implements RoomSessionBeanLocal {
         }
     }
 
-    //deleting a roomType involves deleting all its associated RoomRates 
+    //deleting a roomType involves deleting all its associated RoomRates
+    /*
     @Override
     public void deleteRoomType(Long id) throws RoomTypeNotFoundException {
         try {
@@ -85,4 +86,5 @@ public class RoomSessionBean implements RoomSessionBeanLocal {
             throw new RoomTypeNotFoundException();
         }
     }
+*/
 }
