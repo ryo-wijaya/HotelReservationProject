@@ -26,9 +26,10 @@ public class Room implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long rooomId;
+    private Long roomId;
     private String roomNumber;
     private Map<Date, Boolean> schedule;
+    
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private RoomType roomType;
 
@@ -48,18 +49,18 @@ public class Room implements Serializable {
         this.roomNumber = roomNumber;
     }    
 
-    public Long getRooomId() {
-        return rooomId;
+    public Long getRoomId() {
+        return roomId;
     }
 
-    public void setRooomId(Long rooomId) {
-        this.rooomId = rooomId;
+    public void setRoomId(Long rooomId) {
+        this.roomId = rooomId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (rooomId != null ? rooomId.hashCode() : 0);
+        hash += (roomId != null ? roomId.hashCode() : 0);
         return hash;
     }
 
@@ -70,7 +71,7 @@ public class Room implements Serializable {
             return false;
         }
         Room other = (Room) object;
-        if ((this.rooomId == null && other.rooomId != null) || (this.rooomId != null && !this.rooomId.equals(other.rooomId))) {
+        if ((this.roomId == null && other.roomId != null) || (this.roomId != null && !this.roomId.equals(other.roomId))) {
             return false;
         }
         return true;
@@ -86,7 +87,7 @@ public class Room implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Room[ id=" + rooomId + " ]";
+        return "entity.Room[ id=" + roomId + " ]";
     }
     
 }

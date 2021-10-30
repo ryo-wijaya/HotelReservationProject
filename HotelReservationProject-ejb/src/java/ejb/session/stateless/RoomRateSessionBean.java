@@ -40,6 +40,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal {
             em.persist(roomRate);
             RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
             roomType.addToListOfRoomRate(roomRate);
+            em.flush();
             return roomRate.getRoomRateId();
         } catch (RoomTypeNotFoundException | EntityInstanceExistsInCollectionException ex) {
             throw new FailedToCreateRoomRateException();
