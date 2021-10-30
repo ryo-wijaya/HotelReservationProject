@@ -3,23 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ejb.session.stateful;
+package ejb.session.stateless;
 
-import ejb.session.stateless.BookingSessionBeanLocal;
-import ejb.session.stateless.RoomRateSessionBeanLocal;
-import ejb.session.stateless.RoomSessionBeanLocal;
-import ejb.session.stateless.RoomTypeSessionBeanLocal;
 import entity.RoomType;
 import javax.ejb.EJB;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author ryo20
  */
-@Stateful
-public class HotelReservationBean implements HotelReservationBeanRemote {
-
+@Stateless
+public class HotelManagementBean implements HotelManagementBeanRemote {
+    
     @EJB
     private BookingSessionBeanLocal bookingSessionBeanLocal;
 
@@ -31,4 +27,8 @@ public class HotelReservationBean implements HotelReservationBeanRemote {
 
     @EJB
     private RoomRateSessionBeanLocal roomRateSessionBeanLocal;
+    
+    public void createNewRoomType(RoomType roomType) {
+        roomTypeSessionBeanLocal.createNewRoomType(roomType);
+    }
 }
