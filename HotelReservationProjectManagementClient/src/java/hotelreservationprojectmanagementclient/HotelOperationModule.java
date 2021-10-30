@@ -25,14 +25,14 @@ public class HotelOperationModule {
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
-    private HotelManagementBeanRemote hotelMangementBeanRemote;
+    private HotelManagementBeanRemote hotelManagementBeanRemote;
     private Employee currentEmployee;
 
     public HotelOperationModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote,
             HotelManagementBeanRemote hotelManagementBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
-        this.hotelMangementBeanRemote = hotelManagementBeanRemote;
+        this.hotelManagementBeanRemote = hotelManagementBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.currentEmployee = employee;
     }
@@ -183,7 +183,7 @@ public class HotelOperationModule {
         System.out.println("Please enter a Room Type name");
         String name = sc.nextLine();
         RoomType newRoomType = new RoomType(name);
-        hotelReservationBeanRemote.createNewRoomType(newRoomType);
+        hotelManagementBeanRemote.createNewRoomType(newRoomType);
     }
 
     private void updateARoomType(Scanner sc) {
@@ -191,7 +191,7 @@ public class HotelOperationModule {
         System.out.println("Select a Room Type to update");
         
         RoomType newRoomType = new RoomType(name);
-        hotelReservationBeanRemote.createNewRoomType(newRoomType);
+        hotelManagementBeanRemote.createNewRoomType(newRoomType);
     }
 
     private void deleteARoomType(Scanner sc) {
