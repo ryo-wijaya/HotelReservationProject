@@ -13,8 +13,10 @@ import ejb.session.stateless.PartnerSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
 import entity.RoomType;
+import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -82,7 +84,11 @@ public class HotelOperationModule {
                             this.deleteARoomType(sc);
                             break;
                         case 4:
-                            this.viewAllRoomTypes(sc);
+                            try {
+                                this.viewAllRoomTypes();
+                            } catch (RoomTypeNotFoundException ex) {
+                                System.out.println("No Room Types in the Database!");
+                            }
                             break;
                         case 5:
                             this.viewRoomTypeDetails(sc);
@@ -177,7 +183,6 @@ public class HotelOperationModule {
     }
 
     //NOTE: Development of these methods will follow Room Type -> Room Rate -> Room
-    
     private void createNewRoomType(Scanner sc) {
         System.out.println("You are now creating a Room Type");
         System.out.println("Please enter a Room Type name");
@@ -190,16 +195,18 @@ public class HotelOperationModule {
         System.out.println("You are now updating a Room Type");
         System.out.println("Select a Room Type to update");
         
-        RoomType newRoomType = new RoomType(name);
-        hotelManagementBeanRemote.createNewRoomType(newRoomType);
     }
 
     private void deleteARoomType(Scanner sc) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void viewAllRoomTypes(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void viewAllRoomTypes() throws RoomTypeNotFoundException {
+        System.out.println("You are now viewing all Room Types");
+        List<RoomType> listOfRoomTypes = hotelManagementBeanRemote.viewAllRoomTypes();
+        for (int i = 1; i <= listOfRoomTypes.size(); i++) {
+            System.out.println(i + ". " + listOfRoomTypes.get(i - 1));
+        }
     }
 
     private void viewRoomTypeDetails(Scanner sc) {

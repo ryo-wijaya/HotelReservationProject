@@ -6,8 +6,10 @@
 package ejb.session.stateless;
 
 import entity.RoomType;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -30,5 +32,10 @@ public class HotelManagementBean implements HotelManagementBeanRemote {
     
     public void createNewRoomType(RoomType roomType) {
         roomTypeSessionBeanLocal.createNewRoomType(roomType);
+    }
+    
+    @Override
+    public List<RoomType> viewAllRoomTypes() throws RoomTypeNotFoundException { 
+        return roomTypeSessionBeanLocal.retrieveRoomTypes();
     }
 }
