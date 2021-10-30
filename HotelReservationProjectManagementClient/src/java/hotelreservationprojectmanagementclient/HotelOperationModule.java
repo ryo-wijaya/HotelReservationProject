@@ -9,10 +9,9 @@ import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import entity.Employee;
+import entity.RoomType;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
-import util.exceptions.EmployeeNotFoundException;
-import util.exceptions.partnerNotFoundException;
 
 /**
  *
@@ -69,19 +68,19 @@ public class HotelOperationModule {
 
                     switch (option) {
                         case 1:
-                            this.createNewRoomType();
+                            this.createNewRoomType(sc);
                             break;
                         case 2:
-                            this.updateARoomType();
+                            this.updateARoomType(sc);
                             break;
                         case 3:
-                            this.deleteARoomType();
+                            this.deleteARoomType(sc);
                             break;
                         case 4:
-                            this.viewAllRoomTypes();
+                            this.viewAllRoomTypes(sc);
                             break;
                         case 5:
-                            this.viewRoomTypeDetails();
+                            this.viewRoomTypeDetails(sc);
                             break;
                         case 6:
                             returnBack = true;
@@ -105,19 +104,19 @@ public class HotelOperationModule {
 
                     switch (option) {
                         case 1:
-                            this.createNewRoom();
+                            this.createNewRoom(sc);
                             break;
                         case 2:
-                            this.updateARoom();
+                            this.updateARoom(sc);
                             break;
                         case 3:
-                            this.deleteARoom();
+                            this.deleteARoom(sc);
                             break;
                         case 4:
-                            this.viewAllRooms();
+                            this.viewAllRooms(sc);
                             break;
                         case 5:
-                            this.viewRoomAllocationExceptionReport();
+                            this.viewRoomAllocationExceptionReport(sc);
                             break;
                         case 6:
                             returnBack = true;
@@ -149,19 +148,19 @@ public class HotelOperationModule {
 
             switch (option) {
                 case 1:
-                    this.createNewRoomRate();
+                    this.createNewRoomRate(sc);
                     break;
                 case 2:
-                    this.updateARoomRate();
+                    this.updateARoomRate(sc);
                     break;
                 case 3:
-                    this.deleteARoomRate();
+                    this.deleteARoomRate(sc);
                     break;
                 case 4:
-                    this.viewAllRoomRates();
+                    this.viewAllRoomRates(sc);
                     break;
                 case 5:
-                    this.viewRoomRateDetails();
+                    this.viewRoomRateDetails(sc);
                     break;
                 case 6:
                     logout = true;
@@ -170,5 +169,71 @@ public class HotelOperationModule {
                     System.out.println("Please input a valid choice");
             }
         }
+    }
+
+    //NOTE: Development of these methods will follow Room Type -> Room Rate -> Room
+    
+    private void createNewRoomType(Scanner sc) {
+        System.out.println("You are now creating a Room Type");
+        System.out.println("Please enter a Room Type name");
+        String name = sc.nextLine();
+        RoomType newRoomType = new RoomType(name);
+        
+    }
+
+    private void updateARoomType(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void deleteARoomType(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewAllRoomTypes(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewRoomTypeDetails(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void createNewRoom(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void updateARoom(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void deleteARoom(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewAllRooms(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewRoomAllocationExceptionReport(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void createNewRoomRate(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void updateARoomRate(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void deleteARoomRate(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewAllRoomRates(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void viewRoomRateDetails(Scanner sc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

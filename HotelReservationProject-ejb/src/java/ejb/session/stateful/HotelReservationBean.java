@@ -5,6 +5,8 @@
  */
 package ejb.session.stateful;
 
+import ejb.session.stateless.RoomRateSessionBeanLocal;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 
 /**
@@ -14,6 +16,8 @@ import javax.ejb.Stateful;
 @Stateful
 public class HotelReservationBean implements HotelReservationBeanRemote {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @EJB
+    private RoomRateSessionBeanLocal roomRateSessionBean;
+
+    
 }

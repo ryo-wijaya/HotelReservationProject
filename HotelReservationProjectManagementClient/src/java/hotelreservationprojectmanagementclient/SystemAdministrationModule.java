@@ -37,7 +37,8 @@ public class SystemAdministrationModule {
     public void runMainMenu() {
         Scanner sc = new Scanner(System.in);
         int choice;
-        while (true) {
+        boolean logout = false;
+        while (!logout) {
             System.out.println("You are currently logged in as a System Administrator");
             System.out.println("-----------------------------------------------------");
             System.out.println("1. Create new Employee");
@@ -69,6 +70,9 @@ public class SystemAdministrationModule {
                     } catch (partnerNotFoundException ex) {
                         System.out.println("No Partners exists in the database!");
                     }
+                    break;
+                case 5:
+                    logout = true;
                     break;
                 default:
                     System.out.println("Please input a valid choice");

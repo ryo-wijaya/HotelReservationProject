@@ -5,6 +5,7 @@
  */
 package hotelreservationprojectmanagementclient;
 
+import ejb.session.stateful.HotelReservationBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
@@ -16,6 +17,7 @@ import javax.ejb.EJB;
  */
 public class Main {
 
+
     @EJB
     private static CustomerSessionBeanRemote customerSessionBeanRemote;
 
@@ -24,6 +26,8 @@ public class Main {
 
     @EJB
     private static PartnerSessionBeanRemote partnerSessionBeanRemote;
+    
+    
 
     /**
      * @param args the command line arguments

@@ -37,7 +37,7 @@ public class RoomType implements Serializable {
         listOfRoomRates = new ArrayList<RoomRate>();
     }
 
-    public RoomType(String roomName, Double price) {
+    public RoomType(String roomName) {
         this.roomName = roomName;
     }
 
