@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exceptions.LoginCredentialsInvalidException;
+import util.exceptions.partnerNotFoundException;
 
 /**
  *
@@ -46,7 +47,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     }
     
     @Override
-    public Partner retrievePartnerByPartnerId(Long partnerId)
+    public Partner retrievePartnerByPartnerId(Long partnerId) throws partnerNotFoundException
     {
         Partner partner = em.find(Partner.class, partnerId);
         if (partner != null)
@@ -55,8 +56,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         }
         else 
         {
-            return null;
-            // throw new partnerNotFoundException("Partner ID " + partnerId + " does not exist!");
+            throw new partnerNotFoundException("Partner ID " + partnerId + " does not exist!");
         }
     }
     

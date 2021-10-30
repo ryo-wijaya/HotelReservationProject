@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exceptions.CustomerNotFoundException;
 import util.exceptions.LoginCredentialsInvalidException;
 
 /**
@@ -40,7 +41,7 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
     }
     
     @Override
-    public Customer retrieveCustomerByCustomerId(Long customerId)
+    public Customer retrieveCustomerByCustomerId(Long customerId) throws CustomerNotFoundException
     {
         Customer customer = em.find(Customer.class, customerId);
         
@@ -50,8 +51,7 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
         }
         else 
         {
-            //throw new CustomerNotFoundException("Customer ID" + customerId + " does not exitst!");
-            return null;
+            throw new CustomerNotFoundException("Customer ID" + customerId + " does not exitst!");
         }
                 
     }

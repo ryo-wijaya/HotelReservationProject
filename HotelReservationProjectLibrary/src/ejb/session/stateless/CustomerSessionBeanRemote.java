@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Customer;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exceptions.CustomerNotFoundException;
 import util.exceptions.LoginCredentialsInvalidException;
 
 /**
@@ -17,7 +18,7 @@ import util.exceptions.LoginCredentialsInvalidException;
 @Remote
 public interface CustomerSessionBeanRemote {
     
-    public Customer retrieveCustomerByCustomerId(Long customerId);
+    public Customer retrieveCustomerByCustomerId(Long customerId)throws CustomerNotFoundException;
     
     public Customer registerAsCustomer(Customer newCustomer);
     

@@ -9,6 +9,7 @@ import entity.Partner;
 import java.util.List;
 import javax.ejb.Local;
 import util.exceptions.LoginCredentialsInvalidException;
+import util.exceptions.partnerNotFoundException;
 
 /**
  *
@@ -21,7 +22,7 @@ public interface PartnerSessionBeanLocal {
 
     public List<Partner> retrieveAllPartners();
 
-    public Partner retrievePartnerByPartnerId(Long partnerId);
+    public Partner retrievePartnerByPartnerId(Long partnerId)throws partnerNotFoundException;
 
     public Partner retrievePartnerByUsername(String username);
 
