@@ -14,8 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.EntityInstanceMissingInCollectionException;
@@ -41,8 +41,8 @@ public class Booking implements Serializable {
     @JoinColumn(nullable = false)
     private Customer customer;
 
-    // one to many relationship with rooms
-    @OneToMany
+    // Many to many relationship with rooms
+    @ManyToMany(mappedBy = "Booking")
     private List<Room> rooms;
 
     public Booking() {
