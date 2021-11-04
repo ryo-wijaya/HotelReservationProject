@@ -8,12 +8,15 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.EntityInstanceMissingInCollectionException;
 
@@ -28,7 +31,12 @@ public class RoomType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
+    @Column(nullable = false, length = 16, unique = true)
+    @NotNull
+    @Size(min = 1, max = 16)
     private String roomName;
+    @Column(nullable = false, unique = true)
+    @NotNull
     private Integer ranking;
     
     @OneToMany(fetch = FetchType.LAZY)
