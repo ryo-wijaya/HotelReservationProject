@@ -40,10 +40,10 @@ public class Room implements Serializable {
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private RoomType roomType;
 
-    @OneToMany()
+    @OneToMany(fetch = FetchType.LAZY, cascade = {})
     private List<Booking> preBookings;
     
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {})
     private List<Booking> bookings;
 
     public Room(String roomNumber, RoomType roomType) {
