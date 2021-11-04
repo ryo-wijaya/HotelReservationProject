@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Booking;
 import entity.Room;
 import entity.RoomType;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
@@ -22,6 +24,9 @@ import util.exceptions.RoomTypeNotFoundException;
  */
 @Stateless
 public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRemote {
+
+    @EJB
+    private BookingSessionBeanLocal bookingSessionBeanLocal;
 
     @EJB
     private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
@@ -70,21 +75,19 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     }
 
     //deleting a roomType involves deleting all its associated RoomRates
-    /*
     @Override
-    public void deleteRoomType(Long id) throws RoomTypeNotFoundException {
-        try {
-            RoomType roomTypeToDelete = this.getRoomTypeById(id);
-            for (RoomRate rr : roomTypeToDelete.getListOfRoomRates()) {
-                roomRateSessionBeanLocal.deleteRoomRate(rr.getRoomRateId());
-            }
-            roomTypeToDelete.getListOfRoomRates().clear();
-            em.remove(roomTypeToDelete);
+    public void deleteRoom(Long id) throws RoomNotFoundException, RoomIsTiedToABookingDeletionException {
+        Query query = em.createQuery("SELECT b FROM Booking b");
+        List<Booking> bookings = bookingSessionBeanLocal.retrieveAllProducts();
+        Room roomToDelete = this.getRoomById(id);
 
-        } catch (RoomTypeNotFoundException | RoomRateNotFoundException ex) {
-            //we don't have to worry about a RoomRate not being found, but we still have to catch the potential exception
-            throw new RoomTypeNotFoundException();
+        for (Booking b : bookings) {
+            if (b.getRooms().contains(roomToDelete)) {
+                throw new RoomIsTiedToABookingDeletionException();
+            }
         }
+
+        roomToDelete.getBookings().clear();
+        em.remove(roomToDelete);
     }
-*/
 }

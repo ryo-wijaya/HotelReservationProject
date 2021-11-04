@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,12 +44,12 @@ public class Booking implements Serializable {
     private Date checkOutDate;
     
     // many to one relationship with customer
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(nullable = false)
     private Customer customer;
 
     // Many to many relationship with rooms
-    @ManyToMany(mappedBy = "Booking")
+    @ManyToMany(mappedBy = "Booking", fetch = FetchType.LAZY)
     private List<Room> rooms;
 
     public Booking() {
