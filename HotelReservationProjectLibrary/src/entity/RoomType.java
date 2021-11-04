@@ -39,6 +39,11 @@ public class RoomType implements Serializable {
     @NotNull
     private Integer ranking;
     private Boolean enabled;
+    private String description;
+    private String roomSize;
+    private Integer beds;
+    private Integer capacity;
+    private List<String> amenities;
     
     @OneToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<RoomRate> listOfRoomRates;
@@ -48,17 +53,24 @@ public class RoomType implements Serializable {
         enabled = true;
     }
 
+    public RoomType(String roomName, Integer ranking, String description, String roomSize, Integer beds, Integer capacity, List<String> amenities) {
+        this.roomName = roomName;
+        this.ranking = ranking;
+        this.description = description;
+        this.roomSize = roomSize;
+        this.beds = beds;
+        this.capacity = capacity;
+        this.amenities = amenities;
+    }
+    
+    
+
     public Boolean getEnabled() {
         return enabled;
     }
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public RoomType(String roomName, Integer ranking) {
-        this.roomName = roomName;
-        this.ranking = ranking;
     }
     
     public void addToListOfRoomRate(RoomRate roomRate) throws EntityInstanceExistsInCollectionException {
@@ -140,5 +152,75 @@ public class RoomType implements Serializable {
      */
     public void setRanking(Integer ranking) {
         this.setRanking(ranking);
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the roomSize
+     */
+    public String getRoomSize() {
+        return roomSize;
+    }
+
+    /**
+     * @param roomSize the roomSize to set
+     */
+    public void setRoomSize(String roomSize) {
+        this.roomSize = roomSize;
+    }
+
+    /**
+     * @return the beds
+     */
+    public Integer getBeds() {
+        return beds;
+    }
+
+    /**
+     * @param beds the beds to set
+     */
+    public void setBeds(Integer beds) {
+        this.beds = beds;
+    }
+
+    /**
+     * @return the capacity
+     */
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    /**
+     * @param capacity the capacity to set
+     */
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
+
+    /**
+     * @return the amenities
+     */
+    public List<String> getAmenities() {
+        return amenities;
+    }
+
+    /**
+     * @param amenities the amenities to set
+     */
+    public void setAmenities(List<String> amenities) {
+        this.amenities = amenities;
     }
 }

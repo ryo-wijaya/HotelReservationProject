@@ -16,13 +16,16 @@ import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
+import entity.RoomRate;
 import entity.RoomType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
 import util.enumeration.RatePerNight;
+import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
@@ -203,10 +206,34 @@ public class HotelOperationModule {
     private void createNewRoomType(Scanner sc) {
         System.out.println("You are now creating a Room Type");
         System.out.println("Please enter a Room Type name: ");
-        String name = sc.nextLine();
+        String name = sc.nextLine().trim();
         System.out.println("Please enter select a room Ranking: ");
         Integer newranking = sc.nextInt();
-        RoomType newRoomType = new RoomType(name, newranking);
+        System.out.println("Please enter a Room Type Description: ");
+        String description = sc.nextLine().trim();
+        System.out.println("Please enter a Room Type Size: ");
+        String roomSize = sc.nextLine().trim();
+        System.out.println("Please enter a Room Type Size: ");
+        String roomsize = sc.nextLine().trim();
+        System.out.println("Please enter select number of beds: ");
+        Integer beds = sc.nextInt();
+        System.out.println("Please enter select room capacity: ");
+        Integer capacity = sc.nextInt();
+        String response = "";
+        List<String> amenities = new ArrayList<>();
+
+        while (true) {
+            System.out.println("Please enter room amenitites: ");
+            String amenitie = sc.nextLine().trim();
+            amenities.add(amenitie);
+            System.out.println("Do you have more to add? (N = no): ");
+            response = sc.nextLine().trim();
+            if (response.equals("N")) {
+                break;
+            }
+        }
+
+        RoomType newRoomType = new RoomType(name, newranking, description, roomsize, beds, capacity, amenities);
         Integer ranking = newranking;
         List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newranking);
         for (RoomType updateroomType : roomTypeBellowRanking) {
@@ -217,14 +244,7 @@ public class HotelOperationModule {
             }
             ranking++;
         }
-        System.out.println("Please enter select publish rate: ");
-        Double publishRate = sc.nextDouble();
-        System.out.println("Please enter select normal rate: ");
-        Double normalRate = sc.nextDouble();
-        System.out.println("Please enter select peak rate: ");
-        Double peakRate = sc.nextDouble();
-        System.out.println("Please enter select promotion rate: ");
-        Double promotionRate = sc.nextDouble();
+
         roomTypeSessionBean.createNewRoomType(newRoomType);
     }
 
@@ -239,7 +259,8 @@ public class HotelOperationModule {
         System.out.println("Select a New Room Type ranking");
         Integer newRoomTypeRanking = sc.nextInt();
         Integer ranking = newRoomTypeRanking;
-        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newRoomTypeRanking);
+        Integer oldRanking = roomType.getRanking();
+        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBetweenRanking(newRoomTypeRanking, oldRanking);
         for (RoomType updateroomType : roomTypeBellowRanking) {
             try {
                 roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
@@ -366,8 +387,10 @@ public class HotelOperationModule {
 
         RatePerNight rate;
         double price;
-        String startDate;
-        String endDate;
+        String startDateString;
+        String endDateString;
+        Date startDate;
+        Date endDate;
 
         System.out.print("Select a rate from 1-4>");
         int option = sc.nextInt();
@@ -391,15 +414,29 @@ public class HotelOperationModule {
         System.out.print("Input a price>");
         price = sc.nextDouble();
         System.out.print("Input Start Date in dd/mm/yyyy (with the slashes)>");
-        startDate = sc.next();
+        startDateString = sc.next();
         System.out.print("Input End Date in dd/mm/yyyy (with the slashes)>");
-        endDate = sc.next();
+        endDateString = sc.next();
 
-        //extracting date
-        int[] depDate = Arrays.stream(departureDate.split("/")).mapToInt(Integer::parseInt).toArray();
-        int[] retDate = Arrays.stream(returnDate.split("/")).mapToInt(Integer::parseInt).toArray();
-        departureDateObj = new Date(depDate[3], depDate[2], depDate[1]);
-        returnDateObj = new Date(retDate[3], retDate[2], retDate[1]);
+        int[] sDate = Arrays.stream(startDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+        int[] eDate = Arrays.stream(endDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+        startDate = new Date(sDate[3], sDate[2], sDate[1]);
+        endDate = new Date(eDate[3], eDate[2], eDate[1]);
+        int roomTypeRank;
+        ;
+
+        System.out.print("Which room type to set this room rate to?>");
+        try {
+            this.viewAllRoomTypes();
+            System.out.println("Room Types are ordered by rank, select a rank (numeric): ");
+            roomTypeRank = sc.nextInt();
+            RoomRate newRate = new RoomRate(rate, price, startDate, endDate);
+            roomRateSessionBeanRemote.createNewRoomRate(newRate, roomTypeRank);
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Operation cancelled! No room types exist in the database");
+        } catch (FailedToCreateRoomRateException ex) {
+            System.out.println("Failed to create Room Rate! Please check that a correct room rank was entered");
+        }
     }
 
     private void updateARoomRate(Scanner sc) {

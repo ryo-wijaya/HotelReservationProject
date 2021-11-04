@@ -25,9 +25,13 @@ public interface RoomTypeSessionBeanRemote {
 
     public void deleteRoomType(Long id) throws RoomTypeNotFoundException;
 
-    public RoomType getRoomTypeByName(String roomName);
+    public RoomType getRoomTypeByName(String roomName) throws RoomTypeNotFoundException;
     
     public List<RoomType> getRoomTypeBelowRanking(Integer ranking);
 
     public void updateRoomType(Long id, String newName, Integer ranking) throws RoomTypeNotFoundException;
+    
+    public List<RoomType> getRoomTypeBetweenRanking(Integer newranking, Integer oldranking);
+    
+    public RoomType getRoomTypeByRank(int roomRank) throws RoomTypeNotFoundException;
 }
