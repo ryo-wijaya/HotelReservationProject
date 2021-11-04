@@ -197,18 +197,62 @@ public class HotelOperationModule {
     //NOTE: Development of these methods will follow Room Type -> Room Rate -> Room
     private void createNewRoomType(Scanner sc) {
         System.out.println("You are now creating a Room Type");
-        System.out.println("Please enter a Room Type name");
+        System.out.println("Please enter a Room Type name: ");
         String name = sc.nextLine();
-        System.out.println("Please enter select a room Ranking");
-        Integer ranking = sc.nextInt();
-        RoomType newRoomType = new RoomType(name, ranking);
+        System.out.println("Please enter select a room Ranking: ");
+        Integer newranking = sc.nextInt();
+        RoomType newRoomType = new RoomType(name, newranking);
+        Integer ranking = newranking;
+        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newranking);
+        for(RoomType updateroomType : roomTypeBellowRanking)
+        {
+            try{
+                roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
+            }
+            catch(RoomTypeNotFoundException ex){
+                System.out.println("room type not found!");
+            }
+            ranking++;
+        }
+        System.out.println("Please enter select publish rate: ");
+        Double publishRate = sc.nextDouble();
+        System.out.println("Please enter select normal rate: ");
+        Double normalRate = sc.nextDouble();
+        System.out.println("Please enter select peak rate: ");
+        Double peakRate = sc.nextDouble();
+        System.out.println("Please enter select promotion rate: ");
+        Double promotionRate = sc.nextDouble();
         roomTypeSessionBean.createNewRoomType(newRoomType);
     }
 
     private void updateARoomType(Scanner sc) {
         System.out.println("You are now updating a Room Type");
         System.out.println("Select a Room Type to update");
-        
+        String roomTypeName = sc.nextLine().trim();
+        RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomTypeName);
+        System.out.println("Select a New Room Type name");
+        String newRoomTypeName = sc.nextLine().trim();
+        System.out.println("Select a New Room Type ranking");
+        Integer newRoomTypeRanking = sc.nextInt();
+        Integer ranking = newRoomTypeRanking;
+        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newRoomTypeRanking);
+        for(RoomType updateroomType : roomTypeBellowRanking)
+        {
+            try{
+                roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
+            }
+            catch(RoomTypeNotFoundException ex){
+                System.out.println("room type not found!");
+            }
+            ranking++;
+        }
+        try{
+            roomTypeSessionBean.updateRoomType(roomType.getRoomTypeId(), newRoomTypeName, newRoomTypeRanking);   
+        }
+        catch(RoomTypeNotFoundException ex)
+        {
+            System.out.println("room type not found!");
+        }
     }
 
     private void deleteARoomType(Scanner sc) {
