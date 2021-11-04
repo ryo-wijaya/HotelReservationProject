@@ -14,6 +14,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
@@ -75,23 +76,18 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
     //deleting a roomType involves deleting all its associated RoomRates
     @Override
-    public void deleteRoom(Long id) throws RoomNotFoundException {
-        try {
-            Query query = em.createQuery("SELECT b FROM Booking b");
-            List<Booking> bookings = bookingSessionBeanLocal.retrieveAllProducts();
-            Room roomToDelete = this.getRoomById(id);
-            
-            
-            for (Room r : roomToDelete.getListOfRooms()) {
-                roomRateSessionBeanLocal.deleteRoomRate(rr.getRoomRateId());
+    public void deleteRoom(Long id) throws RoomNotFoundException, RoomIsTiedToABookingDeletionException {
+        Query query = em.createQuery("SELECT b FROM Booking b");
+        List<Booking> bookings = bookingSessionBeanLocal.retrieveAllProducts();
+        Room roomToDelete = this.getRoomById(id);
+
+        for (Booking b : bookings) {
+            if (b.getRooms().contains(roomToDelete)) {
+                throw new RoomIsTiedToABookingDeletionException();
             }
-            roomTypeToDelete.getListOfRoomRates().clear();
-            em.remove(roomTypeToDelete);
-
-        } catch (RoomTypeNotFoundException | RoomRateNotFoundException ex) {
-            //we don't have to worry about a RoomRate not being found, but we still have to catch the potential exception
-            throw new RoomTypeNotFoundException();
         }
-    }
 
+        roomToDelete.getBookings().clear();
+        em.remove(roomToDelete);
+    }
 }

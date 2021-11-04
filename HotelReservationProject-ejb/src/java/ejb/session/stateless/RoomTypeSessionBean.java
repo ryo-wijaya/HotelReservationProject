@@ -62,17 +62,13 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     public RoomType getRoomTypeByName(String roomName) {
         Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomName");
         query.setParameter("inRoomName", roomName);
-        return (RoomType)query.getSingleResult();
+        return (RoomType) query.getSingleResult();
     }
-    
+
     //no merge needed as this is a managed context
     public void updateRoomType(Long id, String newName) throws RoomTypeNotFoundException {
-        try {
-            RoomType roomTypeToUpdate = this.getRoomTypeById(id);
-            roomTypeToUpdate.setRoomName(newName);
-        } catch (RoomTypeNotFoundException ex) {
-            throw new RoomTypeNotFoundException();
-        }
+        RoomType roomTypeToUpdate = this.getRoomTypeById(id);
+        roomTypeToUpdate.setRoomName(newName);
     }
 
     //deleting a roomType involves deleting all its associated RoomRates 
@@ -85,7 +81,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             }
             roomTypeToDelete.getListOfRoomRates().clear();
             em.remove(roomTypeToDelete);
-            
+
         } catch (RoomTypeNotFoundException | RoomRateNotFoundException ex) {
             //we don't have to worry about a RoomRate not being found, but we still have to catch the potential exception
             throw new RoomTypeNotFoundException();

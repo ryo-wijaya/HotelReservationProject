@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,7 +38,7 @@ public class Room implements Serializable {
     @Size(min = 4, max = 4)
     private String roomNumber;
     
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private RoomType roomType;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
