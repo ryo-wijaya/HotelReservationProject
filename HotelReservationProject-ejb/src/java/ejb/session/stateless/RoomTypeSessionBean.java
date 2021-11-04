@@ -79,6 +79,20 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         }
     }
     
+    @Override
+    public List<RoomType> getRoomTypeBetweenRanking(Integer newranking, Integer oldranking)
+    {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking >= :innewRankng AND rt.ranking < :inoldRanking ORDER BY rt.ranking ASC");
+        query.setParameter("innewRanking", newranking);
+        query.setParameter("inoldRanking", oldranking);
+        List<RoomType> listOfRoomTypes = query.getResultList();
+        if (listOfRoomTypes != null) {
+            return listOfRoomTypes;
+        } else {
+            return null;
+        }
+    }
+    
     //no merge needed as this is a managed context
     @Override
     public void updateRoomType(Long id, String newName, Integer ranking) throws RoomTypeNotFoundException {

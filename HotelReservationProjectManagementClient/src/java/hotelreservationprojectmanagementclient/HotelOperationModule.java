@@ -18,6 +18,7 @@ import entity.Employee;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
@@ -201,10 +202,34 @@ public class HotelOperationModule {
     private void createNewRoomType(Scanner sc) {
         System.out.println("You are now creating a Room Type");
         System.out.println("Please enter a Room Type name: ");
-        String name = sc.nextLine();
+        String name = sc.nextLine().trim();
         System.out.println("Please enter select a room Ranking: ");
         Integer newranking = sc.nextInt();
-        RoomType newRoomType = new RoomType(name, newranking);
+        System.out.println("Please enter a Room Type Description: ");
+        String description = sc.nextLine().trim();
+        System.out.println("Please enter a Room Type Size: ");
+        String roomSize = sc.nextLine().trim();
+        System.out.println("Please enter a Room Type Size: ");
+        String roomsize = sc.nextLine().trim();
+        System.out.println("Please enter select number of beds: ");
+        Integer beds = sc.nextInt();
+        System.out.println("Please enter select room capacity: ");
+        Integer capacity = sc.nextInt();
+        String response = "";
+        List<String> amenities = new ArrayList<>();
+        
+        while(true) {
+            System.out.println("Please enter room amenitites: ");
+            String amenitie = sc.nextLine().trim();
+            amenities.add(amenitie);
+            System.out.println("Do you have more to add? (N = no): ");
+            response = sc.nextLine().trim();
+            if (response.equals("N")) {
+                break;
+            }
+        }
+            
+        RoomType newRoomType = new RoomType(name, newranking, description, roomsize, beds, capacity, amenities);
         Integer ranking = newranking;
         List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newranking);
         for(RoomType updateroomType : roomTypeBellowRanking)
@@ -217,15 +242,7 @@ public class HotelOperationModule {
             }
             ranking++;
         }
-        System.out.println("Please enter select publish rate: ");
-        Double publishRate = sc.nextDouble();
-        Long pRate = roomRateSessionBeanRemote.createNewRoomRate(newRoomType, new RoomRate(publishRate));
-        System.out.println("Please enter select normal rate: ");
-        Double normalRate = sc.nextDouble();
-        System.out.println("Please enter select peak rate: ");
-        Double peakRate = sc.nextDouble();
-        System.out.println("Please enter select promotion rate: ");
-        Double promotionRate = sc.nextDouble();
+
         roomTypeSessionBean.createNewRoomType(newRoomType);
     }
 
@@ -240,7 +257,8 @@ public class HotelOperationModule {
         System.out.println("Select a New Room Type ranking");
         Integer newRoomTypeRanking = sc.nextInt();
         Integer ranking = newRoomTypeRanking;
-        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newRoomTypeRanking);
+        Integer oldRanking = roomType.getRanking();
+        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBetweenRanking(newRoomTypeRanking, oldRanking);
         for(RoomType updateroomType : roomTypeBellowRanking)
         {
             try{

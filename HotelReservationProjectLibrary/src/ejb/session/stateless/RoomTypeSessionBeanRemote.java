@@ -30,4 +30,6 @@ public interface RoomTypeSessionBeanRemote {
     public List<RoomType> getRoomTypeBelowRanking(Integer ranking);
 
     public void updateRoomType(Long id, String newName, Integer ranking) throws RoomTypeNotFoundException;
+    
+    public List<RoomType> getRoomTypeBetweenRanking(Integer newranking, Integer oldranking);
 }
