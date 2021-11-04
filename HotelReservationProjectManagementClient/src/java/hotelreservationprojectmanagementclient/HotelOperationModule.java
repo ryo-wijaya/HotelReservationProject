@@ -6,10 +6,14 @@
 package hotelreservationprojectmanagementclient;
 
 import ejb.session.stateful.HotelReservationBeanRemote;
+import ejb.session.stateless.BookingSessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.HotelManagementBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.RoomRateSessionBeanRemote;
+import ejb.session.stateless.RoomSessionBeanRemote;
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
 import entity.RoomType;
@@ -24,16 +28,23 @@ import util.exceptions.RoomTypeNotFoundException;
  */
 public class HotelOperationModule {
 
-    private CustomerSessionBeanRemote customerSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
+    private BookingSessionBeanRemote bookingSessionBean;
+    private RoomTypeSessionBeanRemote roomTypeSessionBean;
+    private RoomSessionBeanRemote roomSessionBean;
+    private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
+    
     private Employee currentEmployee;
 
-    public HotelOperationModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
-        this.customerSessionBeanRemote = customerSessionBeanRemote;
+    public HotelOperationModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, BookingSessionBeanRemote bookingSessionBean, RoomTypeSessionBeanRemote roomTypeSessionBean, RoomSessionBeanRemote roomSessionBean, RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentEmployee) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
-        this.currentEmployee = employee;
+        this.bookingSessionBean = bookingSessionBean;
+        this.roomTypeSessionBean = roomTypeSessionBean;
+        this.roomSessionBean = roomSessionBean;
+        this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
+        this.currentEmployee = currentEmployee;
     }
 
     public void runMainMenu() {
@@ -189,7 +200,7 @@ public class HotelOperationModule {
         System.out.println("Please enter a Room Type name");
         String name = sc.nextLine();
         RoomType newRoomType = new RoomType(name);
-        hotelManagementBeanRemote.createNewRoomType(newRoomType);
+        roomTypeSessionBean.createNewRoomType(newRoomType);
     }
 
     private void updateARoomType(Scanner sc) {
@@ -204,7 +215,7 @@ public class HotelOperationModule {
 
     private void viewAllRoomTypes() throws RoomTypeNotFoundException {
         System.out.println("You are now viewing all Room Types");
-        List<RoomType> listOfRoomTypes = hotelManagementBeanRemote.viewAllRoomTypes();
+        List<RoomType> listOfRoomTypes = roomTypeSessionBean.retrieveRoomTypes();
         for (int i = 1; i <= listOfRoomTypes.size(); i++) {
             System.out.println(i + ". " + listOfRoomTypes.get(i - 1));
         }
@@ -224,7 +235,7 @@ public class HotelOperationModule {
         this.viewAllRoomTypes();
         System.out.println("Please enter select a room Tpye");
         String roomTypeName = sc.nextLine();
-        RoomType roomType = hotelManagementBeanRemote.getRoomTypeByName(roomTypeName);
+        RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomTypeName);
         Room room = new Room(roomNumber, roomType);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
