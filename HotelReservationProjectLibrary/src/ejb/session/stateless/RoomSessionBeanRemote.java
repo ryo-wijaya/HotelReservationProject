@@ -7,12 +7,14 @@ package ejb.session.stateless;
 
 import entity.Room;
 import java.util.List;
+import javax.ejb.Remote;
 import util.exceptions.RoomNotFoundException;
 
 /**
  *
  * @author ryo20
  */
+@Remote
 public interface RoomSessionBeanRemote {
 
     public Long createNewRoom(Room room);

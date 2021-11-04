@@ -39,7 +39,7 @@ public class RoomType implements Serializable {
     @NotNull
     private Integer ranking;
     
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<RoomRate> listOfRoomRates;
 
     public RoomType() {

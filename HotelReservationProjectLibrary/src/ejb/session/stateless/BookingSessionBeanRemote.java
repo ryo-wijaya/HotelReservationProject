@@ -7,12 +7,14 @@ package ejb.session.stateless;
 
 import entity.Booking;
 import java.util.List;
+import javax.ejb.Remote;
 import util.exceptions.BookingNotFoundException;
 
 /**
  *
  * @author ryo20
  */
+@Remote
 public interface BookingSessionBeanRemote {
 
     public Booking createNewBooking(Booking booking);

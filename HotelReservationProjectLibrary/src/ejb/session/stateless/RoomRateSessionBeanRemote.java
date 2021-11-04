@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.RoomRate;
 import java.util.List;
+import javax.ejb.Remote;
 import util.enumeration.RatePerNight;
 import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomRateNotFoundException;
@@ -15,6 +16,7 @@ import util.exceptions.RoomRateNotFoundException;
  *
  * @author ryo20
  */
+@Remote
 public interface RoomRateSessionBeanRemote {
 
     public void deleteRoomRate(Long id) throws RoomRateNotFoundException;
