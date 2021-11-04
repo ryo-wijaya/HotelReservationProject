@@ -13,7 +13,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import util.exceptions.LowestRoomRankingException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
@@ -67,22 +66,25 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     }
 
     
-    public List<RoomType> getRoomTypeBelowRanking(Integer ranking) throws LowestRoomRankingException 
+    @Override
+    public List<RoomType> getRoomTypeBelowRanking(Integer ranking)
     {
-        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking >= :inRankng");
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking >= :inRankng ORDER BY rt.ranking ASC");
         query.setParameter("inRanking", ranking);
         List<RoomType> listOfRoomTypes = query.getResultList();
         if (listOfRoomTypes != null) {
             return listOfRoomTypes;
         } else {
-            throw new LowestRoomRankingException();
+            return null;
         }
     }
     
     //no merge needed as this is a managed context
-    public void updateRoomType(Long id, String newName) throws RoomTypeNotFoundException {
+    @Override
+    public void updateRoomType(Long id, String newName, Integer ranking) throws RoomTypeNotFoundException {
         RoomType roomTypeToUpdate = this.getRoomTypeById(id);
         roomTypeToUpdate.setRoomName(newName);
+        roomTypeToUpdate.setRanking(ranking);
     }
 
     //deleting a roomType involves deleting all its associated RoomRates 
