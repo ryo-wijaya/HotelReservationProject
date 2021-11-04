@@ -356,7 +356,37 @@ public class HotelOperationModule {
     }
 
     private void createNewRoomRate(Scanner sc) {
-        
+        System.out.println("You are now creating a new Room Rate");
+        System.out.println("Please enter a rate type:");
+        for (int i = 0; i < RatePerNight.values().length; i++) {
+            System.out.println((i + 1) + ". " + RatePerNight.values()[i]);
+        }
+
+        RatePerNight rate;
+        double price;
+
+        System.out.print("Select a rate from 1-4>");
+        int option = sc.nextInt();
+        while (true) {
+            if (option == 1) {
+                rate = RatePerNight.PUBLISHRATE;
+                break;
+            } else if (option == 2) {
+                rate = RatePerNight.PEAKRATE;
+                break;
+            } else if (option == 3) {
+                rate = RatePerNight.NORMALRATE;
+                break;
+            } else if (option == 4) {
+                rate = RatePerNight.PROMOTIONRATE;
+                break;
+            } else {
+                System.out.println("Invalid choice!");
+            }
+        }
+        System.out.print("Input a price>");
+        price = sc.nextDouble();
+        System.out.println("Input a start date");
     }
 
     private void updateARoomRate(Scanner sc) {
