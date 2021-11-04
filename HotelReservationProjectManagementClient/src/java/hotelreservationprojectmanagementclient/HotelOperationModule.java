@@ -199,7 +199,9 @@ public class HotelOperationModule {
         System.out.println("You are now creating a Room Type");
         System.out.println("Please enter a Room Type name");
         String name = sc.nextLine();
-        RoomType newRoomType = new RoomType(name);
+        System.out.println("Please enter select a room Ranking");
+        Integer ranking = sc.nextInt();
+        RoomType newRoomType = new RoomType(name, ranking);
         roomTypeSessionBean.createNewRoomType(newRoomType);
     }
 

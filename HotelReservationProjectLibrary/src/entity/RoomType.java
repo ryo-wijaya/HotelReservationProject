@@ -43,13 +43,13 @@ public class RoomType implements Serializable {
     private List<RoomRate> listOfRoomRates;
 
     public RoomType() {
-        listOfRoomRates = new ArrayList<RoomRate>();
+        listOfRoomRates = new ArrayList<>();
     }
 
-    public RoomType(String roomName) {
+    public RoomType(String roomName, Integer ranking) {
         this.roomName = roomName;
+        this.ranking = ranking;
     }
-
     
     public void addToListOfRoomRate(RoomRate roomRate) throws EntityInstanceExistsInCollectionException {
         if (!listOfRoomRates.contains(roomRate)) {
@@ -73,7 +73,7 @@ public class RoomType implements Serializable {
     }
 
     public void setRoomName(String roomName) {
-        this.roomName = roomName;
+        this.setRoomName(roomName);
     }
 
     public List<RoomRate> getListOfRoomRates() {
@@ -129,7 +129,6 @@ public class RoomType implements Serializable {
      * @param ranking the ranking to set
      */
     public void setRanking(Integer ranking) {
-        this.ranking = ranking;
+        this.setRanking(ranking);
     }
-    
 }

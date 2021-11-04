@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exceptions.LowestRoomRankingException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
@@ -63,6 +64,18 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomName");
         query.setParameter("inRoomName", roomName);
         return (RoomType)query.getSingleResult();
+    }
+    
+    public List<RoomType> getRoomTypeBelowRanking(Integer ranking) throws LowestRoomRankingException 
+    {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking >= :inRankng");
+        query.setParameter("inRanking", ranking);
+        List<RoomType> listOfRoomTypes = query.getResultList();
+        if (listOfRoomTypes != null) {
+            return listOfRoomTypes;
+        } else {
+            throw new LowestRoomRankingException();
+        }
     }
     
     //no merge needed as this is a managed context
