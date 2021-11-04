@@ -38,7 +38,6 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         em.persist(booking);
         em.flush();
         return booking;
-        //
     }
     
     @Override

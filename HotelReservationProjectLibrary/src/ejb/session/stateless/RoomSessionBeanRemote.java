@@ -26,5 +26,7 @@ public interface RoomSessionBeanRemote {
     
     public void deleteRoom(Long id) throws RoomNotFoundException, RoomIsTiedToABookingDeletionException;
     
-    public void updateRoom(Long id, Long roomTypeId) throws RoomNotFoundException;
+    public void updateRoom(Room room) throws RoomNotFoundException;
+    
+    public Room getRoomByRoomNumber(String roomNumber) throws RoomNotFoundException;
 }

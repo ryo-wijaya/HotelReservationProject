@@ -37,6 +37,7 @@ public class Room implements Serializable {
     @NotNull
     @Size(min = 4, max = 4)
     private String roomNumber;
+    private boolean roomStatus;
     
     @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private RoomType roomType;
@@ -47,9 +48,18 @@ public class Room implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {})
     private List<Booking> bookings;
 
-    public Room(String roomNumber, RoomType roomType) {
+    public Room(String roomNumber, RoomType roomType, boolean status) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
+        this.roomStatus = status;
+    }
+
+    public boolean getRoomStatus() {
+        return roomStatus;
+    }
+
+    public void setRoomStatus(boolean roomStatus) {
+        this.roomStatus = roomStatus;
     }
     
     public Room() {
