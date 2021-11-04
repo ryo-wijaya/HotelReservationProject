@@ -6,10 +6,15 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import util.enumeration.EmployeeType;
 
 /**
@@ -23,9 +28,21 @@ public class Partner implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partnerId;
+    @Column(nullable = false, length = 64)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String name;
+    @Column(nullable = false, length = 16, unique = true)
+    @NotNull
+    @Size(min = 1, max = 16)
     private String userName;
+    @Column(nullable = false, length = 16)
+    @NotNull
+    @Size(min = 1, max = 16)
     private String password;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull
     private EmployeeType employeeType;
 
     public Partner() {

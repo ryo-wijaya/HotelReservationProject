@@ -26,7 +26,6 @@ public class HoRSClientModule {
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
-    private HotelManagementBeanRemote hotelManagementBeanRemote;
     
     private FrontOfficeModule frontOfficeModule;
     private SystemAdministrationModule systemAdministrationModule;
@@ -34,11 +33,10 @@ public class HoRSClientModule {
     
     private Employee currentEmployee;
 
-    public HoRSClientModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, HotelManagementBeanRemote hotelManagementBeanRemote) {
+    public HoRSClientModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
-        this.hotelManagementBeanRemote = hotelManagementBeanRemote;
     }
     
     public void runEmployeeLoginPage(){

@@ -6,10 +6,8 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.EntityInstanceMissingInCollectionException;
 
@@ -32,6 +32,9 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
+    @Column(nullable = false, length = 4, unique = true)
+    @NotNull
+    @Size(min = 4, max = 4)
     private String roomNumber;
     
     @OneToOne(optional = false, fetch = FetchType.LAZY)

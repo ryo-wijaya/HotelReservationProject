@@ -27,14 +27,11 @@ public class HotelOperationModule {
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
-    private HotelManagementBeanRemote hotelManagementBeanRemote;
     private Employee currentEmployee;
 
-    public HotelOperationModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote,
-            HotelManagementBeanRemote hotelManagementBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
+    public HotelOperationModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
-        this.hotelManagementBeanRemote = hotelManagementBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.currentEmployee = employee;
     }
