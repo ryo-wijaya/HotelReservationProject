@@ -6,10 +6,14 @@
 package hotelreservationprojectmanagementclient;
 
 import ejb.session.stateful.HotelReservationBeanRemote;
+import ejb.session.stateless.BookingSessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.HotelManagementBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
+import ejb.session.stateless.RoomRateSessionBeanRemote;
+import ejb.session.stateless.RoomSessionBeanRemote;
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import javax.ejb.EJB;
 
 /**
@@ -17,6 +21,15 @@ import javax.ejb.EJB;
  * @author ryo20
  */
 public class Main {
+
+    @EJB
+    private static BookingSessionBeanRemote bookingSessionBean;
+
+    @EJB
+    private static RoomTypeSessionBeanRemote roomTypeSessionBean;
+
+    @EJB
+    private static RoomSessionBeanRemote roomSessionBean;
 
     @EJB
     private static CustomerSessionBeanRemote customerSessionBeanRemote;
@@ -27,13 +40,16 @@ public class Main {
     @EJB
     private static PartnerSessionBeanRemote partnerSessionBeanRemote;
     
+    @EJB
+    private static RoomRateSessionBeanRemote roomRateSessionBeanRemote;
+    
     
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        HoRSClientModule hoRSClient = new HoRSClientModule(customerSessionBeanRemote, employeeSessionBeanRemote, partnerSessionBeanRemote);
+        HoRSClientModule hoRSClient = new HoRSClientModule(customerSessionBeanRemote, employeeSessionBeanRemote, partnerSessionBeanRemote, bookingSessionBean, roomTypeSessionBean, roomSessionBean, roomRateSessionBeanRemote);
         hoRSClient.runEmployeeLoginPage();
     }
 }
