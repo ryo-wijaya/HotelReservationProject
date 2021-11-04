@@ -54,7 +54,7 @@ public class Customer implements Serializable {
     private String passportNumber;
     
     //One to many relationship with booking
-    @OneToMany(mappedBy = "Customer", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Booking> bookings;
 
     public Customer() {

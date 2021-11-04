@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,21 +25,51 @@ public class RoomRate implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
     private RatePerNight ratePerNight;
-    private double price;
+    private Double price;
+    private Date startDate;
+    private Date endDate;
+    private Boolean enabled;
 
     public RoomRate() {
+        enabled = true;
     }
 
-    public RoomRate(RatePerNight ratePerNight, double price) {
+    public RoomRate(RatePerNight ratePerNight, Double price, Date startDate, Date endDate) {
         this.ratePerNight = ratePerNight;
         this.price = price;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
-    public double getPrice() {
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
     
