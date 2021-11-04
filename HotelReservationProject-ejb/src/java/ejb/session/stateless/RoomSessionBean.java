@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Booking;
 import entity.Room;
 import entity.RoomType;
 import java.util.List;
@@ -22,6 +23,9 @@ import util.exceptions.RoomTypeNotFoundException;
  */
 @Stateless
 public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRemote {
+
+    @EJB
+    private BookingSessionBeanLocal bookingSessionBeanLocal;
 
     @EJB
     private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
@@ -70,12 +74,15 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     }
 
     //deleting a roomType involves deleting all its associated RoomRates
-    /*
     @Override
-    public void deleteRoomType(Long id) throws RoomTypeNotFoundException {
+    public void deleteRoom(Long id) throws RoomNotFoundException {
         try {
-            RoomType roomTypeToDelete = this.getRoomTypeById(id);
-            for (RoomRate rr : roomTypeToDelete.getListOfRoomRates()) {
+            Query query = em.createQuery("SELECT b FROM Booking b");
+            List<Booking> bookings = bookingSessionBeanLocal.retrieveAllProducts();
+            Room roomToDelete = this.getRoomById(id);
+            
+            
+            for (Room r : roomToDelete.getListOfRooms()) {
                 roomRateSessionBeanLocal.deleteRoomRate(rr.getRoomRateId());
             }
             roomTypeToDelete.getListOfRoomRates().clear();
@@ -86,5 +93,5 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             throw new RoomTypeNotFoundException();
         }
     }
-*/
+
 }
