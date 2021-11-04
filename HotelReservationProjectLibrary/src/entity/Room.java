@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,9 +38,10 @@ public class Room implements Serializable {
     @NotNull
     @Size(min = 4, max = 4)
     private String roomNumber;
-    private boolean roomStatus;
+    private Boolean roomStatus;
+    private Boolean enabled;
     
-    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = {})
     private RoomType roomType;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {})
@@ -47,22 +49,33 @@ public class Room implements Serializable {
     
     @ManyToMany(fetch = FetchType.LAZY, cascade = {})
     private List<Booking> bookings;
-
-    public Room(String roomNumber, RoomType roomType, boolean status) {
+    
+    public Room() {
+        preBookings = new ArrayList<>();
+        bookings = new ArrayList<>();
+        enabled = true;
+        roomStatus = false;
+    }
+    
+    public Room(String roomNumber, RoomType roomType) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
-        this.roomStatus = status;
     }
 
-    public boolean getRoomStatus() {
+    public Boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Boolean getRoomStatus() {
         return roomStatus;
     }
 
-    public void setRoomStatus(boolean roomStatus) {
+    public void setRoomStatus(Boolean roomStatus) {
         this.roomStatus = roomStatus;
-    }
-    
-    public Room() {
     }
 
     public void addPreBookings(Booking booking) throws EntityInstanceExistsInCollectionException

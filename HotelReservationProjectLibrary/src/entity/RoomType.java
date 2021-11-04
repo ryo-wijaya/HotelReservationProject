@@ -38,12 +38,22 @@ public class RoomType implements Serializable {
     @Column(nullable = false, unique = true)
     @NotNull
     private Integer ranking;
+    private Boolean enabled;
     
     @OneToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<RoomRate> listOfRoomRates;
 
     public RoomType() {
         listOfRoomRates = new ArrayList<>();
+        enabled = true;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public RoomType(String roomName, Integer ranking) {

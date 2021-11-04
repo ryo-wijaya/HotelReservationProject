@@ -49,20 +49,17 @@ public class Booking implements Serializable {
     private Customer customer;
 
     // Many to many relationship with rooms
-    @ManyToMany(mappedBy = "Booking", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "bookings", fetch = FetchType.LAZY)
     private List<Room> rooms;
 
     public Booking() {
         this.rooms = new ArrayList<>();
     }
 
-    public Booking(Date checkInDate, Date checkOutDate, Customer customer) {
+    public Booking(Date checkInDate, Date checkOutDate) {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.customer = customer;
     }
-    
-    
     
     public Long getBookingId() {
         return bookingId;

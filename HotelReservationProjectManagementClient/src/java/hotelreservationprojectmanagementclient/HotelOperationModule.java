@@ -271,14 +271,14 @@ public class HotelOperationModule {
                     if (room.getRoomStatus()) {
                         System.out.println("Room is currently in use");
                     } else {
-                        
+                        System.out.println("Room is not in use");
                     }
+                    System.out.print("Change room status>");
+                    
                 }
             }
         } catch (RoomNotFoundException ex) {
             System.out.println("Invalid room number!");
-        } catch (RoomTypeNotFoundException ex) {
-            System.out.println("Invalid room type!");
         }
     }
 
