@@ -43,7 +43,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
     @Override
     public List<Room> retrieveRooms() throws RoomNotFoundException {
-        Query query = em.createQuery("SELECT r FROM Room");
+        Query query = em.createQuery("SELECT r FROM Room r");
         List<Room> listOfRooms = query.getResultList();
         if (listOfRooms != null) {
             return listOfRooms;
@@ -61,17 +61,22 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             throw new RoomNotFoundException();
         }
     }
-
-    //no merge needed as this is a managed context
-    public void updateRoom(Long id, Long roomTypeId) throws RoomNotFoundException {
-        try {
-            Room roomToUpdate = this.getRoomById(id);
-            RoomType roomTypeToAdd = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
-            roomToUpdate.setRoomType(roomTypeToAdd);
-        } catch (RoomNotFoundException | RoomTypeNotFoundException ex) {
-            //roomType exception should not trigger, but we just catch it for compile safety
+    
+    
+    public Room getRoomByRoomNumber(String roomNumber) throws RoomNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :inRoomNumber");
+        query.setParameter("inRoomNumber", roomNumber);
+        Room room = (Room) query.getSingleResult();
+        if (room != null) {
+            return room;
+        } else {
             throw new RoomNotFoundException();
         }
+    }
+
+    public void updateRoom(Room room) throws RoomNotFoundException {
+        //add bean validators
+        em.merge(room);
     }
 
     //deleting a roomType involves deleting all its associated RoomRates

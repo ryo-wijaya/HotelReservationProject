@@ -20,6 +20,8 @@ import entity.RoomType;
 import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
+import util.enumeration.RatePerNight;
+import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
 /**
@@ -34,7 +36,7 @@ public class HotelOperationModule {
     private RoomTypeSessionBeanRemote roomTypeSessionBean;
     private RoomSessionBeanRemote roomSessionBean;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
-    
+
     private Employee currentEmployee;
 
     public HotelOperationModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, BookingSessionBeanRemote bookingSessionBean, RoomTypeSessionBeanRemote roomTypeSessionBean, RoomSessionBeanRemote roomSessionBean, RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentEmployee) {
@@ -93,11 +95,11 @@ public class HotelOperationModule {
                             break;
                         case 4:
                             try {
-                                this.viewAllRoomTypes();
-                            } catch (RoomTypeNotFoundException ex) {
-                                System.out.println("No Room Types in the Database!");
-                            }
-                            break;
+                            this.viewAllRoomTypes();
+                        } catch (RoomTypeNotFoundException ex) {
+                            System.out.println("No Room Types in the Database!");
+                        }
+                        break;
                         case 5:
                             this.viewRoomTypeDetails(sc);
                             break;
@@ -124,11 +126,11 @@ public class HotelOperationModule {
                     switch (option) {
                         case 1:
                             try {
-                                this.createNewRoom(sc);
-                            } catch (RoomTypeNotFoundException ex) {
-                                System.out.println("Room Type not found!");
-                            }
-                            break;
+                            this.createNewRoom(sc);
+                        } catch (RoomTypeNotFoundException ex) {
+                            System.out.println("Room Type not found!");
+                        }
+                        break;
                         case 2:
                             this.updateARoom(sc);
                             break;
@@ -228,6 +230,7 @@ public class HotelOperationModule {
     private void updateARoomType(Scanner sc) {
         System.out.println("You are now updating a Room Type");
         System.out.println("Select a Room Type to update");
+
         String roomTypeName = sc.nextLine().trim();
         RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomTypeName);
         System.out.println("Select a New Room Type name");
@@ -274,20 +277,54 @@ public class HotelOperationModule {
     private void createNewRoom(Scanner sc) throws RoomTypeNotFoundException {
         System.out.println("You are now creating a Room");
         System.out.println("Please enter a floor");
-        String floor = sc.nextLine();
+        String floor = sc.nextLine().trim();
         System.out.println("Please enter a room number");
-        String number = sc.nextLine();
+        String number = sc.nextLine().trim();
         String roomNumber = String.join(floor, number);
         this.viewAllRoomTypes();
-        System.out.println("Please enter select a room Tpye");
+        System.out.println("Please enter a room type");
         String roomTypeName = sc.nextLine();
         RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomTypeName);
-        Room room = new Room(roomNumber, roomType);
+        Room room = new Room(roomNumber, roomType, false);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void updateARoom(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("You are now updating a Room");
+        System.out.println("Please enter a room number");
+        String roomNumber = sc.nextLine().trim();
+        try {
+            Room room = roomSessionBean.getRoomByRoomNumber(roomNumber);
+            int option;
+            while (true) {
+                System.out.println("1. Update Room Number");
+                System.out.println("2. Update Room status");
+                System.out.print("Enter your choice>");
+                option = sc.nextInt();
+
+                if (option == 1) {
+                    System.out.print("Please enter a floor>");
+                    String floor = sc.nextLine().trim();
+                    System.out.print("Please enter a room number>");
+                    String number = sc.nextLine().trim();
+                    String newRoomNumber = String.join(floor, number);
+                    room.setRoomNumber(newRoomNumber);
+                    roomSessionBean.updateRoom(room);
+                    
+                } else if (option == 2) {
+                    System.out.println("The room status is now: ");
+                    if (room.getRoomStatus()) {
+                        System.out.println("Room is currently in use");
+                    } else {
+                        
+                    }
+                }
+            }
+        } catch (RoomNotFoundException ex) {
+            System.out.println("Invalid room number!");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Invalid room type!");
+        }
     }
 
     private void deleteARoom(Scanner sc) {

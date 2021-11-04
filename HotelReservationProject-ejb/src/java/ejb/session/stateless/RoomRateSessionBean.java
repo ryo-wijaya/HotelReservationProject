@@ -31,8 +31,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
 
     @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
     private EntityManager em;
-    
-    
+
     //creating a new roomRate involves adding it to a given RoomType as well
     @Override
     public Long createNewRoomRate(RoomRate roomRate, Long roomTypeId) throws FailedToCreateRoomRateException {
@@ -71,21 +70,13 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
     //No em.merge() since we are doing the update in a managed context
     @Override
     public void updateRoomRate(Long id, RatePerNight newRatePerNight) throws RoomRateNotFoundException {
-        try {
-            RoomRate roomRateToUpdate = this.getRoomRateById(id);
-            roomRateToUpdate.setRatePerNight(newRatePerNight);
-        } catch (RoomRateNotFoundException ex) {
-            throw new RoomRateNotFoundException();
-        }
+        RoomRate roomRateToUpdate = this.getRoomRateById(id);
+        roomRateToUpdate.setRatePerNight(newRatePerNight);
     }
 
     @Override
     public void deleteRoomRate(Long id) throws RoomRateNotFoundException {
-        try {
-            RoomRate roomRateToDelete = this.getRoomRateById(id);
-            em.remove(roomRateToDelete);
-        } catch (RoomRateNotFoundException ex) {
-            throw new RoomRateNotFoundException();
-        }
+        RoomRate roomRateToDelete = this.getRoomRateById(id);
+        em.remove(roomRateToDelete);
     }
 }
