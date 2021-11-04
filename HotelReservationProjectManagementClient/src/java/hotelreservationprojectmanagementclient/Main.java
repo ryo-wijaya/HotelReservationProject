@@ -19,9 +19,6 @@ import javax.ejb.EJB;
 public class Main {
 
     @EJB
-    private static HotelManagementBeanRemote hotelManagementBean;
-
-    @EJB
     private static CustomerSessionBeanRemote customerSessionBeanRemote;
 
     @EJB
@@ -36,7 +33,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        HoRSClientModule hoRSClient = new HoRSClientModule(customerSessionBeanRemote, employeeSessionBeanRemote, partnerSessionBeanRemote, hotelManagementBean);
+        HoRSClientModule hoRSClient = new HoRSClientModule(customerSessionBeanRemote, employeeSessionBeanRemote, partnerSessionBeanRemote);
         hoRSClient.runEmployeeLoginPage();
     }
 }
