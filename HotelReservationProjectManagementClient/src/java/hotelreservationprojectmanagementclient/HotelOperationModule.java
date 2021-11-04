@@ -17,6 +17,8 @@ import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
 import entity.RoomType;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
@@ -364,6 +366,8 @@ public class HotelOperationModule {
 
         RatePerNight rate;
         double price;
+        String startDate;
+        String endDate;
 
         System.out.print("Select a rate from 1-4>");
         int option = sc.nextInt();
@@ -386,7 +390,16 @@ public class HotelOperationModule {
         }
         System.out.print("Input a price>");
         price = sc.nextDouble();
-        System.out.println("Input a start date");
+        System.out.print("Input Start Date in dd/mm/yyyy (with the slashes)>");
+        startDate = sc.next();
+        System.out.print("Input End Date in dd/mm/yyyy (with the slashes)>");
+        endDate = sc.next();
+
+        //extracting date
+        int[] depDate = Arrays.stream(departureDate.split("/")).mapToInt(Integer::parseInt).toArray();
+        int[] retDate = Arrays.stream(returnDate.split("/")).mapToInt(Integer::parseInt).toArray();
+        departureDateObj = new Date(depDate[3], depDate[2], depDate[1]);
+        returnDateObj = new Date(retDate[3], retDate[2], retDate[1]);
     }
 
     private void updateARoomRate(Scanner sc) {
