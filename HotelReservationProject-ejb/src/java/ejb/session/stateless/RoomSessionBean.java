@@ -81,18 +81,17 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
     //deleting a roomType involves deleting all its associated RoomRates
     @Override
-    public void deleteRoom(Long id) throws RoomNotFoundException, RoomIsTiedToABookingDeletionException {
+    public void deleteRoomByRoomNumber(String roomNumber) throws RoomNotFoundException, RoomIsTiedToABookingDeletionException {
         Query query = em.createQuery("SELECT b FROM Booking b");
         List<Booking> bookings = bookingSessionBeanLocal.retrieveAllProducts();
-        Room roomToDelete = this.getRoomById(id);
+        Room roomToDelete = this.getRoomByRoomNumber(roomNumber);
 
         for (Booking b : bookings) {
             if (b.getRooms().contains(roomToDelete)) {
                 throw new RoomIsTiedToABookingDeletionException();
             }
         }
-
         roomToDelete.getBookings().clear();
-        em.remove(roomToDelete);
+        roomToDelete.setEnabled(false);
     }
 }

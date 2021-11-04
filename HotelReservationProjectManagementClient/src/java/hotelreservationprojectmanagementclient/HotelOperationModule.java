@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
 import util.enumeration.RatePerNight;
+import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
@@ -232,12 +233,10 @@ public class HotelOperationModule {
         RoomType newRoomType = new RoomType(name, newranking, description, roomsize, beds, capacity, amenities);
         Integer ranking = newranking;
         List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newranking);
-        for(RoomType updateroomType : roomTypeBellowRanking)
-        {
-            try{
+        for (RoomType updateroomType : roomTypeBellowRanking) {
+            try {
                 roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
-            }
-            catch(RoomTypeNotFoundException ex){
+            } catch (RoomTypeNotFoundException ex) {
                 System.out.println("room type not found!");
             }
             ranking++;
@@ -263,17 +262,14 @@ public class HotelOperationModule {
         {
             try{
                 roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
-            }
-            catch(RoomTypeNotFoundException ex){
+            } catch (RoomTypeNotFoundException ex) {
                 System.out.println("room type not found!");
             }
             ranking++;
         }
-        try{
-            roomTypeSessionBean.updateRoomType(roomType.getRoomTypeId(), newRoomTypeName, newRoomTypeRanking);   
-        }
-        catch(RoomTypeNotFoundException ex)
-        {
+        try {
+            roomTypeSessionBean.updateRoomType(roomType.getRoomTypeId(), newRoomTypeName, newRoomTypeRanking);
+        } catch (RoomTypeNotFoundException ex) {
             System.out.println("room type not found!");
         }
     }
@@ -305,7 +301,7 @@ public class HotelOperationModule {
         System.out.println("Please enter a room type");
         String roomTypeName = sc.nextLine();
         RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomTypeName);
-        Room room = new Room(roomNumber, roomType, false);
+        Room room = new Room(roomNumber, roomType);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -330,16 +326,15 @@ public class HotelOperationModule {
                     String newRoomNumber = String.join(floor, number);
                     room.setRoomNumber(newRoomNumber);
                     roomSessionBean.updateRoom(room);
-                    
+
                 } else if (option == 2) {
-                    System.out.println("The room status is now: ");
                     if (room.getRoomStatus()) {
-                        System.out.println("Room is currently in use");
+                        System.out.println("Room status changed from in-use to not-in-use");
+                        room.setRoomStatus(true);
                     } else {
-                        System.out.println("Room is not in use");
+                        System.out.println("Room changed from not-in-use to in-use");
+                        room.setRoomStatus(false);
                     }
-                    System.out.print("Change room status>");
-                    
                 }
             }
         } catch (RoomNotFoundException ex) {
@@ -348,11 +343,33 @@ public class HotelOperationModule {
     }
 
     private void deleteARoom(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("You are now deleting a Room");
+        System.out.println("Please enter a room number");
+        String roomNumber = sc.nextLine().trim();
+        try {
+            roomSessionBean.deleteRoomByRoomNumber(roomNumber);
+        } catch (RoomNotFoundException ex) {
+            System.out.println("Room not found!");
+        } catch (RoomIsTiedToABookingDeletionException ex) {
+            System.out.println("Room is currently tied to a booking!");
+        }
     }
 
     private void viewAllRooms(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            List<Room> rooms = roomSessionBean.retrieveRooms();
+            for (Room r : rooms) {
+                String status;
+                if (r.getRoomStatus()) {
+                    status = "Occupied";
+                } else {
+                    status = "Empty";
+                }
+                System.out.println("Room number: " + r.getRoomNumber() + " Room Type: " + r.getRoomType().getRoomName() + " Room status: " + status);
+            }
+        } catch (RoomNotFoundException ex) {
+            System.out.println("Room not found!");
+        }
     }
 
     private void viewRoomAllocationExceptionReport(Scanner sc) {
@@ -360,7 +377,37 @@ public class HotelOperationModule {
     }
 
     private void createNewRoomRate(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("You are now creating a new Room Rate");
+        System.out.println("Please enter a rate type:");
+        for (int i = 0; i < RatePerNight.values().length; i++) {
+            System.out.println((i + 1) + ". " + RatePerNight.values()[i]);
+        }
+
+        RatePerNight rate;
+        double price;
+
+        System.out.print("Select a rate from 1-4>");
+        int option = sc.nextInt();
+        while (true) {
+            if (option == 1) {
+                rate = RatePerNight.PUBLISHRATE;
+                break;
+            } else if (option == 2) {
+                rate = RatePerNight.PEAKRATE;
+                break;
+            } else if (option == 3) {
+                rate = RatePerNight.NORMALRATE;
+                break;
+            } else if (option == 4) {
+                rate = RatePerNight.PROMOTIONRATE;
+                break;
+            } else {
+                System.out.println("Invalid choice!");
+            }
+        }
+        System.out.print("Input a price>");
+        price = sc.nextDouble();
+        System.out.println("Input a start date");
     }
 
     private void updateARoomRate(Scanner sc) {
