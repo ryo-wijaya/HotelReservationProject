@@ -16,6 +16,7 @@ import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
+import entity.RoomRate;
 import entity.RoomType;
 import java.util.List;
 import java.util.Scanner;
@@ -218,6 +219,7 @@ public class HotelOperationModule {
         }
         System.out.println("Please enter select publish rate: ");
         Double publishRate = sc.nextDouble();
+        Long pRate = roomRateSessionBeanRemote.createNewRoomRate(newRoomType, new RoomRate(publishRate));
         System.out.println("Please enter select normal rate: ");
         Double normalRate = sc.nextDouble();
         System.out.println("Please enter select peak rate: ");

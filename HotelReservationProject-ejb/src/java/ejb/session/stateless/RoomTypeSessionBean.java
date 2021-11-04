@@ -85,6 +85,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         RoomType roomTypeToUpdate = this.getRoomTypeById(id);
         roomTypeToUpdate.setRoomName(newName);
         roomTypeToUpdate.setRanking(ranking);
+        em.merge(roomTypeToUpdate);
     }
 
     //deleting a roomType involves deleting all its associated RoomRates 
