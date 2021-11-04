@@ -21,7 +21,7 @@ import util.exceptions.RoomTypeNotFoundException;
  * @author ryo20
  */
 @Stateless
-public class RoomSessionBean implements RoomSessionBeanLocal {
+public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRemote {
 
     @EJB
     private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;

@@ -19,7 +19,7 @@ import util.exceptions.BookingNotFoundException;
  * @author Jorda
  */
 @Stateless
-public class BookingSessionBean implements BookingSessionBeanLocal {
+public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessionBeanRemote {
 
     @EJB
     private RoomSessionBeanLocal roomSessionBean;
