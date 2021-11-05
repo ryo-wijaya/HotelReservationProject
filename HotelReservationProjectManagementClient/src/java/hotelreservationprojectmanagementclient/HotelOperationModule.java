@@ -31,6 +31,7 @@ import static util.enumeration.RateType.PUBLISHRATE;
 import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
+import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
 /**
@@ -469,39 +470,133 @@ public class HotelOperationModule {
                     System.out.println("Invalid choice!");
                 }
             }
-            
             List<RoomRate> listOfFilteredRates = roomTypeSessionBean.getRoomRateByRoomTypeRankAndRateType(roomTypeRanking, rate);
-            
-            
 
-            while (true) {
-                System.out.println("1. Update Room Number");
-                System.out.println("2. Update Room status");
-                System.out.print("Enter your choice>");
-                option = sc.nextInt();
+            int roomRateToEditChoice;
+            RoomRate roomRateToEdit;
+            int scenario;
 
-                if (option == 1) {
-                    System.out.print("Please enter a floor>");
-                    String floor = sc.nextLine().trim();
-                    System.out.print("Please enter a room number>");
-                    String number = sc.nextLine().trim();
-                    String newRoomNumber = String.join(floor, number);
-                    room.setRoomNumber(newRoomNumber);
+            if (listOfFilteredRates.size() > 1) { //if room rate is of type promotionRate or peakRate
+                while (true) {
+                    for (int i = 0; i < listOfFilteredRates.size(); i++) {
+                        System.out.println((i + 1) + ". Rate Type: " + listOfFilteredRates.get(i).getRateType() + " Rate Per Night: " + listOfFilteredRates.get(i).getPrice() + " Start Date: "
+                                + listOfFilteredRates.get(i).getStartDate() + " End Date: " + listOfFilteredRates.get(i).getEndDate());
+                    }
+                    System.out.print("Please chose a rate to edit by index>");
+                    roomRateToEditChoice = sc.nextInt();
 
-                } else if (option == 2) {
-                    if (room.getRoomStatus()) {
-                        System.out.println("Room status changed from in-use to not-in-use");
-                        room.setRoomStatus(true);
+                    try {
+                        roomRateToEdit = listOfFilteredRates.get(roomRateToEditChoice);
+                        scenario = 1;
+                        break;
+                    } catch (IndexOutOfBoundsException ex) {
+                        System.out.println("Please select a valid Room Rate!");
+                    }
+                }
+            } else { // if room rate is of type publishRate or normalRate
+                roomRateToEdit = listOfFilteredRates.get(0);
+                scenario = 2;
+            }
+
+            boolean moreToEdit = true;
+            while (moreToEdit) {
+                int editOption;
+
+                while (true) {
+                    if (scenario == 1) {
+                        System.out.println("1. Edit the RateType");
+                        System.out.println("2. Edit the Price");
+                        System.out.print("Enter a choice>");
+                        editOption = sc.nextInt();
+                        if (editOption == 1 && editOption == 2) {
+                            break;
+                        }
+
+                    } else if (scenario == 2) {
+                        System.out.println("1. Edit the RateType");
+                        System.out.println("2. Edit the Price");
+                        System.out.println("3. Edit the Start Date and End Date");
+                        System.out.print("Enter a choice>");
+                        editOption = sc.nextInt();
+                        if (editOption > 0 && editOption < 4) {
+                            break;
+                        }
+                    }
+                    System.out.println("Enter a valid option!");
+                }
+
+                if (editOption == 1) { //editing a rate
+                    System.out.println("Current Rate Type is: " + roomRateToEdit.getRateType().toString());
+                    int newRateChoice;
+                    RateType newRate = null;
+                    while (true) {
+                        System.out.print("Please choose a new rate type>");
+                        this.viewAllRoomRates();
+                        newRateChoice = sc.nextInt();
+                        if (newRateChoice == 1) {
+                            newRate = RateType.PUBLISHRATE;
+                            break;
+                        } else if (newRateChoice == 2) {
+                            newRate = RateType.PEAKRATE;
+                            break;
+                        } else if (newRateChoice == 3) {
+                            newRate = RateType.NORMALRATE;
+                            break;
+                        } else if (newRateChoice == 4) {
+                            newRate = RateType.PROMOTIONRATE;
+                            break;
+                        } else {
+                            System.out.println("Invalid choice!");
+                        }
+                    }
+                    roomRateToEdit.setRateType(newRate);
+
+                } else if (editOption == 2) { //editing a price
+                    System.out.println("The old rate is: $" + roomRateToEdit.getPrice());
+                    double newPrice = sc.nextDouble();
+                    roomRateToEdit.setPrice(newPrice);
+
+                } else if (editOption == 3) { //editing a start date
+                    while (true) {
+                        System.out.println("The old Start Date is: " + roomRateToEdit.getStartDate());
+                        System.out.println("The old End Date is: " + roomRateToEdit.getEndDate());
+                        System.out.print("Input new Start Date in dd/mm/yyyy (with the slashes)>");
+                        String startDateString = sc.next();
+                        System.out.print("Input new End Date in dd/mm/yyyy (with the slashes)>");
+                        String endDateString = sc.next();
+                        int[] sDate = Arrays.stream(startDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+                        int[] eDate = Arrays.stream(endDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+                        Date startDate = new Date(sDate[3], sDate[2], sDate[1]);
+                        Date endDate = new Date(eDate[3], eDate[2], eDate[1]);
+                        if (startDate.compareTo(roomRateToEdit.getEndDate()) > 0) {
+                            System.out.println("Invalid Operation - start date exceed end date");
+                        } else {
+                            roomRateToEdit.setStartDate(startDate);
+                            roomRateToEdit.setEndDate(endDate);
+                            break;
+                        }
+                    }
+                }
+                System.out.println("Do you have anything else to edit? (yes/no)");
+                String choice = sc.nextLine().trim();
+                while (true) {
+                    if (choice.equals("no")) {
+                        moreToEdit = false;
+                        break;
+                    } else if (choice.equals("yes")) {
+                        break;
                     } else {
-                        System.out.println("Room changed from not-in-use to in-use");
-                        room.setRoomStatus(false);
+                        System.out.println("Your choices are either 'yes' or 'no'!");
                     }
                 }
             }
         } catch (RoomTypeNotFoundException ex) {
-            System.out.println("Invalid room number!");
+            System.out.println("No Room type in database!");
+        } catch (RoomRateNotFoundException ex) {
+            System.out.println("No Room Rates exist with the provided parameters!");
         }
     }
+    
 
     private void deleteARoomRate(Scanner sc) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -531,57 +626,47 @@ public class HotelOperationModule {
                 Integer response = sc.nextInt();
                 if (response == 1) {
                     RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, PUBLISHRATE);
-                    if(roomRate != null){
+                    if (roomRate != null) {
                         System.out.println("Room Type Name: " + roomName);
                         System.out.println("Rate Type: " + PUBLISHRATE);
                         System.out.println("Rate per night: " + roomRate.getPrice());
-                    }
-                    else {
+                    } else {
                         System.out.println("Rate Type does not exists!");
                     }
-                } 
-                else if(response == 2){
+                } else if (response == 2) {
                     RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, NORMALRATE);
-                    if(roomRate != null){
+                    if (roomRate != null) {
                         System.out.println("Room Type Name: " + roomName);
                         System.out.println("Rate Type: " + NORMALRATE);
                         System.out.println("Rate per night: " + roomRate.getPrice());
-                    }
-                    else {
+                    } else {
                         System.out.println("Rate Type does not exists!");
                     }
-                }
-                else if(response == 3){
+                } else if (response == 3) {
                     RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, PEAKRATE);
-                    if(roomRate != null){
+                    if (roomRate != null) {
                         System.out.println("Room Type Name: " + roomName);
                         System.out.println("Rate Type: " + PEAKRATE);
                         System.out.println("Rate per night: " + roomRate.getPrice());
-                    }
-                    else {
+                    } else {
                         System.out.println("Rate Type does not exists!");
                     }
-                }
-                else if(response == 4){
+                } else if (response == 4) {
                     RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, PROMOTIONRATE);
-                    if(roomRate != null){
+                    if (roomRate != null) {
                         System.out.println("Room Type Name: " + roomName);
                         System.out.println("Rate Type: " + PROMOTIONRATE);
                         System.out.println("Rate per night: " + roomRate.getPrice());
-                    }
-                    else {
+                    } else {
                         System.out.println("Rate Type does not exists!");
                     }
-                }
-                else if(response == 5){
+                } else if (response == 5) {
                     break;
-                }
-                else {
+                } else {
                     System.out.println("Invalid Room Rate!");
                 }
             }
-        }
-        catch(RoomTypeNotFoundException ex){
+        } catch (RoomTypeNotFoundException ex) {
             System.out.println("Operation cancelled! No room types exist in the database");
         }
     }
