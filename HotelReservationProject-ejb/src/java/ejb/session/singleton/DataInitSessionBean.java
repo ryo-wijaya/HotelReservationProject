@@ -73,6 +73,7 @@ public class DataInitSessionBean {
     }
     
     public void loadData() {
+        
         Employee employee = new Employee("admin", "sysadmin", "password", SYSTEMADMINISTRATOR);
         employeeSessionBeanLocal.createNewEmployee(employee);
         employee = new Employee("op", "opmanager", "password", OPERATIONMANAGER);
@@ -106,5 +107,6 @@ public class DataInitSessionBean {
         }
 
         
+        System.out.println("Successfully deployed");
     }
 }
