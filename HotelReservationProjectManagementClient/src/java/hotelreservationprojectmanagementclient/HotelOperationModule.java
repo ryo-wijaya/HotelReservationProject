@@ -252,25 +252,26 @@ public class HotelOperationModule {
         System.out.println("Select a Room Type to update");
 
         String roomTypeName = sc.nextLine().trim();
-        RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomTypeName);
-        System.out.println("Select a New Room Type name");
-        String newRoomTypeName = sc.nextLine().trim();
-        System.out.println("Select a New Room Type ranking");
-        Integer newRoomTypeRanking = sc.nextInt();
-        Integer ranking = newRoomTypeRanking;
-        Integer oldRanking = roomType.getRanking();
-        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBetweenRanking(newRoomTypeRanking, oldRanking);
-        for (RoomType updateroomType : roomTypeBellowRanking) {
-            try {
-                roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
-            } catch (RoomTypeNotFoundException ex) {
-                System.out.println("room type not found!");
+        try{
+            RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomTypeName);
+            System.out.println("Select a New Room Type name");
+            String newRoomTypeName = sc.nextLine().trim();
+            System.out.println("Select a New Room Type ranking");
+            Integer newRoomTypeRanking = sc.nextInt();
+            Integer ranking = newRoomTypeRanking;
+            Integer oldRanking = roomType.getRanking();
+            List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBetweenRanking(newRoomTypeRanking, oldRanking);
+            for (RoomType updateroomType : roomTypeBellowRanking) {
+                try {
+                    roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
+                } catch (RoomTypeNotFoundException ex) {
+                    System.out.println("room type not found!");
+                }
+                ranking++;
             }
-            ranking++;
-        }
-        try {
             roomTypeSessionBean.updateRoomType(roomType.getRoomTypeId(), newRoomTypeName, newRoomTypeRanking);
-        } catch (RoomTypeNotFoundException ex) {
+        }
+        catch(RoomTypeNotFoundException ex){
             System.out.println("room type not found!");
         }
     }
@@ -448,6 +449,11 @@ public class HotelOperationModule {
     private void viewAllRoomRates() {
         System.out.println("Displaying list of Room Rates");
         List<RoomRate> listOfRoomRates = roomRateSessionBeanRemote.retrieveRoomRates();
+        if (!listOfRoomRates.isEmpty()) {
+            for (RoomRate rr : listOfRoomRates) {
+                System.out.println("Rate Type: " + rr.getRateType() + " Rate Per Night: ");
+            }
+        }
     }
 
     private void viewRoomRateDetails(Scanner sc) {
@@ -455,12 +461,18 @@ public class HotelOperationModule {
         System.out.println("You are now viewing a Room Rate");
         System.out.println("Please enter Room Type name");
         String roomName = sc.nextLine().trim();
+        try{
+            RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomName);
+        }
+        catch(RoomTypeNotFoundException ex){
+            System.out.println("Operation cancelled! No room types exist in the database");
+        }
         while(true)
         {
             System.out.println("Please enter Room Type's room rate (1: Publish Rate, 2: Normal Rate, 3: Peak Rate, 4: Promotion Rate, 5: Exit)");
             Integer response = sc.nextInt();
             if(response == 1){
-                //RoomRate roomRate = roomRateSessionBeanRemote.getRoomRateById();
+                //RoomRate roomRate = roomTypeSessionBeanRemote.getRoomRateById();
                 //System.out.println("Room Type: " + " Room rate type: " + " Price: ");
             }
         }

@@ -24,7 +24,7 @@ public class RoomRate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
-    private RateType ratePerNight;
+    private RateType rateType;
     private Double price;
     private Date startDate;
     private Date endDate;
@@ -35,7 +35,7 @@ public class RoomRate implements Serializable {
     }
 
     public RoomRate(RateType ratePerNight, Double price, Date startDate, Date endDate) {
-        this.ratePerNight = ratePerNight;
+        this.rateType = ratePerNight;
         this.price = price;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -73,12 +73,12 @@ public class RoomRate implements Serializable {
         this.price = price;
     }
     
-    public RateType getRatePerNight() {
-        return ratePerNight;
+    public RateType getRateType() {
+        return rateType;
     }
 
-    public void setRatePerNight(RateType ratePerNight) {
-        this.ratePerNight = ratePerNight;
+    public void setRateType(RateType rateType) {
+        this.rateType = rateType;
     }
     
     public Long getRoomRateId() {

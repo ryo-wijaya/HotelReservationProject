@@ -74,7 +74,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
     @Override
     public void updateRoomRate(Long id, RateType newRatePerNight) throws RoomRateNotFoundException {
         RoomRate roomRateToUpdate = this.getRoomRateById(id);
-        roomRateToUpdate.setRatePerNight(newRatePerNight);
+        roomRateToUpdate.setRateType(newRatePerNight);
     }
 
     @Override
