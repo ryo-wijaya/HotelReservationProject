@@ -139,15 +139,16 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     }
     
     @Override
-    public RoomRate getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException{
+    public List<RoomRate> getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException{
         RoomType roomType = getRoomTypeByName(roomName);
         List<RoomRate> roomRates = roomType.getListOfRoomRates();
+        List<RoomRate> filteredRates = new ArrayList<>();
         for (RoomRate roomRate : roomRates) {
             if (roomRate.getRateType().equals(rateType)) {
-                return roomRate;
+                filteredRates.add(roomRate);
             }
         }
-        return null;
+        return filteredRates;
     }
     
     

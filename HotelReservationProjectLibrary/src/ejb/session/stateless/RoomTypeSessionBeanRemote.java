@@ -37,5 +37,5 @@ public interface RoomTypeSessionBeanRemote {
     
     public RoomType getRoomTypeByRank(int roomRank) throws RoomTypeNotFoundException;
     
-    public RoomRate getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException;
+    public List<RoomRate> getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException;
 }
