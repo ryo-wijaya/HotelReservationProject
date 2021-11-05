@@ -187,7 +187,7 @@ public class HotelOperationModule {
                     this.deleteARoomRate(sc);
                     break;
                 case 4:
-                    this.viewAllRoomRates(sc);
+                    this.viewAllRoomRates();
                     break;
                 case 5:
                     this.viewRoomRateDetails(sc);
@@ -422,7 +422,6 @@ public class HotelOperationModule {
         startDate = new Date(sDate[3], sDate[2], sDate[1]);
         endDate = new Date(eDate[3], eDate[2], eDate[1]);
         int roomTypeRank;
-        ;
 
         System.out.print("Which room type to set this room rate to?>");
         try {
@@ -446,8 +445,9 @@ public class HotelOperationModule {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void viewAllRoomRates(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void viewAllRoomRates() {
+        System.out.println("Displaying list of Room Rates");
+        List<RoomRate> listOfRoomRates = roomRateSessionBeanRemote.retrieveRoomRates();
     }
 
     private void viewRoomRateDetails(Scanner sc) {
@@ -464,9 +464,5 @@ public class HotelOperationModule {
                 //System.out.println("Room Type: " + " Room rate type: " + " Price: ");
             }
         }
-        
-        
-        
-        
     }
 }
