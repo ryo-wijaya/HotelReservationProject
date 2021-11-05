@@ -151,7 +151,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     }
     
     @Override
-    public List<RoomRate> getRoomRateByRoomTypeRankAndRateType(int roomRank, RateType rateType) {
+    public List<RoomRate> getRoomRateByRoomTypeRankAndRateType(int roomRank, RateType rateType) throws RoomRateNotFoundException {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking =:inRoomRank");
         query.setParameter("inRoomRank", roomRank);
         RoomType roomtype = (RoomType) query.getSingleResult();
@@ -162,6 +162,11 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
                 filteredRates.add(rr);
             }
         }
-        return filteredRates;
+        
+        if (filteredRates.isEmpty()) {
+            throw new RoomRateNotFoundException();
+        } else {
+            return filteredRates;
+        }
     }
 }

@@ -446,7 +446,7 @@ public class HotelOperationModule {
         String roomNumber = sc.nextLine().trim();
         try {
             this.viewAllRoomTypes();
-            System.out.print("Please enter a room type option (numeric)>");
+            System.out.print("Please enter a room type option by rank(numeric)>");
             int roomTypeRanking = sc.nextInt();
             RateType rate;
             this.viewAllRoomRates();
@@ -470,7 +470,7 @@ public class HotelOperationModule {
                 }
             }
             
-            
+            List<RoomRate> listOfFilteredRates = roomTypeSessionBean.getRoomRateByRoomTypeRankAndRateType(roomTypeRanking, rate);
             
             
 

@@ -10,6 +10,7 @@ import entity.RoomType;
 import java.util.List;
 import javax.ejb.Local;
 import util.enumeration.RateType;
+import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
 /**
@@ -39,6 +40,6 @@ public interface RoomTypeSessionBeanLocal {
 
     public RoomRate getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException;
 
-    public List<RoomRate> getRoomRateByRoomTypeRankAndRateType(int roomRank, RateType rateType);
+    public List<RoomRate> getRoomRateByRoomTypeRankAndRateType(int roomRank, RateType rateType) throws RoomRateNotFoundException;
     
 }
