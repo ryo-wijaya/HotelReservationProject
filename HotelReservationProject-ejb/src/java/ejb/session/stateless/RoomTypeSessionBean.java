@@ -150,7 +150,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         return null;
     }
     
-    
+    @Override
     public List<RoomRate> getRoomRateByRoomTypeRankAndRateType(int roomRank, RateType rateType) {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking =:inRoomRank");
         query.setParameter("inRoomRank", roomRank);
