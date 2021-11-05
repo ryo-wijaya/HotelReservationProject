@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.RateType;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
@@ -134,6 +135,18 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             //we don't have to worry about a RoomRate not being found, but we still have to catch the potential exception
             throw new RoomTypeNotFoundException();
         }
+    }
+    
+    @Override
+    public RoomRate getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException{
+        RoomType roomType = getRoomTypeByName(roomName);
+        List<RoomRate> roomRates = roomType.getListOfRoomRates();
+        for (RoomRate roomRate : roomRates) {
+            if (roomRate.getRateType().equals(rateType)) {
+                return roomRate;
+            }
+        }
+        return null;
     }
 
 }

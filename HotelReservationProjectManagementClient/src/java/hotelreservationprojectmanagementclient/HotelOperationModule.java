@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
 import util.enumeration.RateType;
+import static util.enumeration.RateType.PUBLISHRATE;
 import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
@@ -467,8 +468,8 @@ public class HotelOperationModule {
                 System.out.println("Please enter Room Type's room rate (1: Publish Rate, 2: Normal Rate, 3: Peak Rate, 4: Promotion Rate, 5: Exit)");
                 Integer response = sc.nextInt();
                 if (response == 1) {
-                    List<RoomRate> roomRate = roomType.getListOfRoomRates();
-                    //System.out.println("Room Type: " + " Room rate type: " + " Price: ");
+                    RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, PUBLISHRATE);
+                    
                 }
             }
         }
