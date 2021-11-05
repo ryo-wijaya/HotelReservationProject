@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import util.enumeration.RatePerNight;
+import util.enumeration.RateType;
 
 /**
  *
@@ -24,7 +24,7 @@ public class RoomRate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
-    private RatePerNight ratePerNight;
+    private RateType ratePerNight;
     private Double price;
     private Date startDate;
     private Date endDate;
@@ -34,7 +34,7 @@ public class RoomRate implements Serializable {
         enabled = true;
     }
 
-    public RoomRate(RatePerNight ratePerNight, Double price, Date startDate, Date endDate) {
+    public RoomRate(RateType ratePerNight, Double price, Date startDate, Date endDate) {
         this.ratePerNight = ratePerNight;
         this.price = price;
         this.startDate = startDate;
@@ -73,11 +73,11 @@ public class RoomRate implements Serializable {
         this.price = price;
     }
     
-    public RatePerNight getRatePerNight() {
+    public RateType getRatePerNight() {
         return ratePerNight;
     }
 
-    public void setRatePerNight(RatePerNight ratePerNight) {
+    public void setRatePerNight(RateType ratePerNight) {
         this.ratePerNight = ratePerNight;
     }
     

@@ -13,7 +13,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import util.enumeration.RatePerNight;
+import util.enumeration.RateType;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomRateNotFoundException;
@@ -68,7 +68,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
     }
     
     //needs to make room rate bidirectional. ADD in RoomTpyeName -> getRoomTypeByName -> add with the query WHERE rr.roomType = roomType
-    public RoomRate getRoomRateByRatePerNight(RatePerNight ratePerNight) {
+    public RoomRate getRoomRateByRatePerNight(RateType ratePerNight) {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.ratePerNight = :inRatePerNight");
         query.setParameter("inRatePerNight", ratePerNight);
         return (RoomRate) query.getSingleResult();
@@ -76,7 +76,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
     
     //No em.merge() since we are doing the update in a managed context
     @Override
-    public void updateRoomRate(Long id, RatePerNight newRatePerNight) throws RoomRateNotFoundException {
+    public void updateRoomRate(Long id, RateType newRatePerNight) throws RoomRateNotFoundException {
         RoomRate roomRateToUpdate = this.getRoomRateById(id);
         roomRateToUpdate.setRatePerNight(newRatePerNight);
     }

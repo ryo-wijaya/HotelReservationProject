@@ -9,7 +9,6 @@ import ejb.session.stateful.HotelReservationBeanRemote;
 import ejb.session.stateless.BookingSessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
-import ejb.session.stateless.HotelManagementBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
@@ -24,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
-import util.enumeration.RatePerNight;
+import util.enumeration.RateType;
 import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
@@ -381,11 +380,11 @@ public class HotelOperationModule {
     private void createNewRoomRate(Scanner sc) {
         System.out.println("You are now creating a new Room Rate");
         System.out.println("Please enter a rate type:");
-        for (int i = 0; i < RatePerNight.values().length; i++) {
-            System.out.println((i + 1) + ". " + RatePerNight.values()[i]);
+        for (int i = 0; i < RateType.values().length; i++) {
+            System.out.println((i + 1) + ". " + RateType.values()[i]);
         }
 
-        RatePerNight rate;
+        RateType rate;
         double price;
         String startDateString;
         String endDateString;
@@ -396,16 +395,16 @@ public class HotelOperationModule {
         int option = sc.nextInt();
         while (true) {
             if (option == 1) {
-                rate = RatePerNight.PUBLISHRATE;
+                rate = RateType.PUBLISHRATE;
                 break;
             } else if (option == 2) {
-                rate = RatePerNight.PEAKRATE;
+                rate = RateType.PEAKRATE;
                 break;
             } else if (option == 3) {
-                rate = RatePerNight.NORMALRATE;
+                rate = RateType.NORMALRATE;
                 break;
             } else if (option == 4) {
-                rate = RatePerNight.PROMOTIONRATE;
+                rate = RateType.PROMOTIONRATE;
                 break;
             } else {
                 System.out.println("Invalid choice!");
