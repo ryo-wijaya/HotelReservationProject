@@ -84,13 +84,13 @@ public class DataInitSessionBean {
         
         try{
             RoomType roomType = new RoomType("Grand Suite", 1, "Grand Suite", "GRAND", 3, 6, new ArrayList<>());
-            RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 100.00, null, null);
-            RoomRate normalRoomRate = new RoomRate(NORMALRATE, 50.00, null, null);
+            RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 100.00);
+            RoomRate normalRoomRate = new RoomRate(NORMALRATE, 50.00);
             roomType.addToListOfRoomRate(publishRoomRate);
-            roomType.addToListOfRoomRate(normalRoomRate);
+            //roomType.addToListOfRoomRate(normalRoomRate);
             roomTypeSessionBean.createNewRoomType(roomType);
             roomRateSessionBean.createNewRoomRate(normalRoomRate, 1);
-            roomRateSessionBean.createNewRoomRate(publishRoomRate, 1);
+            //roomRateSessionBean.createNewRoomRate(publishRoomRate, 1);
             Room room = new Room("0105", roomType);
             roomSessionBean.createNewRoom(room);
             room = new Room("0205", roomType);
@@ -101,8 +101,10 @@ public class DataInitSessionBean {
             roomSessionBean.createNewRoom(room);
             room = new Room("0505", roomType);
             roomSessionBean.createNewRoom(room);
-        } catch (EntityInstanceExistsInCollectionException | FailedToCreateRoomRateException ex) {
-            System.out.println("data init error!!!");
+        } catch (EntityInstanceExistsInCollectionException ex) {
+            System.out.print("ERROR 1 ");
+        } catch (FailedToCreateRoomRateException ex) {
+            System.out.print("ERROR 2 ");
         }
 
         
