@@ -458,19 +458,17 @@ public class HotelOperationModule {
         String roomName = sc.nextLine().trim();
         try{
             RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomName);
+            while (true) {
+                System.out.println("Please enter Room Type's room rate (1: Publish Rate, 2: Normal Rate, 3: Peak Rate, 4: Promotion Rate, 5: Exit)");
+                Integer response = sc.nextInt();
+                if (response == 1) {
+                    List<RoomRate> roomRate = roomType.getListOfRoomRates();
+                    //System.out.println("Room Type: " + " Room rate type: " + " Price: ");
+                }
+            }
         }
         catch(RoomTypeNotFoundException ex){
             System.out.println("Operation cancelled! No room types exist in the database");
         }
-        while(true)
-        {
-            System.out.println("Please enter Room Type's room rate (1: Publish Rate, 2: Normal Rate, 3: Peak Rate, 4: Promotion Rate, 5: Exit)");
-            Integer response = sc.nextInt();
-            if(response == 1){
-                //RoomRate roomRate = roomTypeSessionBeanRemote.getRoomRateById();
-                //System.out.println("Room Type: " + " Room rate type: " + " Price: ");
-            }
-        }
-        
     }
 }
