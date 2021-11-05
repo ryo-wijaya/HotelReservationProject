@@ -625,39 +625,54 @@ public class HotelOperationModule {
                 System.out.println("Please enter Room Type's room rate (1: Publish Rate, 2: Normal Rate, 3: Peak Rate, 4: Promotion Rate, 5: Exit)");
                 Integer response = sc.nextInt();
                 if (response == 1) {
-                    RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, PUBLISHRATE);
-                    if (roomRate != null) {
-                        System.out.println("Room Type Name: " + roomName);
-                        System.out.println("Rate Type: " + PUBLISHRATE);
-                        System.out.println("Rate per night: " + roomRate.getPrice());
-                    } else {
+                    List<RoomRate> roomRates = roomTypeSessionBean.getRoomRate(roomName, PUBLISHRATE);
+                    if(!roomRates.isEmpty()){
+                        for (RoomRate roomRate : roomRates) {
+                            System.out.println("Room Type Name: " + roomName);
+                            System.out.println("Rate Type: " + PUBLISHRATE);
+                            System.out.println("Rate per night: " + roomRate.getPrice());
+                        }
+                    }
+                    else {
                         System.out.println("Rate Type does not exists!");
                     }
-                } else if (response == 2) {
-                    RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, NORMALRATE);
-                    if (roomRate != null) {
-                        System.out.println("Room Type Name: " + roomName);
-                        System.out.println("Rate Type: " + NORMALRATE);
-                        System.out.println("Rate per night: " + roomRate.getPrice());
-                    } else {
+                } 
+                else if(response == 2){
+                    List<RoomRate> roomRates = roomTypeSessionBean.getRoomRate(roomName, NORMALRATE);
+                    if(!roomRates.isEmpty()){
+                        for (RoomRate roomRate : roomRates) {
+                            System.out.println("Room Type Name: " + roomName);
+                            System.out.println("Rate Type: " + NORMALRATE);
+                            System.out.println("Rate per night: " + roomRate.getPrice());
+                        }
+                    }
+                    else {
                         System.out.println("Rate Type does not exists!");
                     }
-                } else if (response == 3) {
-                    RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, PEAKRATE);
-                    if (roomRate != null) {
-                        System.out.println("Room Type Name: " + roomName);
-                        System.out.println("Rate Type: " + PEAKRATE);
-                        System.out.println("Rate per night: " + roomRate.getPrice());
-                    } else {
+                }
+                else if(response == 3){
+                    List<RoomRate> roomRates = roomTypeSessionBean.getRoomRate(roomName, PEAKRATE);
+                    if(!roomRates.isEmpty()){
+                        for (RoomRate roomRate : roomRates) {
+                            System.out.println("Room Type Name: " + roomName);
+                            System.out.println("Rate Type: " + PEAKRATE);
+                            System.out.println("Rate per night: " + roomRate.getPrice());
+                        }
+                    }
+                    else {
                         System.out.println("Rate Type does not exists!");
                     }
-                } else if (response == 4) {
-                    RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, PROMOTIONRATE);
-                    if (roomRate != null) {
-                        System.out.println("Room Type Name: " + roomName);
-                        System.out.println("Rate Type: " + PROMOTIONRATE);
-                        System.out.println("Rate per night: " + roomRate.getPrice());
-                    } else {
+                }
+                else if(response == 4){
+                    List<RoomRate> roomRates = roomTypeSessionBean.getRoomRate(roomName, PROMOTIONRATE);
+                    if(!roomRates.isEmpty()){
+                        for (RoomRate roomRate : roomRates) {
+                            System.out.println("Room Type Name: " + roomName);
+                            System.out.println("Rate Type: " + PROMOTIONRATE);
+                            System.out.println("Rate per night: " + roomRate.getPrice());
+                        }
+                    }
+                    else {
                         System.out.println("Rate Type does not exists!");
                     }
                 } else if (response == 5) {
