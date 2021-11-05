@@ -423,6 +423,8 @@ public class HotelOperationModule {
     }
 
     private void viewRoomRateDetails(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("You are now viewing a Room Rate");
+        System.out.println("Please enter Room Rate");
+        
     }
 }
