@@ -34,10 +34,10 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
 
     //creating a new roomRate involves adding it to a given RoomType as well
     @Override
-    public Long createNewRoomRate(RoomRate roomRate, Long roomTypeId) throws FailedToCreateRoomRateException {
+    public Long createNewRoomRate(RoomRate roomRate, int roomRank) throws FailedToCreateRoomRateException {
         try {
             em.persist(roomRate);
-            RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
+            RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeByRank(roomRank);
             roomType.addToListOfRoomRate(roomRate);
             em.flush();
             return roomRate.getRoomRateId();

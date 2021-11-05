@@ -19,10 +19,13 @@ import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
 import util.enumeration.RatePerNight;
+import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
@@ -218,8 +221,8 @@ public class HotelOperationModule {
         Integer capacity = sc.nextInt();
         String response = "";
         List<String> amenities = new ArrayList<>();
-        
-        while(true) {
+
+        while (true) {
             System.out.println("Please enter room amenitites: ");
             String amenitie = sc.nextLine().trim();
             amenities.add(amenitie);
@@ -229,7 +232,7 @@ public class HotelOperationModule {
                 break;
             }
         }
-            
+
         RoomType newRoomType = new RoomType(name, newranking, description, roomsize, beds, capacity, amenities);
         Integer ranking = newranking;
         List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newranking);
@@ -258,9 +261,8 @@ public class HotelOperationModule {
         Integer ranking = newRoomTypeRanking;
         Integer oldRanking = roomType.getRanking();
         List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBetweenRanking(newRoomTypeRanking, oldRanking);
-        for(RoomType updateroomType : roomTypeBellowRanking)
-        {
-            try{
+        for (RoomType updateroomType : roomTypeBellowRanking) {
+            try {
                 roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
             } catch (RoomTypeNotFoundException ex) {
                 System.out.println("room type not found!");
@@ -385,6 +387,10 @@ public class HotelOperationModule {
 
         RatePerNight rate;
         double price;
+        String startDateString;
+        String endDateString;
+        Date startDate;
+        Date endDate;
 
         System.out.print("Select a rate from 1-4>");
         int option = sc.nextInt();
@@ -407,7 +413,30 @@ public class HotelOperationModule {
         }
         System.out.print("Input a price>");
         price = sc.nextDouble();
-        System.out.println("Input a start date");
+        System.out.print("Input Start Date in dd/mm/yyyy (with the slashes)>");
+        startDateString = sc.next();
+        System.out.print("Input End Date in dd/mm/yyyy (with the slashes)>");
+        endDateString = sc.next();
+
+        int[] sDate = Arrays.stream(startDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+        int[] eDate = Arrays.stream(endDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+        startDate = new Date(sDate[3], sDate[2], sDate[1]);
+        endDate = new Date(eDate[3], eDate[2], eDate[1]);
+        int roomTypeRank;
+        ;
+
+        System.out.print("Which room type to set this room rate to?>");
+        try {
+            this.viewAllRoomTypes();
+            System.out.println("Room Types are ordered by rank, select a rank (numeric): ");
+            roomTypeRank = sc.nextInt();
+            RoomRate newRate = new RoomRate(rate, price, startDate, endDate);
+            roomRateSessionBeanRemote.createNewRoomRate(newRate, roomTypeRank);
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Operation cancelled! No room types exist in the database");
+        } catch (FailedToCreateRoomRateException ex) {
+            System.out.println("Failed to create Room Rate! Please check that a correct room rank was entered");
+        }
     }
 
     private void updateARoomRate(Scanner sc) {
