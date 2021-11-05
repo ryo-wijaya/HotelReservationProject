@@ -8,7 +8,7 @@ package ejb.session.stateless;
 import entity.RoomRate;
 import java.util.List;
 import javax.ejb.Local;
-import util.enumeration.RatePerNight;
+import util.enumeration.RateType;
 import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomRateNotFoundException;
 
@@ -21,7 +21,7 @@ public interface RoomRateSessionBeanLocal {
 
     public void deleteRoomRate(Long id) throws RoomRateNotFoundException;
 
-    public void updateRoomRate(Long id, RatePerNight newRatePerNight) throws RoomRateNotFoundException;
+    public void updateRoomRate(Long id, RateType newRatePerNight) throws RoomRateNotFoundException;
 
     public RoomRate getRoomRateById(Long id) throws RoomRateNotFoundException;
 

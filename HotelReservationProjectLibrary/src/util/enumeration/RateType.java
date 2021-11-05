@@ -9,6 +9,6 @@ package util.enumeration;
  *
  * @author ryo20
  */
-public enum RatePerNight {
+public enum RateType {
     PUBLISHRATE, PEAKRATE, NORMALRATE, PROMOTIONRATE
 }
