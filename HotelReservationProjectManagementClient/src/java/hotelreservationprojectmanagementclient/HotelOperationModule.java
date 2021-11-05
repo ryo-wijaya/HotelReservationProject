@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
 import util.enumeration.RateType;
+import static util.enumeration.RateType.PUBLISHRATE;
 import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
@@ -522,16 +523,17 @@ public class HotelOperationModule {
         String roomName = sc.nextLine().trim();
         try {
             RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomName);
-        } catch (RoomTypeNotFoundException ex) {
-            System.out.println("Operation cancelled! No room types exist in the database");
-        }
-        while (true) {
-            System.out.println("Please enter Room Type's room rate (1: Publish Rate, 2: Normal Rate, 3: Peak Rate, 4: Promotion Rate, 5: Exit)");
-            Integer response = sc.nextInt();
-            if (response == 1) {
-                //RoomRate roomRate = roomTypeSessionBeanRemote.getRoomRateById();
-                //System.out.println("Room Type: " + " Room rate type: " + " Price: ");
+            while (true) {
+                System.out.println("Please enter Room Type's room rate (1: Publish Rate, 2: Normal Rate, 3: Peak Rate, 4: Promotion Rate, 5: Exit)");
+                Integer response = sc.nextInt();
+                if (response == 1) {
+                    RoomRate roomRate = roomTypeSessionBean.getRoomRate(roomName, PUBLISHRATE);
+                    
+                }
             }
+        }
+        catch(RoomTypeNotFoundException ex){
+            System.out.println("Operation cancelled! No room types exist in the database");
         }
     }
 }

@@ -5,9 +5,11 @@
  */
 package ejb.session.stateless;
 
+import entity.RoomRate;
 import entity.RoomType;
 import java.util.List;
 import javax.ejb.Local;
+import util.enumeration.RateType;
 import util.exceptions.RoomTypeNotFoundException;
 
 /**
@@ -34,5 +36,7 @@ public interface RoomTypeSessionBeanLocal {
     public List<RoomType> getRoomTypeBetweenRanking(Integer newranking, Integer oldranking);
 
     public RoomType getRoomTypeByRank(int roomRank) throws RoomTypeNotFoundException;
+
+    public RoomRate getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException;
     
 }

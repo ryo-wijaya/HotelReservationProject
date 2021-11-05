@@ -7,12 +7,14 @@ package ejb.session.stateless;
 
 import entity.RoomRate;
 import entity.RoomType;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.RateType;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
@@ -135,5 +137,31 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             throw new RoomTypeNotFoundException();
         }
     }
-
+    
+    @Override
+    public RoomRate getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException{
+        RoomType roomType = getRoomTypeByName(roomName);
+        List<RoomRate> roomRates = roomType.getListOfRoomRates();
+        for (RoomRate roomRate : roomRates) {
+            if (roomRate.getRateType().equals(rateType)) {
+                return roomRate;
+            }
+        }
+        return null;
+    }
+    
+    
+    public List<RoomRate> getRoomRateByRoomTypeRankAndRateType(int roomRank, RateType rateType) {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking =:inRoomRank");
+        query.setParameter("inRoomRank", roomRank);
+        RoomType roomtype = (RoomType) query.getSingleResult();
+        List<RoomRate> filteredRates = new ArrayList<>();
+        
+        for (RoomRate rr : roomtype.getListOfRoomRates()) {
+            if (rr.getRateType() == rateType) {
+                filteredRates.add(rr);
+            }
+        }
+        return filteredRates;
+    }
 }
