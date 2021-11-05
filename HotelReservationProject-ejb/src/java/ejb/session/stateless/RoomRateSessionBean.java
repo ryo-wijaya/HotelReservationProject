@@ -47,14 +47,10 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
     }
 
     @Override
-    public List<RoomRate> retrieveRoomRates() throws RoomRateNotFoundException {
+    public List<RoomRate> retrieveRoomRates() {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr");
         List<RoomRate> listOfRoomRates = query.getResultList();
-        if (listOfRoomRates != null) {
-            return listOfRoomRates;
-        } else {
-            throw new RoomRateNotFoundException();
-        }
+        return listOfRoomRates;
     }
 
     @Override
@@ -78,7 +74,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
     @Override
     public void updateRoomRate(Long id, RateType newRatePerNight) throws RoomRateNotFoundException {
         RoomRate roomRateToUpdate = this.getRoomRateById(id);
-        roomRateToUpdate.setRatePerNight(newRatePerNight);
+        roomRateToUpdate.setRateType(newRatePerNight);
     }
 
     @Override
