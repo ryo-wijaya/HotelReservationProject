@@ -66,7 +66,14 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
             throw new RoomRateNotFoundException();
         }
     }
-
+    
+    //needs to make room rate bidirectional. ADD in RoomTpyeName -> getRoomTypeByName -> add with the query WHERE rr.roomType = roomType
+    public RoomRate getRoomRateByRatePerNight(RatePerNight ratePerNight) {
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.ratePerNight = :inRatePerNight");
+        query.setParameter("inRatePerNight", ratePerNight);
+        return (RoomRate) query.getSingleResult();
+    }
+    
     //No em.merge() since we are doing the update in a managed context
     @Override
     public void updateRoomRate(Long id, RatePerNight newRatePerNight) throws RoomRateNotFoundException {

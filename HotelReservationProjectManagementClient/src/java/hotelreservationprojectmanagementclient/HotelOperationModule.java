@@ -423,8 +423,22 @@ public class HotelOperationModule {
     }
 
     private void viewRoomRateDetails(Scanner sc) {
+        
         System.out.println("You are now viewing a Room Rate");
-        System.out.println("Please enter Room Rate");
+        System.out.println("Please enter Room Type name");
+        String roomName = sc.nextLine().trim();
+        while(true)
+        {
+            System.out.println("Please enter Room Type's room rate (1: Publish Rate, 2: Normal Rate, 3: Peak Rate, 4: Promotion Rate, 5: Exit)");
+            Integer response = sc.nextInt();
+            if(response == 1){
+                //RoomRate roomRate = roomRateSessionBeanRemote.getRoomRateById();
+                //System.out.println("Room Type: " + " Room rate type: " + " Price: ");
+            }
+        }
+        
+        
+        
         
     }
 }
