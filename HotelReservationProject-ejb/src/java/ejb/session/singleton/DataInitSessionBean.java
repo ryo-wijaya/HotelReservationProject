@@ -10,6 +10,7 @@ import ejb.session.stateless.RoomRateSessionBeanLocal;
 import ejb.session.stateless.RoomSessionBeanLocal;
 import ejb.session.stateless.RoomTypeSessionBeanLocal;
 import entity.Employee;
+import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ import static util.enumeration.EmployeeRole.SYSTEMADMINISTRATOR;
 import util.enumeration.RateType;
 import static util.enumeration.RateType.NORMALRATE;
 import static util.enumeration.RateType.PUBLISHRATE;
+import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
@@ -79,12 +82,29 @@ public class DataInitSessionBean {
         employee = new Employee("guest", "guestrelo", "password", GUESTRELATIONSOFFICER);
         employeeSessionBeanLocal.createNewEmployee(employee);
         
-        RoomType roomType = new RoomType("Grand Suite", 1, "Grand Suite", "GRAND", 3, 6, new ArrayList<>());
-        RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 100.00, null, null);
-        RoomRate normalRoomRate = new RoomRate(NORMALRATE, 50.00, null, null);
-        roomType.addToListOfRoomRate(publishRoomRate);
-        roomType.addToListOfRoomRate(normalRoomRate);
-        roomTypeSessionBean.createNewRoomType(roomType);
+        try{
+            RoomType roomType = new RoomType("Grand Suite", 1, "Grand Suite", "GRAND", 3, 6, new ArrayList<>());
+            RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 100.00, null, null);
+            RoomRate normalRoomRate = new RoomRate(NORMALRATE, 50.00, null, null);
+            roomType.addToListOfRoomRate(publishRoomRate);
+            roomType.addToListOfRoomRate(normalRoomRate);
+            roomTypeSessionBean.createNewRoomType(roomType);
+            roomRateSessionBean.createNewRoomRate(normalRoomRate, 1);
+            roomRateSessionBean.createNewRoomRate(publishRoomRate, 1);
+            Room room = new Room("0105", roomType);
+            roomSessionBean.createNewRoom(room);
+            room = new Room("0205", roomType);
+            roomSessionBean.createNewRoom(room);
+            room = new Room("0305", roomType);
+            roomSessionBean.createNewRoom(room);
+            room = new Room("0405", roomType);
+            roomSessionBean.createNewRoom(room);
+            room = new Room("0505", roomType);
+            roomSessionBean.createNewRoom(room);
+        } catch (EntityInstanceExistsInCollectionException | FailedToCreateRoomRateException ex) {
+            System.out.println("data init error!!!");
+        }
+
         
     }
 }
