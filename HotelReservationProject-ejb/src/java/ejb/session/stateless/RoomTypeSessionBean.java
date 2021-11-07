@@ -61,9 +61,9 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     }
 
     @Override
-    public RoomType getRoomTypeByName(String roomName) throws RoomTypeNotFoundException {
-        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomName");
-        query.setParameter("inRoomName", roomName);
+    public RoomType getRoomTypeByName(String roomTypeName) throws RoomTypeNotFoundException {
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomTypeName");
+        query.setParameter("inRoomTypeName", roomTypeName);
         RoomType roomtype = (RoomType) query.getSingleResult();
 
         if (roomtype != null) {

@@ -42,19 +42,21 @@ public class HotelOperationModule {
 
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
-    private BookingSessionBeanRemote bookingSessionBean;
-    private RoomTypeSessionBeanRemote roomTypeSessionBean;
-    private RoomSessionBeanRemote roomSessionBean;
+    private BookingSessionBeanRemote bookingSessionBeanRemote;
+    private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
+    private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
 
     private Employee currentEmployee;
 
-    public HotelOperationModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, BookingSessionBeanRemote bookingSessionBean, RoomTypeSessionBeanRemote roomTypeSessionBean, RoomSessionBeanRemote roomSessionBean, RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentEmployee) {
+    public HotelOperationModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote,
+            BookingSessionBeanRemote bookingSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote,
+            RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentEmployee) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
-        this.bookingSessionBean = bookingSessionBean;
-        this.roomTypeSessionBean = roomTypeSessionBean;
-        this.roomSessionBean = roomSessionBean;
+        this.bookingSessionBeanRemote = bookingSessionBeanRemote;
+        this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
+        this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.currentEmployee = currentEmployee;
     }
@@ -242,84 +244,80 @@ public class HotelOperationModule {
         String name;
         String description;
         String roomSize;
-        int newRanking = 0;
+        String nextHigherRoomTypeName;
+        RoomType nextHigherRoomType = null;
         int numOfBeds = 0;
         int roomCapacity = 0;
 
-        System.out.println("\n-You are now creating a new room type-");
-        System.out.println("--------------------------------------\n");
-        System.out.print("Please enter a Room Type name>");
-        name = sc.nextLine().trim();
+        try {
+            System.out.println("\n-You are now creating a new room type-");
+            System.out.println("--------------------------------------\n");
+            System.out.print("Please enter a Room Type name>");
+            name = sc.nextLine().trim();
 
-        while (newRanking != 404) {
-            System.out.print("Please enter a room Ranking (integer)>");
-            try {
-                newRanking = Integer.parseInt(sc.nextLine().trim());
-            } catch (NumberFormatException ex) {
-                System.out.println("Please enter an integer!");
-                newRanking = 404;
+            System.out.println("Please enter a next higher room type by name(case-sensitive), input 'None' if this will be the higher rank");
+            nextHigherRoomTypeName = sc.nextLine().trim();
+
+            if (!nextHigherRoomTypeName.equals("None")) {
+                nextHigherRoomType = roomTypeSessionBeanRemote.getRoomTypeByName(nextHigherRoomTypeName);
             }
-        }
 
-        System.out.print("Please enter a Room Type Description>");
-        description = sc.nextLine().trim();
-        System.out.print("Please enter a Room Type Size>");
-        roomSize = sc.nextLine().trim();
+            System.out.print("Please enter a Room Type Description>");
+            description = sc.nextLine().trim();
+            System.out.print("Please enter a Room Type Size>");
+            roomSize = sc.nextLine().trim();
 
-        while (numOfBeds != 404) {
-            System.out.print("Please input the number of beds (Integer)>");
-            try {
-                numOfBeds = Integer.parseInt(sc.nextLine().trim());
-            } catch (NumberFormatException ex) {
-                System.out.println("Please enter an integer!");
-                numOfBeds = 404;
-            }
-        }
-
-        while (roomCapacity != 404) {
-            System.out.print("Please input the room capacity (Integer)>");
-            try {
-                roomCapacity = Integer.parseInt(sc.nextLine().trim());
-            } catch (NumberFormatException ex) {
-                System.out.println("Please enter an integer!");
-                roomCapacity = 404;
-            }
-        }
-
-        RoomType newRoomType = new RoomType(name, newRanking, description, roomSize, numOfBeds, roomCapacity);
-
-        boolean hasMoreAmenities = true;
-        while (hasMoreAmenities) {
-            String response = "";
-            System.out.print("Please enter an amenity: ");
-            String amenity = sc.nextLine().trim();
-            newRoomType.getAmenities().add(amenity);
-
-            while (true) {
-                System.out.print("Do you have more amenities to add? (yes/no)>");
-                response = sc.nextLine().trim();
-                if (response.equals("no")) {
-                    hasMoreAmenities = false;
-                    break;
-                } else if (response.equals("yes")) {
-                    break;
-                } else {
-                    System.out.println("Please enter a valid response!");
+            while (numOfBeds != 404) {
+                System.out.print("Please input the number of beds (Integer)>");
+                try {
+                    numOfBeds = Integer.parseInt(sc.nextLine().trim());
+                } catch (NumberFormatException ex) {
+                    System.out.println("Please enter an integer!");
+                    numOfBeds = 404;
                 }
             }
-        }
 
-        Integer ranking = newRanking;
-        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newRanking);
-        for (RoomType updateroomType : roomTypeBellowRanking) {
-            try {
-                roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
-            } catch (RoomTypeNotFoundException ex) {
-                System.out.println("room type not found!");
+            while (roomCapacity != 404) {
+                System.out.print("Please input the room capacity (Integer)>");
+                try {
+                    roomCapacity = Integer.parseInt(sc.nextLine().trim());
+                } catch (NumberFormatException ex) {
+                    System.out.println("Please enter an integer!");
+                    roomCapacity = 404;
+                }
             }
-            ranking++;
+
+            RoomType newRoomType = new RoomType(name, description, roomSize, numOfBeds, roomCapacity);
+            
+            if (nextHigherRoomType != null) { //Saved as a String
+                newRoomType.setNextHigherRoomType(nextHigherRoomTypeName);
+            }
+            
+            //adding amenities
+            boolean hasMoreAmenities = true;
+            while (hasMoreAmenities) {
+                String response = "";
+                System.out.print("Please enter an amenity: ");
+                String amenity = sc.nextLine().trim();
+                newRoomType.getAmenities().add(amenity);
+
+                while (true) {
+                    System.out.print("Do you have more amenities to add? (yes/no)>");
+                    response = sc.nextLine().trim();
+                    if (response.equals("no")) {
+                        hasMoreAmenities = false;
+                        break;
+                    } else if (response.equals("yes")) {
+                        break;
+                    } else {
+                        System.out.println("Please enter a valid response!");
+                    }
+                }
+            }
+
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Next Higher Room Type is not found!");
         }
-        roomTypeSessionBean.createNewRoomType(newRoomType);
     }
 
     private void updateARoomType(Scanner sc) {
