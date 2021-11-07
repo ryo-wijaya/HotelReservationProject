@@ -82,7 +82,7 @@ public class DataInitSessionBean {
         employeeSessionBeanLocal.createNewEmployee(employee);
         
         try{
-            RoomType roomType = new RoomType("Grand Suite", 1, "Grand Suite", "GRAND", 3, 6, new ArrayList<>());
+            RoomType roomType = new RoomType("Grand Suite", 1, "Grand Suite", "GRAND", 3, 6);
             RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 100.00);
             RoomRate normalRoomRate = new RoomRate(NORMALRATE, 50.00);
             roomType.addToListOfRoomRate(publishRoomRate);

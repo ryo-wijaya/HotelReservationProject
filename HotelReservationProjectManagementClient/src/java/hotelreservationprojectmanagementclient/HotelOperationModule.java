@@ -235,6 +235,11 @@ public class HotelOperationModule {
     }
 
     private void createNewRoomType(Scanner sc) {
+        // ideally when given a nextHigherRoomType name we want to call getRoomTypeByName(name), should throw RoomTypeNotFoundException if not found
+        // when catching this exception, we can either ask for reinput in a loop or cancel transaction, then call createNewRoomType(RoomType roomType, long nextHighertTypeId)
+        // Not doing both of these in 1 method prevents the user from enetering a bunch of info just for the roomtype not to exist at the end.
+        // also for create methods, the only object we should pass in is the one we are creating, any associating object should be an id (theo).
+        
         System.out.println("\n-You are now creating a new room type-");
         System.out.println("--------------------------------------\n");
         System.out.print("Please enter a Room Type name>");
@@ -255,27 +260,52 @@ public class HotelOperationModule {
         String description = sc.nextLine().trim();
         System.out.print("Please enter a Room Type Size>");
         String roomSize = sc.nextLine().trim();
-        System.out.print("Please enter a Room Type Size>");
-        String roomsize = sc.nextLine().trim();
-        System.out.print("Please enter select number of beds>");
-        Integer beds = sc.nextInt();
-        System.out.print("Please enter select room capacity>");
-        Integer capacity = sc.nextInt();
-        String response = "";
-        List<String> amenities = new ArrayList<>();
 
-        while (true) {
-            System.out.println("Please enter room amenitites: ");
-            String amenitie = sc.nextLine().trim();
-            amenities.add(amenitie);
-            System.out.println("Do you have more to add? (N = no): ");
-            response = sc.nextLine().trim();
-            if (response.equals("N")) {
-                break;
+        int numOfBeds = 0;
+        while (numOfBeds != 404) {
+            System.out.print("Please input the number of beds (Integer)>");
+            try {
+                numOfBeds = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                System.out.println("Please enter an integer!");
+                numOfBeds = 404;
             }
         }
 
-        RoomType newRoomType = new RoomType(name, newRanking, description, roomsize, beds, capacity, amenities);
+        int roomCapacity = 0;
+        while (roomCapacity != 404) {
+            System.out.print("Please input the room capacity (Integer)>");
+            try {
+                roomCapacity = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                System.out.println("Please enter an integer!");
+                roomCapacity = 404;
+            }
+        }
+
+        RoomType newRoomType = new RoomType(name, newRanking, description, roomSize, numOfBeds, roomCapacity);
+
+        boolean hasMoreAmenities = true;
+        while (hasMoreAmenities) {
+            String response = "";
+            System.out.print("Please enter an amenity: ");
+            String amenity = sc.nextLine().trim();
+            newRoomType.getAmenities().add(amenity);
+
+            while (true) {
+                System.out.print("Do you have more amenities to add? (yes/no)>");
+                response = sc.nextLine().trim();
+                if (response.equals("no")) {
+                    hasMoreAmenities = false;
+                    break;
+                } else if (response.equals("yes")) {
+                    break;
+                } else {
+                    System.out.println("Please enter a valid response!");
+                }
+            }
+        }
+
         Integer ranking = newRanking;
         List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newRanking);
         for (RoomType updateroomType : roomTypeBellowRanking) {
@@ -286,7 +316,6 @@ public class HotelOperationModule {
             }
             ranking++;
         }
-
         roomTypeSessionBean.createNewRoomType(newRoomType);
     }
 

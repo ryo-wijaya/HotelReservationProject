@@ -50,10 +50,11 @@ public class RoomType implements Serializable {
 
     public RoomType() {
         listOfRoomRates = new ArrayList<>();
+        amenities = new ArrayList<>();
         enabled = true;
     }
 
-    public RoomType(String roomName, Integer ranking, String description, String roomSize, Integer beds, Integer capacity, List<String> amenities) {
+    public RoomType(String roomName, Integer ranking, String description, String roomSize, Integer beds, Integer capacity) {
         this();
         this.roomName = roomName;
         this.ranking = ranking;
@@ -61,7 +62,6 @@ public class RoomType implements Serializable {
         this.roomSize = roomSize;
         this.beds = beds;
         this.capacity = capacity;
-        this.amenities = amenities;
     }
 
     public Boolean getEnabled() {
