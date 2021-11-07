@@ -120,12 +120,8 @@ public class HotelOperationModule {
                             this.deleteARoomType(sc);
                             break;
                         case 4:
-                            try {
                             this.viewAllRoomTypes();
-                        } catch (RoomTypeNotFoundException ex) {
-                            System.out.println("No Room Types in the Database!");
-                        }
-                        break;
+                            break;
                         case 5:
                             this.viewRoomTypeDetails(sc);
                             break;
@@ -158,12 +154,8 @@ public class HotelOperationModule {
 
                     switch (option) {
                         case 1:
-                            try {
                             this.createNewRoom(sc);
-                        } catch (RoomTypeNotFoundException ex) {
-                            System.out.println("Room Type not found!");
-                        }
-                        break;
+                            break;
                         case 2:
                             this.updateARoom(sc);
                             break;
@@ -406,7 +398,7 @@ public class HotelOperationModule {
                     String newAmenity = sc.nextLine().trim();
                     roomType.getAmenities().add(newAmenity);
                     roomTypeSessionBeanRemote.updateRoomType(roomType);
-                    
+
                 } else if (option == 8) {
                     System.out.print("Type in the amenity of the Room Type you wish to delete>");
                     String amenityToDelete = sc.nextLine().trim();
@@ -419,7 +411,7 @@ public class HotelOperationModule {
 
                 } else if (option == 9) {
                     break;
-                    
+
                 } else {
                     System.out.println("Please enter a valid option!");
                 }
@@ -443,20 +435,24 @@ public class HotelOperationModule {
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("invalid room type name");
         }
-        
+
     }
 
-    private void viewAllRoomTypes() throws RoomTypeNotFoundException {
-        System.out.println("You are now viewing all Room Types");
-        List<RoomType> listOfRoomTypes = roomTypeSessionBeanRemote.retrieveRoomTypes();
-        for (int i = 1; i <= listOfRoomTypes.size(); i++) {
-            System.out.println(i + ". " + listOfRoomTypes.get(i - 1));
+    private void viewAllRoomTypes() {
+        try {
+            System.out.println("You are now viewing all Room Types");
+            List<RoomType> listOfRoomTypes = roomTypeSessionBeanRemote.retrieveRoomTypes();
+            for (int i = 1; i <= listOfRoomTypes.size(); i++) {
+                System.out.println(i + ". " + listOfRoomTypes.get(i - 1));
+            }
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("No Rooms Exist in the Database!");
         }
     }
 
-    private RoomType viewRoomTypeDetails(Scanner sc) throws RoomTypeNotFoundException {
-        viewAllRoomTypes();
+    private RoomType viewRoomTypeDetails(Scanner sc) {
         try {
+            viewAllRoomTypes();
             System.out.println("You are now viewing Room Type details");
             System.out.println("Please enter Room Type name");
             String typeName = sc.nextLine().trim();
@@ -478,7 +474,7 @@ public class HotelOperationModule {
     }
 
     private void createNewRoom(Scanner sc) {
-        try{
+        try {
             System.out.println("\n-You are now creating a new Room-");
             System.out.println("---------------------------------\n");
             System.out.print("Please enter a floor>");
@@ -493,16 +489,16 @@ public class HotelOperationModule {
             Room room = new Room(roomNumber);
             roomSessionBeanRemote.createNewRoom(room, roomType.getRoomTypeId());
             System.out.println("Room Successfully created");
-        }
-        catch (RoomTypeNotFoundException ex) {
+        } catch (RoomTypeNotFoundException ex) {
             System.out.println("Invalid Room Type");
         }
-        
+
     }
 
     private void updateARoom(Scanner sc) {
-        System.out.println("You are now updating a Room");
-        System.out.println("Please enter a room number");
+        System.out.println("\n-You are now updating a Room-");
+        System.out.println("-----------------------------\n");
+        System.out.println("");
         String roomNumber = sc.nextLine().trim();
         try {
             Room room = roomSessionBeanRemote.getRoomByRoomNumber(roomNumber);
@@ -510,15 +506,18 @@ public class HotelOperationModule {
             while (true) {
                 System.out.println("1. Update Room Number");
                 System.out.println("2. Update Room status");
+                System.out.println("3. Back");
                 System.out.print("Enter your choice>");
-                option = sc.nextInt();
+
+                try {
+                    option = Integer.parseInt(sc.nextLine().trim());
+                } catch (NumberFormatException ex) {
+                    option = 404;
+                }
 
                 if (option == 1) {
-                    System.out.print("Please enter a floor>");
-                    String floor = sc.nextLine().trim();
-                    System.out.print("Please enter a room number>");
-                    String number = sc.nextLine().trim();
-                    String newRoomNumber = String.join(floor, number);
+                    System.out.print("Please enter a new room number>");
+                    String newRoomNumber = sc.nextLine().trim();
                     room.setRoomNumber(newRoomNumber);
                     roomSessionBeanRemote.updateRoom(room);
 
@@ -530,6 +529,12 @@ public class HotelOperationModule {
                         System.out.println("Room changed from not-in-use to in-use");
                         room.setRoomStatus(false);
                     }
+                    roomSessionBeanRemote.updateRoom(room);
+
+                } else if (option == 3) {
+                    break;
+                } else {
+                    System.out.println("Please input a valid option!");
                 }
             }
         } catch (RoomNotFoundException ex) {
