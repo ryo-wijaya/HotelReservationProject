@@ -80,6 +80,6 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
     @Override
     public void deleteRoomRate(Long id) throws RoomRateNotFoundException {
         RoomRate roomRateToDelete = this.getRoomRateById(id);
-        em.remove(roomRateToDelete);
+        roomRateToDelete.setEnabled(Boolean.FALSE);
     }
 }

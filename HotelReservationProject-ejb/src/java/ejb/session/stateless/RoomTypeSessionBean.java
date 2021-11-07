@@ -145,7 +145,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         List<RoomRate> roomRates = roomType.getListOfRoomRates();
         List<RoomRate> filteredRates = new ArrayList<>();
         for (RoomRate roomRate : roomRates) {
-            if (roomRate.getRateType().equals(rateType)) {
+            if (roomRate.getRateType().equals(rateType) && roomRate.getEnabled() == true) {
                 filteredRates.add(roomRate);
             }
         }

@@ -423,7 +423,6 @@ public class HotelOperationModule {
 
     private void deleteARoomType(Scanner sc) {
         System.out.println("You are now DELETING a Room Type");
-        String response = "";
         try {
             RoomType roomType = viewRoomTypeDetails(sc);
             if(!roomType.getEnabled()) {
@@ -431,7 +430,7 @@ public class HotelOperationModule {
                 return;
             }
             System.out.println("Confirmation to Delete Room Type. (Y: yes)");
-            response = sc.nextLine().trim();
+            String response = sc.nextLine().trim();
             if ("Y".equals(response)) {
                 roomTypeSessionBeanRemote.deleteRoomType(roomType.getRoomTypeId());
                 System.out.println("Room Type successfully deleted!");
@@ -802,7 +801,19 @@ public class HotelOperationModule {
     }
 
     private void deleteARoomRate(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            System.out.println("You are now deleting a Room Rate");
+            System.out.println("--------------------------------");
+            List<RoomRate> roomRates = viewRoomRateDetails(sc);
+            if (roomRates.size() > 1) {
+                System.out.println("Please select room rate to delete. (1 - " + roomRates.size() + ")");
+            }
+            Integer response = sc.nextInt();
+            roomRateSessionBeanRemote.deleteRoomRate(roomRates.get(response - 1).getRoomRateId());
+            
+        } catch (RoomRateNotFoundException ex) {
+            System.out.println("Invalid Room Rate!");
+        }
     }
 
     private void viewAllRoomRates() {
@@ -810,14 +821,18 @@ public class HotelOperationModule {
         List<RoomRate> listOfRoomRates = roomRateSessionBeanRemote.retrieveRoomRates();
         if (!listOfRoomRates.isEmpty()) {
             for (RoomRate rr : listOfRoomRates) {
-                System.out.println("Rate Type: " + rr.getRateType() + " Rate Per Night: " + rr.getPrice() + " Start Date: " + rr.getStartDate() + " End Date: " + rr.getEndDate());
+                System.out.println("Rate Type: " + rr.getRateType());
+                System.out.println("Rate Per Night: " + rr.getPrice());
+                System.out.println("Start Date: " + rr.getStartDate());
+                System.out.println("End Date: " + rr.getEndDate());
+                System.out.println("------------------------------------");
             }
         } else {
             System.out.println("No Room Rate exists in the database!");
         }
     }
 
-    private void viewRoomRateDetails(Scanner sc) {
+    private List<RoomRate> viewRoomRateDetails(Scanner sc) {
 
         System.out.println("You are now viewing a Room Rate");
         System.out.println("Please enter Room Type name");
@@ -835,6 +850,7 @@ public class HotelOperationModule {
                             System.out.println("Rate Type: " + PUBLISHRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
+                        return roomRates;
                     } else {
                         System.out.println("Rate Type does not exists!");
                     }
@@ -846,6 +862,7 @@ public class HotelOperationModule {
                             System.out.println("Rate Type: " + NORMALRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
+                        return roomRates;
                     } else {
                         System.out.println("Rate Type does not exists!");
                     }
@@ -857,6 +874,7 @@ public class HotelOperationModule {
                             System.out.println("Rate Type: " + PEAKRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
+                        return roomRates;
                     } else {
                         System.out.println("Rate Type does not exists!");
                     }
@@ -868,6 +886,7 @@ public class HotelOperationModule {
                             System.out.println("Rate Type: " + PROMOTIONRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
+                        return roomRates;
                     } else {
                         System.out.println("Rate Type does not exists!");
                     }
@@ -877,8 +896,10 @@ public class HotelOperationModule {
                     System.out.println("Invalid Room Rate!");
                 }
             }
+            return new ArrayList<>();
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Operation cancelled! No room types exist in the database");
+            return new ArrayList<>();
         }
     }
 }

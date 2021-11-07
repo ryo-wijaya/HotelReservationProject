@@ -89,18 +89,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     //deleting a roomType involves deleting all its associated RoomRates
     @Override
     public void deleteRoomByRoomNumber(String roomNumber) throws RoomNotFoundException, RoomIsTiedToABookingDeletionException {
-        List<Booking> bookings = bookingSessionBeanLocal.retrieveAllProducts();
         Room roomToDelete = this.getRoomByRoomNumber(roomNumber);
-
-        for (Booking b : bookings) {
-            if (b.getRooms().contains(roomToDelete)) {
-                throw new RoomIsTiedToABookingDeletionException();
-            }
-            else if (b.getRooms().contains(roomToDelete)){
-                b.getRooms().remove(roomToDelete);
-            }
-        }
-        
         roomToDelete.getBookings().clear();
         roomToDelete.setEnabled(false);
     }
@@ -108,8 +97,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     @Override
     public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException {
         RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeByName(typeName);
-        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType AND r.enabled = :inTrue");
         query.setParameter("inRoomType", roomType);
+        query.setParameter("inTrue", true);
         List<Room> rooms = query.getResultList();
         return rooms.isEmpty();
     }
