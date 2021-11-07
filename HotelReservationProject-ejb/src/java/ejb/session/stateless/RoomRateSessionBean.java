@@ -34,14 +34,15 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
 
     //creating a new roomRate involves adding it to a given RoomType as well
     @Override
-    public Long createNewRoomRate(RoomRate roomRate, int roomRank) throws FailedToCreateRoomRateException {
+    public Long createNewRoomRate(RoomRate roomRate, Long roomTypeId) throws FailedToCreateRoomRateException {
         try {
+            Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomTypeId = :inRoomTypeId");
+            query.setParameter("inRoomTypeId", roomTypeId);
             em.persist(roomRate);
-            RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeByRank(roomRank);
+            RoomType roomType = (RoomType) query.getSingleResult();
             roomType.addToListOfRoomRate(roomRate);
-            em.flush();
             return roomRate.getRoomRateId();
-        } catch (RoomTypeNotFoundException | EntityInstanceExistsInCollectionException ex) {
+        } catch (EntityInstanceExistsInCollectionException ex) {
             throw new FailedToCreateRoomRateException();
         }
     }
@@ -62,15 +63,14 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
             throw new RoomRateNotFoundException();
         }
     }
-    
+
     //needs to make room rate bidirectional. ADD in RoomTpyeName -> getRoomTypeByName -> add with the query WHERE rr.roomType = roomType
     public RoomRate getRoomRateByRatePerNight(RateType ratePerNight) {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.ratePerNight = :inRatePerNight");
         query.setParameter("inRatePerNight", ratePerNight);
         return (RoomRate) query.getSingleResult();
     }
-    
-    //No em.merge() since we are doing the update in a managed context
+
     @Override
     public void updateRoomRate(Long id, RateType newRatePerNight) throws RoomRateNotFoundException {
         RoomRate roomRateToUpdate = this.getRoomRateById(id);
