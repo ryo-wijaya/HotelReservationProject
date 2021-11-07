@@ -43,7 +43,6 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         Query query = em.createQuery("SELECT rt FROM RoomType rt");
         List<RoomType> listOfRoomTypes = query.getResultList();
         if (listOfRoomTypes != null) {
-            listOfRoomTypes.sort((x, y) -> x.getNextHigherRoomType() - y.getNextHigherRoomType());
             return listOfRoomTypes;
         } else {
             throw new RoomTypeNotFoundException();

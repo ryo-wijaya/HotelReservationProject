@@ -362,8 +362,21 @@ public class HotelOperationModule {
         }
     }
 
-    private void viewRoomTypeDetails(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void viewRoomTypeDetails(Scanner sc) throws RoomTypeNotFoundException {
+        viewAllRoomTypes();
+        System.out.println("You are now viewing a Room Type details");
+        System.out.println("Please enter Room Type name");
+        String typeName = sc.nextLine().trim();
+        RoomType roomType = roomTypeSessionBean.getRoomTypeByName(typeName);
+        System.out.println("Room Type Name: " + roomType.getRoomName());
+        System.out.println("Next Higher Room Type: " + roomType.getNextHigherRoomType());
+        System.out.println("Description: " + roomType.getDescription());
+        System.out.println("Room Size: " + roomType.getRoomSize());
+        System.out.println("Beds: " + roomType.getBeds());
+        System.out.println("Capacity: " + roomType.getCapacity());
+        for(String amenities : roomType.getAmenities()){
+            System.out.println("Amentites: " + amenities);
+        }
     }
 
     private void createNewRoom(Scanner sc) throws RoomTypeNotFoundException {
