@@ -477,20 +477,27 @@ public class HotelOperationModule {
         }
     }
 
-    private void createNewRoom(Scanner sc) throws RoomTypeNotFoundException {
-        System.out.println("\n-You are now creating a new Room-");
-        System.out.println("---------------------------------\n");
-        System.out.print("Please enter a floor>");
-        String floor = sc.nextLine().trim();
-        System.out.print("Please enter a room number>");
-        String number = sc.nextLine().trim();
-        String roomNumber = String.join(floor, number);
-        this.viewAllRoomTypes();
-        System.out.println("Please enter a room type");
-        String roomTypeName = sc.nextLine();
-        RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
-        Room room = new Room(roomNumber, roomType);
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void createNewRoom(Scanner sc) {
+        try{
+            System.out.println("\n-You are now creating a new Room-");
+            System.out.println("---------------------------------\n");
+            System.out.print("Please enter a floor>");
+            String floor = sc.nextLine().trim();
+            System.out.print("Please enter a room number>");
+            String number = sc.nextLine().trim();
+            String roomNumber = String.join(floor, number);
+            this.viewAllRoomTypes();
+            System.out.println("Please enter a room type");
+            String roomTypeName = sc.nextLine();
+            RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
+            Room room = new Room(roomNumber);
+            roomSessionBeanRemote.createNewRoom(room, roomType.getRoomTypeId());
+            System.out.println("Room Successfully created");
+        }
+        catch (RoomTypeNotFoundException ex) {
+            System.out.println("Invalid Room Type");
+        }
+        
     }
 
     private void updateARoom(Scanner sc) {

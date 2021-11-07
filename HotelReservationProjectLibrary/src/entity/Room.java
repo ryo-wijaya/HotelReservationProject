@@ -57,9 +57,8 @@ public class Room implements Serializable {
         roomStatus = false;
     }
     
-    public Room(String roomNumber, RoomType roomType) {
+    public Room(String roomNumber) {
         this.roomNumber = roomNumber;
-        this.roomType = roomType;
     }
 
     public Boolean isEnabled() {
@@ -124,10 +123,6 @@ public class Room implements Serializable {
         {
             throw new EntityInstanceMissingInCollectionException("Booking does not exist");
         }
-    }
-    
-    public Room(String roomNumber) {
-        this.roomNumber = roomNumber;
     }
     
     public String getRoomNumber() {

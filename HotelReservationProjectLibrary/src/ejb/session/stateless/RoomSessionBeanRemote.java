@@ -19,7 +19,7 @@ import util.exceptions.RoomTypeNotFoundException;
 @Remote
 public interface RoomSessionBeanRemote {
 
-    public Long createNewRoom(Room room);
+    public Long createNewRoom(Room room, Long roomTypeId) throws RoomTypeNotFoundException;
 
     public List<Room> retrieveRooms() throws RoomNotFoundException;
 

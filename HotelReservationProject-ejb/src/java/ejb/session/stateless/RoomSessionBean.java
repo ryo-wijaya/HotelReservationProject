@@ -35,7 +35,10 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     private EntityManager em;
 
     @Override
-    public Long createNewRoom(Room room) {
+    public Long createNewRoom(Room room, Long roomTypeId) throws RoomTypeNotFoundException {
+        RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
+        
+        room.setRoomType(roomType);
         em.persist(room);
         em.flush();
         return room.getRoomId();
