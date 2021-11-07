@@ -14,8 +14,6 @@ import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
