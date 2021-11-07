@@ -42,6 +42,7 @@ public class Booking implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Date checkOutDate;
+    private Boolean preBooking;
     
     // many to one relationship with customer
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {})
@@ -54,9 +55,11 @@ public class Booking implements Serializable {
 
     public Booking() {
         this.rooms = new ArrayList<>();
+        preBooking = true;
     }
 
     public Booking(Date checkInDate, Date checkOutDate) {
+        this();
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
     }
@@ -172,6 +175,20 @@ public class Booking implements Serializable {
         {
             throw new EntityInstanceMissingInCollectionException("Booking does not exist");
         }
+    }
+
+    /**
+     * @return the preBooking
+     */
+    public Boolean getPreBooking() {
+        return preBooking;
+    }
+
+    /**
+     * @param preBooking the preBooking to set
+     */
+    public void setPreBooking(Boolean preBooking) {
+        this.preBooking = preBooking;
     }
     
 }
