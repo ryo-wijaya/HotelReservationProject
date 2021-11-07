@@ -9,6 +9,6 @@ package util.enumeration;
  *
  * @author ryo20
  */
-public enum EmployeeType {
+public enum PartnerType {
     PARTNEREMPLOYEE, PARTNERRESERVATIONMANAGER
 }

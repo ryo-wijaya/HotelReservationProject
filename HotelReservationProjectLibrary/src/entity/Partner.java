@@ -15,7 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import util.enumeration.EmployeeType;
+import util.enumeration.PartnerType;
 
 /**
  *
@@ -43,12 +43,12 @@ public class Partner implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
-    private EmployeeType employeeType;
+    private PartnerType employeeType;
 
     public Partner() {
     }
 
-    public Partner(String name, String userName, String password, EmployeeType employeeType) {
+    public Partner(String name, String userName, String password, PartnerType employeeType) {
         this.name = name;
         this.userName = userName;
         this.password = password;
@@ -129,14 +129,14 @@ public class Partner implements Serializable {
     /**
      * @return the employeeType
      */
-    public EmployeeType getEmployeeType() {
+    public PartnerType getEmployeeType() {
         return employeeType;
     }
 
     /**
      * @param employeeType the employeeType to set
      */
-    public void setEmployeeType(EmployeeType employeeType) {
+    public void setEmployeeType(PartnerType employeeType) {
         this.employeeType = employeeType;
     }
     

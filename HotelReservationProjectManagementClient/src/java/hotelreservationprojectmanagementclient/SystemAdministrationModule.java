@@ -13,9 +13,9 @@ import entity.Partner;
 import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeRole;
-import util.enumeration.EmployeeType;
+import util.enumeration.PartnerType;
 import util.exceptions.EmployeeNotFoundException;
-import util.exceptions.partnerNotFoundException;
+import util.exceptions.PartnerNotFoundException;
 
 /**
  *
@@ -39,8 +39,8 @@ public class SystemAdministrationModule {
         int choice;
         boolean logout = false;
         while (!logout) {
-            System.out.println("You are currently logged in as a System Administrator");
-            System.out.println("-----------------------------------------------------");
+            System.out.println("\n-You are currently logged in as a System Administrator-");
+            System.out.println("-------------------------------------------------------\n");
             System.out.println("1. Create new Employee");
             System.out.println("2. View all Employees");
             System.out.println("3. Create new Partner");
@@ -48,34 +48,31 @@ public class SystemAdministrationModule {
             System.out.println("5. Logout");
 
             System.out.print("Please select an option>");
-            choice = sc.nextInt();
+
+            try { //fixes nextLine() eating \n problem + when user enters not an Int, catch error
+                choice = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException ex) {
+                choice = 404; //this number just has to be not a valid option
+            }
 
             switch (choice) {
                 case 1:
                     this.createNewEmployee();
                     break;
                 case 2:
-                    try {
-                        this.viewAllEmployees();
-                    } catch (EmployeeNotFoundException ex) {
-                        System.out.println("No Employees exist in the database!");
-                    }
+                    this.viewAllEmployees();
                     break;
                 case 3:
                     this.createNewPartner();
                     break;
                 case 4:
-                    try {
-                        this.viewAllPartners();
-                    } catch (partnerNotFoundException ex) {
-                        System.out.println("No Partners exists in the database!");
-                    }
+                    this.viewAllPartners();
                     break;
                 case 5:
                     logout = true;
                     break;
                 default:
-                    System.out.println("Please input a valid choice");
+                    System.out.println("Please input a valid choice!");
             }
         }
     }
@@ -85,22 +82,32 @@ public class SystemAdministrationModule {
         String username;
         String password;
         EmployeeRole role = null;
-
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter a full name");
-        name = sc.nextLine();
-        System.out.print("Enter a username>");
-        username = sc.next();
-        System.out.print("Enter a password>");
-        password = sc.next();
         boolean roleSettled = false;
 
-        while (roleSettled == false) {
-            System.out.println("Enter a Role, these are your choices");
+        System.out.println("\n-Creating a new employee-");
+        System.out.println("-------------------------\n");
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter a full name>");
+        name = sc.nextLine();
+        System.out.print("Enter a username>");
+        username = sc.next().trim();
+        System.out.print("Enter a password>");
+        password = sc.next().trim();
+
+        while (!roleSettled) {
+            int roleChoice;
+
             for (int i = 0; i < EmployeeRole.values().length; i++) {
                 System.out.println((i + 1) + ". " + EmployeeRole.values()[i]);
             }
-            int roleChoice = sc.nextInt();
+
+            System.out.print("\nEnter a Role (integer), these are your choices>");
+            try {
+                roleChoice = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                roleChoice = 404;
+            }
 
             switch (roleChoice) {
                 case 1:
@@ -123,67 +130,82 @@ public class SystemAdministrationModule {
                     System.out.println("Please enter a valid choice!");
             }
         }
-        //At this point we have all the data we need to create a new employee
         Employee newEmployee = new Employee(name, username, password, role);
         employeeSessionBeanRemote.createNewEmployee(newEmployee);
     }
-    
 
-    public void viewAllEmployees() throws EmployeeNotFoundException {
-        List<Employee> listOfEmployees = employeeSessionBeanRemote.retrieveAllEmployees();
-        System.out.println("Viewing a list of Employees");
-        for (Employee e : listOfEmployees) {
-            System.out.println("Name: " + e.getName() + " | Username: " + e.getUsername() + " | Role: " + e.getErole());
+    public void viewAllEmployees() {
+        try {
+            List<Employee> listOfEmployees = employeeSessionBeanRemote.retrieveAllEmployees();
+            System.out.println("\n-Viewing a list of Employees-");
+            System.out.println("-----------------------------\n");
+            for (Employee e : listOfEmployees) {
+                System.out.println("Name: " + e.getName() + " | Username: " + e.getUsername() + " | Role: " + e.getErole());
+            }
+        } catch (EmployeeNotFoundException ex) {
+            System.out.println("No employees exist in the database!");
         }
     }
-    
 
     public void createNewPartner() {
         String name;
         String username;
         String password;
-        EmployeeType type = null;
-
+        PartnerType type = null;
+        boolean roleSettled = false;
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter a full name");
+
+        System.out.println("\n-Creating a new Partner-");
+        System.out.println("------------------------\n");
+        System.out.print("Enter a full name>");
         name = sc.nextLine();
         System.out.print("Enter a username>");
-        username = sc.next();
+        username = sc.next().trim();
         System.out.print("Enter a password>");
-        password = sc.next();
-        boolean roleSettled = false;
+        password = sc.next().trim();
 
-        while (roleSettled == false) {
-            System.out.println("Enter a partner type, these are your choices");
-            for (int i = 0; i < EmployeeType.values().length; i++) {
-                System.out.println((i + 1) + ". " + EmployeeType.values()[i]);
+        while (!roleSettled) {
+            int roleChoice;
+
+            for (int i = 0; i < PartnerType.values().length; i++) {
+                System.out.println((i + 1) + ". " + PartnerType.values()[i]);
             }
-            int roleChoice = sc.nextInt();
+
+            System.out.print("Enter a partner type (integer), these are your choices>");
+            try {
+                roleChoice = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                roleChoice = 404;
+            }
 
             switch (roleChoice) {
                 case 1:
-                    type = EmployeeType.PARTNEREMPLOYEE;
+                    type = PartnerType.PARTNEREMPLOYEE;
                     roleSettled = true;
                     break;
                 case 2:
-                    type = EmployeeType.PARTNERRESERVATIONMANAGER;
+                    type = PartnerType.PARTNERRESERVATIONMANAGER;
                     roleSettled = true;
                     break;
                 default:
                     System.out.println("Please enter a valid choice!");
             }
         }
-        //At this point we have all the data we need to create a new partner
+
         Partner partner = new Partner(name, username, password, type);
         partnerSessionBeanRemote.createNewPartner(partner);
     }
-    
 
-    public void viewAllPartners() throws partnerNotFoundException {
-        List<Partner> listOfPartners = partnerSessionBeanRemote.retrieveAllPartners();
-        System.out.println("Viewing a list of Partners");
-        for (Partner p : listOfPartners) {
-            System.out.println("Name: " + p.getName() + " | Username: " + p.getUserName() + " | PartnerType: " + p.getEmployeeType());
+    public void viewAllPartners() {
+        try {
+            List<Partner> listOfPartners = partnerSessionBeanRemote.retrieveAllPartners();
+            System.out.println("\n-Viewing a list of Partners-");
+            System.out.println("----------------------------\n");
+            for (Partner p : listOfPartners) {
+                System.out.println("Name: " + p.getName() + " | Username: " + p.getUserName() + " | PartnerType: " + p.getEmployeeType());
+            }
+        } catch (PartnerNotFoundException ex) {
+            System.out.println("No partners exist in the Database!");
         }
     }
 }

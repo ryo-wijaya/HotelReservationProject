@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exceptions.LoginCredentialsInvalidException;
-import util.exceptions.partnerNotFoundException;
+import util.exceptions.PartnerNotFoundException;
 
 /**
  *
@@ -26,68 +26,58 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-
     public PartnerSessionBean() {
     }
-    
+
     @Override
-    public Partner createNewPartner(Partner newPartner)
-    {
+    public Partner createNewPartner(Partner newPartner) {
         em.persist(newPartner);
         em.flush();
         return newPartner;
         // throw partnerusernameexistexcpetion and unknownpersistenceexception
     }
-    
+
     @Override
-    public List<Partner> retrieveAllPartners() 
-    {
-        Query query = em.createQuery("SELECT p FROM Partner P");
-        return query.getResultList();
+    public List<Partner> retrieveAllPartners() throws PartnerNotFoundException {
+        Query query = em.createQuery("SELECT p FROM Partner p");
+        List<Partner> partners = query.getResultList();
+        if (!partners.isEmpty()) {
+            return partners;
+        } else {
+            throw new PartnerNotFoundException();
+        }
     }
-    
+
     @Override
-    public Partner retrievePartnerByPartnerId(Long partnerId) throws partnerNotFoundException
-    {
+    public Partner retrievePartnerByPartnerId(Long partnerId) throws PartnerNotFoundException {
         Partner partner = em.find(Partner.class, partnerId);
-        if (partner != null)
-        {
+        if (partner != null) {
             return partner;
-        }
-        else 
-        {
-            throw new partnerNotFoundException("Partner ID " + partnerId + " does not exist!");
+        } else {
+            throw new PartnerNotFoundException();
         }
     }
-    
+
     @Override
-    public Partner retrievePartnerByUsername(String username)
-    {
+    public Partner retrievePartnerByUsername(String username) {
         Query query = em.createQuery("SELECT p FROM Partner p WHERE p.username = :inUsername");
         query.setParameter("inUsername", username);
-        return (Partner)query.getSingleResult();
+        return (Partner) query.getSingleResult();
         // catch noResultException | NonUniqueResultException
     }
-    
+
     @Override
-    public Partner partnerLogin(String username, String password) throws LoginCredentialsInvalidException
-    {
-        try
-        {
+    public Partner partnerLogin(String username, String password) throws LoginCredentialsInvalidException {
+        try {
             Partner partner = retrievePartnerByUsername(username);
-            if(partner.getPassword().equals(password))
-            {
+            if (partner.getPassword().equals(password)) {
                 return partner;
+            } else {
+                throw new LoginCredentialsInvalidException();
             }
-            else 
-            {
-                throw new LoginCredentialsInvalidException("Username does not exist or invalid password!");
-            }
-        }
-        catch(LoginCredentialsInvalidException ex)
-        {
-            throw new LoginCredentialsInvalidException("Username does not exist or invalid password!");
+        } catch (LoginCredentialsInvalidException ex) {
+            throw new LoginCredentialsInvalidException();
         }
     }
-    
+
 }

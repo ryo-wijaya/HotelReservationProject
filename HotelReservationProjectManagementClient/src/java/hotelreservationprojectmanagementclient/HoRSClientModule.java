@@ -52,20 +52,25 @@ public class HoRSClientModule {
    
     public void runEmployeeLoginPage(){
         Scanner sc = new Scanner(System.in);
-        Integer response = 0;
+        int response;
             
             while(true){
-                System.out.println("*** Welcome to HoRS management client System ***\n");
+                System.out.println("-Welcome to HoRS management client System-\n");
                 System.out.println("1: Login");
-                System.out.println("2: Exit\n");
-                response = 0;               
-                while (response < 1 || response > 2){
-                    System.out.print("> ");      
-                    response = sc.nextInt();        
-                    if(response == 1){
+                System.out.println("2: Exit\n");    
+                while (true) {
+                    System.out.print("Enter an option> ");
+                    
+                    try {
+                        response = Integer.parseInt(sc.nextLine().trim());
+                    } catch (NumberFormatException ex) {
+                        response = 404;
+                    }
+                        
+                    if (response == 1) {
                         try {
                             doLogin();
-                            System.out.print("Login successful!\n");
+                            System.out.print("Login successful!");
                             if(currentEmployee.getErole() == SYSTEMADMINISTRATOR){
                                 systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
                                 systemAdministrationModule.runMainMenu();
@@ -80,29 +85,29 @@ public class HoRSClientModule {
                             }
                         }
                         catch (LoginCredentialsInvalidException ex) {
-                            System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
+                            System.out.println("Invalid login credentials!");
                         }                  
                     }
-                    else if(response == 2){
+                    else if (response == 2){
                         break;
                     }
                     else {
-                        System.out.println("Invalid option, please try again!\n");
+                        System.out.println("Invalid option, please try again!");
                     }
                 }
+                
                 if (response == 2) {
+                    System.out.println("Exiting application!");
                     break;
                 }
             }
-        //if correct credentials are given, instantiate the required client class (check enum type), pass in the remote beans, and call the runMainMenu() method of each class.
-        //dont forget to also pass in the EmployeeEntity
     }
     
-    public void doLogin() throws LoginCredentialsInvalidException{
+    public void doLogin() throws LoginCredentialsInvalidException {
         Scanner sc = new Scanner(System.in);
         String username = "";
         String password = "";
-        System.out.println("*** HoRS management client System :: Login ***\n");
+        System.out.println("-HoRS management client System Login-");
         System.out.print("Enter username> ");
         username = sc.nextLine().trim();
         System.out.print("Enter password> ");
@@ -114,6 +119,5 @@ public class HoRSClientModule {
         else {
             throw new LoginCredentialsInvalidException("Invalid login credential!");
         }
-        
     }
 }
