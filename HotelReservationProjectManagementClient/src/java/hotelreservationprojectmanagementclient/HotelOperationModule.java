@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.enumeration.EmployeeRole;
 import util.enumeration.RateType;
 import static util.enumeration.RateType.NORMALRATE;
@@ -349,31 +351,49 @@ public class HotelOperationModule {
     }
 
     private void deleteARoomType(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("You are now DELETING a Room Type");
+        String response = "";
+        try {
+            RoomType roomType = viewRoomTypeDetails(sc);
+            System.out.println("Confirmation to Delete Room Type. (Y: yes)");
+            response = sc.nextLine().trim();
+            if ("Y".equals(response)) {
+                roomTypeSessionBeanRemote.deleteRoomType(roomType.getRoomTypeId());
+            }
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("invalid room type name");
+        }
+        
     }
 
     private void viewAllRoomTypes() throws RoomTypeNotFoundException {
         System.out.println("You are now viewing all Room Types");
-        List<RoomType> listOfRoomTypes = roomTypeSessionBean.retrieveRoomTypes();
+        List<RoomType> listOfRoomTypes = roomTypeSessionBeanRemote.retrieveRoomTypes();
         for (int i = 1; i <= listOfRoomTypes.size(); i++) {
             System.out.println(i + ". " + listOfRoomTypes.get(i - 1));
         }
     }
 
-    private void viewRoomTypeDetails(Scanner sc) throws RoomTypeNotFoundException {
+    private RoomType viewRoomTypeDetails(Scanner sc) throws RoomTypeNotFoundException {
         viewAllRoomTypes();
-        System.out.println("You are now viewing a Room Type details");
-        System.out.println("Please enter Room Type name");
-        String typeName = sc.nextLine().trim();
-        RoomType roomType = roomTypeSessionBean.getRoomTypeByName(typeName);
-        System.out.println("Room Type Name: " + roomType.getRoomName());
-        System.out.println("Next Higher Room Type: " + roomType.getNextHigherRoomType());
-        System.out.println("Description: " + roomType.getDescription());
-        System.out.println("Room Size: " + roomType.getRoomSize());
-        System.out.println("Beds: " + roomType.getBeds());
-        System.out.println("Capacity: " + roomType.getCapacity());
-        for(String amenities : roomType.getAmenities()){
-            System.out.println("Amentites: " + amenities);
+        try {
+            System.out.println("You are now viewing Room Type details");
+            System.out.println("Please enter Room Type name");
+            String typeName = sc.nextLine().trim();
+            RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(typeName);
+            System.out.println("Room Type Name: " + roomType.getRoomName());
+            System.out.println("Next Higher Room Type: " + roomType.getNextHigherRoomType());
+            System.out.println("Description: " + roomType.getDescription());
+            System.out.println("Room Size: " + roomType.getRoomSize());
+            System.out.println("Beds: " + roomType.getBeds());
+            System.out.println("Capacity: " + roomType.getCapacity());
+            for (String amenities : roomType.getAmenities()) {
+                System.out.println("Amentites: " + amenities);
+            }
+            return roomType;
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("invalid room type name");
+            return null;
         }
     }
 

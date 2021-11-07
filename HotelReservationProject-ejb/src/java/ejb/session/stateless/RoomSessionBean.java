@@ -63,6 +63,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     }
     
     
+    @Override
     public Room getRoomByRoomNumber(String roomNumber) throws RoomNotFoundException {
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :inRoomNumber");
         query.setParameter("inRoomNumber", roomNumber);
@@ -74,6 +75,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         }
     }
 
+    @Override
     public void updateRoom(Room room) throws RoomNotFoundException {
         //add bean validators
         em.merge(room);
@@ -93,5 +95,13 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         }
         roomToDelete.getBookings().clear();
         roomToDelete.setEnabled(false);
+    }
+    @Override
+    public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException{
+        RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeByName(typeName);
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType");
+        query.setParameter("inRoomType", roomType);
+        List<Room> rooms = query.getResultList();
+        return rooms.isEmpty();
     }
 }
