@@ -115,13 +115,9 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         }
     }
 
-    //no merge needed as this is a managed context
     @Override
-    public void updateRoomType(Long id, String newName, Integer ranking) throws RoomTypeNotFoundException {
-        RoomType roomTypeToUpdate = this.getRoomTypeById(id);
-        roomTypeToUpdate.setRoomName(newName);
-        roomTypeToUpdate.setNextHigherRoomType(ranking);
-        em.merge(roomTypeToUpdate);
+    public void updateRoomType(RoomType roomType) {
+        em.merge(roomType);
     }
 
     //deleting a roomType involves deleting all its associated RoomRates 
@@ -145,7 +141,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     }
     
     @Override
-    public List<RoomRate> getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException{
+    public List<RoomRate> getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException {
         RoomType roomType = getRoomTypeByName(roomName);
         List<RoomRate> roomRates = roomType.getListOfRoomRates();
         List<RoomRate> filteredRates = new ArrayList<>();
@@ -157,6 +153,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         return filteredRates;
     }
     
+    /*
     @Override
     public List<RoomRate> getRoomRateByRoomTypeRankAndRateType(int roomRank, RateType rateType) throws RoomRateNotFoundException {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking =:inRoomRank");
@@ -174,6 +171,23 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             throw new RoomRateNotFoundException();
         } else {
             return filteredRates;
+        }
+    }
+    */
+    
+    @Override
+    public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName) {
+        Query query1 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomName = :inOldName");
+        Query query2 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.NextHigherRoomType = :inNewName");
+        query1.setParameter("inOldName", newRoomTypeName);
+        query2.setParameter("inNewName", newRoomTypeName);
+        
+        RoomType roomTypeWithNewName = (RoomType) query1.getSingleResult();
+        roomTypeWithNewName.setRoomName(newRoomTypeName);
+        
+        List<RoomType> roomTypesToChange = query2.getResultList();
+        for (RoomType rt : roomTypesToChange) {
+            rt.setNextHigherRoomType(newRoomTypeName);
         }
     }
 }

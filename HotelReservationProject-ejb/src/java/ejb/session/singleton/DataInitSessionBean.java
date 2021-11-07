@@ -81,6 +81,7 @@ public class DataInitSessionBean {
         employee = new Employee("guest", "guestrelo", "password", GUESTRELATIONSOFFICER);
         employeeSessionBeanLocal.createNewEmployee(employee);
         
+        /*
         try{
             RoomType roomType = new RoomType("Grand Suite", 1, "Grand Suite", "GRAND", 3, 6);
             RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 100.00);
@@ -105,6 +106,7 @@ public class DataInitSessionBean {
         } catch (FailedToCreateRoomRateException ex) {
             System.out.print("ERROR 2 ");
         }
+        */
 
         
         System.out.println("Successfully deployed");
