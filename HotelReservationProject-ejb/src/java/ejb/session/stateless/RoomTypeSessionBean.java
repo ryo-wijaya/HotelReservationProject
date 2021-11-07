@@ -131,8 +131,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
                     roomRateSessionBeanLocal.deleteRoomRate(rr.getRoomRateId());
                 }
                 roomTypeToDelete.getListOfRoomRates().clear();
-                em.remove(roomTypeToDelete);
-
+                roomTypeToDelete.setEnabled(false);
             } catch (RoomTypeNotFoundException | RoomRateNotFoundException ex) {
                 //we don't have to worry about a RoomRate not being found, but we still have to catch the potential exception
                 throw new RoomTypeNotFoundException();
