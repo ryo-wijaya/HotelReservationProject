@@ -37,18 +37,21 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     @Override
     public Long createNewRoom(Room room, Long roomTypeId) throws RoomTypeNotFoundException {
         RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
-        
-        room.setRoomType(roomType);
-        em.persist(room);
-        em.flush();
-        return room.getRoomId();
+        if (roomType.getEnabled()) {
+            room.setRoomType(roomType);
+            em.persist(room);
+            em.flush();
+            return room.getRoomId();
+        } else {
+            throw new RoomTypeNotFoundException();
+        }
     }
 
     @Override
     public List<Room> retrieveRooms() throws RoomNotFoundException {
         Query query = em.createQuery("SELECT r FROM Room r");
         List<Room> listOfRooms = query.getResultList();
-        if (listOfRooms != null) {
+        if (!listOfRooms.isEmpty()) {
             return listOfRooms;
         } else {
             throw new RoomNotFoundException();
@@ -64,8 +67,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             throw new RoomNotFoundException();
         }
     }
-    
-    
+
     @Override
     public Room getRoomByRoomNumber(String roomNumber) throws RoomNotFoundException {
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :inRoomNumber");
@@ -98,8 +100,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         roomToDelete.getBookings().clear();
         roomToDelete.setEnabled(false);
     }
+
     @Override
-    public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException{
+    public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException {
         RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeByName(typeName);
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType");
         query.setParameter("inRoomType", roomType);

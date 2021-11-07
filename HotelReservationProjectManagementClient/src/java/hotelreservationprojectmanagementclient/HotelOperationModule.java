@@ -477,11 +477,8 @@ public class HotelOperationModule {
         try {
             System.out.println("\n-You are now creating a new Room-");
             System.out.println("---------------------------------\n");
-            System.out.print("Please enter a floor>");
-            String floor = sc.nextLine().trim();
             System.out.print("Please enter a room number>");
-            String number = sc.nextLine().trim();
-            String roomNumber = String.join(floor, number);
+            String roomNumber = sc.nextLine().trim();
             this.viewAllRoomTypes();
             System.out.println("Please enter a room type");
             String roomTypeName = sc.nextLine();
@@ -489,6 +486,7 @@ public class HotelOperationModule {
             Room room = new Room(roomNumber);
             roomSessionBeanRemote.createNewRoom(room, roomType.getRoomTypeId());
             System.out.println("Room Successfully created");
+            
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Invalid Room Type");
         }
@@ -557,6 +555,8 @@ public class HotelOperationModule {
 
     private void viewAllRooms(Scanner sc) {
         try {
+            System.out.println("\n-You are now viewing all Rooms-");
+            System.out.println("-------------------------------\n");
             List<Room> rooms = roomSessionBeanRemote.retrieveRooms();
             for (Room r : rooms) {
                 String status;
@@ -577,12 +577,6 @@ public class HotelOperationModule {
     }
 
     private void createNewRoomRate(Scanner sc) {
-        System.out.println("You are now creating a new Room Rate");
-        System.out.println("Please enter a rate type:");
-        for (int i = 0; i < RateType.values().length; i++) {
-            System.out.println((i + 1) + ". " + RateType.values()[i]);
-        }
-
         RateType rate;
         double price;
         String startDateString;
@@ -590,9 +584,19 @@ public class HotelOperationModule {
         Date startDate;
         Date endDate;
 
-        System.out.print("Select a rate from 1-4>");
-        int option = sc.nextInt();
+        System.out.println("\n-You are now creating a new Room Rate-");
+        System.out.println("--------------------------------------\n");
+
         while (true) {
+            int room = dis
+            for (int i = 0; i < RateType.values().length; i++) {
+                System.out.println((i + 1) + ". " + RateType.values()[i]);
+            }
+            System.out.print("Select a rate from 1-4>");
+            
+            try {
+                i
+            }
             if (option == 1) {
                 rate = RateType.PUBLISHRATE;
                 break;
@@ -609,6 +613,7 @@ public class HotelOperationModule {
                 System.out.println("Invalid choice!");
             }
         }
+
         System.out.print("Input a price>");
         price = sc.nextDouble();
         System.out.print("Input Start Date in dd/mm/yyyy (with the slashes)>");
@@ -629,11 +634,10 @@ public class HotelOperationModule {
             roomTypeRank = sc.nextInt();
             RoomRate newRate = new RoomRate(rate, price, startDate, endDate);
             roomRateSessionBeanRemote.createNewRoomRate(newRate, roomTypeRank);
-        } catch (RoomTypeNotFoundException ex) {
-            System.out.println("Operation cancelled! No room types exist in the database");
         } catch (FailedToCreateRoomRateException ex) {
             System.out.println("Failed to create Room Rate! Please check that a correct room rank was entered");
         }
+
     }
 
     private void updateARoomRate(Scanner sc) {
