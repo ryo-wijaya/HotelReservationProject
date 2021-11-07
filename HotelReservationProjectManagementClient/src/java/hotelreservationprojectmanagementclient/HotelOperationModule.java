@@ -72,18 +72,25 @@ public class HotelOperationModule {
         boolean logout = false;
         int submoduleOption;
         while (!logout) {
-            System.out.println("You are currently logged in as an Operation Manager");
+            System.out.println("\n-You are currently logged in as a Operation Manager-");
+            System.out.println("----------------------------------------------------\n");
             System.out.println("1. Room Types");
             System.out.println("2. Rooms");
             System.out.println("3. Logout");
             System.out.print("Please select a sub-module to work with>");
-            submoduleOption = sc.nextInt();
-            int option;
+
+            try {
+                submoduleOption = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                submoduleOption = 404;
+            }
 
             if (submoduleOption == 1) {
                 boolean returnBack = false;
                 while (!returnBack) {
-                    System.out.println("You are now in the Room Type sub-module");
+                    int option;
+                    System.out.println("\n-You are now in the Room Type Sub-Module-");
+                    System.out.println("-----------------------------------------\n");
                     System.out.println("1. Create new Room Type");
                     System.out.println("2. Update a Room Type");
                     System.out.println("3. Delete a Room Type");
@@ -91,7 +98,12 @@ public class HotelOperationModule {
                     System.out.println("5. View Room Type details");
                     System.out.println("6. Back to sub-module page");
                     System.out.print("Please select an option>");
-                    option = sc.nextInt();
+
+                    try {
+                        option = Integer.parseInt(sc.nextLine().trim());
+                    } catch (NumberFormatException ex) {
+                        option = 404;
+                    }
 
                     switch (option) {
                         case 1:
@@ -123,7 +135,9 @@ public class HotelOperationModule {
             } else if (submoduleOption == 2) {
                 boolean returnBack = false;
                 while (!returnBack) {
-                    System.out.println("You are now in the Room sub-module");
+                    int option;
+                    System.out.println("\n-You are now in the Room Sub-Module-");
+                    System.out.println("------------------------------------\n");
                     System.out.println("1. Create new Room");
                     System.out.println("2. Update a Room");
                     System.out.println("3. Delete a Room");
@@ -131,7 +145,12 @@ public class HotelOperationModule {
                     System.out.println("5. View Room Allocation Exception Report");
                     System.out.println("6. Back to sub-module page");
                     System.out.print("Please select an option>");
-                    option = sc.nextInt();
+
+                    try {
+                        option = Integer.parseInt(sc.nextLine().trim());
+                    } catch (NumberFormatException ex) {
+                        option = 404;
+                    }
 
                     switch (option) {
                         case 1:
@@ -163,6 +182,8 @@ public class HotelOperationModule {
             } else if (submoduleOption == 3) {
                 logout = true;
                 break;
+            } else {
+                System.out.println("Select a valid sub-module option!");
             }
         }
     }
@@ -171,15 +192,22 @@ public class HotelOperationModule {
         Scanner sc = new Scanner(System.in);
         boolean logout = false;
         int option;
+
         while (!logout) {
-            System.out.println("You are currently logged in as an Sales Manager");
+            System.out.println("\n-You are currently logged in as a Sales Manager-");
+            System.out.println("------------------------------------------------\n");
             System.out.println("1. Create new Room Rate");
             System.out.println("2. Update a Room Rate");
             System.out.println("3. Delete a Room Rates");
             System.out.println("4. View all Room Rates");
             System.out.println("5. View Room Rates details");
             System.out.print("Please select an option>");
-            option = sc.nextInt();
+
+            try {
+                option = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                option = 404;
+            }
 
             switch (option) {
                 case 1:
@@ -201,27 +229,37 @@ public class HotelOperationModule {
                     logout = true;
                     break;
                 default:
-                    System.out.println("Please input a valid choice");
+                    System.out.println("Please input a valid option!");
             }
         }
     }
 
-    //NOTE: Development of these methods will follow Room Type -> Room Rate -> Room
     private void createNewRoomType(Scanner sc) {
-        System.out.println("You are now creating a Room Type");
-        System.out.println("Please enter a Room Type name: ");
+        System.out.println("\n-You are now creating a new room type-");
+        System.out.println("--------------------------------------\n");
+        System.out.print("Please enter a Room Type name>");
         String name = sc.nextLine().trim();
-        System.out.println("Please enter select a room Ranking: ");
-        Integer newranking = sc.nextInt();
-        System.out.println("Please enter a Room Type Description: ");
+
+        int newRanking = 0;
+        while (newRanking != 404) {
+            System.out.print("Please enter a room Ranking (integer)>");
+            try {
+                newRanking = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                System.out.println("Please enter an integer!");
+                newRanking = 404;
+            }
+        }
+
+        System.out.print("Please enter a Room Type Description>");
         String description = sc.nextLine().trim();
-        System.out.println("Please enter a Room Type Size: ");
+        System.out.print("Please enter a Room Type Size>");
         String roomSize = sc.nextLine().trim();
-        System.out.println("Please enter a Room Type Size: ");
+        System.out.print("Please enter a Room Type Size>");
         String roomsize = sc.nextLine().trim();
-        System.out.println("Please enter select number of beds: ");
+        System.out.print("Please enter select number of beds>");
         Integer beds = sc.nextInt();
-        System.out.println("Please enter select room capacity: ");
+        System.out.print("Please enter select room capacity>");
         Integer capacity = sc.nextInt();
         String response = "";
         List<String> amenities = new ArrayList<>();
@@ -237,9 +275,9 @@ public class HotelOperationModule {
             }
         }
 
-        RoomType newRoomType = new RoomType(name, newranking, description, roomsize, beds, capacity, amenities);
-        Integer ranking = newranking;
-        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newranking);
+        RoomType newRoomType = new RoomType(name, newRanking, description, roomsize, beds, capacity, amenities);
+        Integer ranking = newRanking;
+        List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBelowRanking(newRanking);
         for (RoomType updateroomType : roomTypeBellowRanking) {
             try {
                 roomTypeSessionBean.updateRoomType(updateroomType.getRoomTypeId(), updateroomType.getRoomName(), ranking + 1);
@@ -596,7 +634,6 @@ public class HotelOperationModule {
             System.out.println("No Room Rates exist with the provided parameters!");
         }
     }
-    
 
     private void deleteARoomRate(Scanner sc) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -626,53 +663,46 @@ public class HotelOperationModule {
                 Integer response = sc.nextInt();
                 if (response == 1) {
                     List<RoomRate> roomRates = roomTypeSessionBean.getRoomRate(roomName, PUBLISHRATE);
-                    if(!roomRates.isEmpty()){
+                    if (!roomRates.isEmpty()) {
                         for (RoomRate roomRate : roomRates) {
                             System.out.println("Room Type Name: " + roomName);
                             System.out.println("Rate Type: " + PUBLISHRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
-                    }
-                    else {
+                    } else {
                         System.out.println("Rate Type does not exists!");
                     }
-                } 
-                else if(response == 2){
+                } else if (response == 2) {
                     List<RoomRate> roomRates = roomTypeSessionBean.getRoomRate(roomName, NORMALRATE);
-                    if(!roomRates.isEmpty()){
+                    if (!roomRates.isEmpty()) {
                         for (RoomRate roomRate : roomRates) {
                             System.out.println("Room Type Name: " + roomName);
                             System.out.println("Rate Type: " + NORMALRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
-                    }
-                    else {
+                    } else {
                         System.out.println("Rate Type does not exists!");
                     }
-                }
-                else if(response == 3){
+                } else if (response == 3) {
                     List<RoomRate> roomRates = roomTypeSessionBean.getRoomRate(roomName, PEAKRATE);
-                    if(!roomRates.isEmpty()){
+                    if (!roomRates.isEmpty()) {
                         for (RoomRate roomRate : roomRates) {
                             System.out.println("Room Type Name: " + roomName);
                             System.out.println("Rate Type: " + PEAKRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
-                    }
-                    else {
+                    } else {
                         System.out.println("Rate Type does not exists!");
                     }
-                }
-                else if(response == 4){
+                } else if (response == 4) {
                     List<RoomRate> roomRates = roomTypeSessionBean.getRoomRate(roomName, PROMOTIONRATE);
-                    if(!roomRates.isEmpty()){
+                    if (!roomRates.isEmpty()) {
                         for (RoomRate roomRate : roomRates) {
                             System.out.println("Room Type Name: " + roomName);
                             System.out.println("Rate Type: " + PROMOTIONRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
-                    }
-                    else {
+                    } else {
                         System.out.println("Rate Type does not exists!");
                     }
                 } else if (response == 5) {
