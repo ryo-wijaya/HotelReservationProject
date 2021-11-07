@@ -359,6 +359,7 @@ public class HotelOperationModule {
             response = sc.nextLine().trim();
             if ("Y".equals(response)) {
                 roomTypeSessionBeanRemote.deleteRoomType(roomType.getRoomTypeId());
+                System.out.println("Room Type successfully deleted!");
             }
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("invalid room type name");
