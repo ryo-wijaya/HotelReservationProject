@@ -239,13 +239,18 @@ public class HotelOperationModule {
         // when catching this exception, we can either ask for reinput in a loop or cancel transaction, then call createNewRoomType(RoomType roomType, long nextHighertTypeId)
         // Not doing both of these in 1 method prevents the user from enetering a bunch of info just for the roomtype not to exist at the end.
         // also for create methods, the only object we should pass in is the one we are creating, any associating object should be an id (theo).
-        
+        String name;
+        String description;
+        String roomSize;
+        int newRanking = 0;
+        int numOfBeds = 0;
+        int roomCapacity = 0;
+
         System.out.println("\n-You are now creating a new room type-");
         System.out.println("--------------------------------------\n");
         System.out.print("Please enter a Room Type name>");
-        String name = sc.nextLine().trim();
+        name = sc.nextLine().trim();
 
-        int newRanking = 0;
         while (newRanking != 404) {
             System.out.print("Please enter a room Ranking (integer)>");
             try {
@@ -257,11 +262,10 @@ public class HotelOperationModule {
         }
 
         System.out.print("Please enter a Room Type Description>");
-        String description = sc.nextLine().trim();
+        description = sc.nextLine().trim();
         System.out.print("Please enter a Room Type Size>");
-        String roomSize = sc.nextLine().trim();
+        roomSize = sc.nextLine().trim();
 
-        int numOfBeds = 0;
         while (numOfBeds != 404) {
             System.out.print("Please input the number of beds (Integer)>");
             try {
@@ -272,7 +276,6 @@ public class HotelOperationModule {
             }
         }
 
-        int roomCapacity = 0;
         while (roomCapacity != 404) {
             System.out.print("Please input the room capacity (Integer)>");
             try {
@@ -320,15 +323,15 @@ public class HotelOperationModule {
     }
 
     private void updateARoomType(Scanner sc) {
-        System.out.println("You are now updating a Room Type");
-        System.out.println("Select a Room Type to update");
+        System.out.println("\n-You are now updating a Room Type-");
+        System.out.println("----------------------------------\n");
 
         String roomTypeName = sc.nextLine().trim();
         try {
             RoomType roomType = roomTypeSessionBean.getRoomTypeByName(roomTypeName);
-            System.out.println("Select a New Room Type name");
+            System.out.print("Select a New Room Type name>");
             String newRoomTypeName = sc.nextLine().trim();
-            System.out.println("Select a New Room Type ranking");
+            System.out.print("Select a New Room Type ranking>");
             Integer newRoomTypeRanking = sc.nextInt();
             Integer ranking = newRoomTypeRanking;
             Integer oldRanking = roomType.getRanking();
@@ -364,10 +367,11 @@ public class HotelOperationModule {
     }
 
     private void createNewRoom(Scanner sc) throws RoomTypeNotFoundException {
-        System.out.println("You are now creating a Room");
-        System.out.println("Please enter a floor");
+        System.out.println("\n-You are now creating a new Room-");
+        System.out.println("---------------------------------\n");
+        System.out.print("Please enter a floor>");
         String floor = sc.nextLine().trim();
-        System.out.println("Please enter a room number");
+        System.out.print("Please enter a room number>");
         String number = sc.nextLine().trim();
         String roomNumber = String.join(floor, number);
         this.viewAllRoomTypes();
