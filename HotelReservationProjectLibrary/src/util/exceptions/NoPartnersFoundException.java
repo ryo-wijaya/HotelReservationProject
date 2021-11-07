@@ -7,24 +7,24 @@ package util.exceptions;
 
 /**
  *
- * @author Jorda
+ * @author ryo20
  */
-public class partnerNotFoundException extends Exception {
+public class NoPartnersFoundException extends Exception {
 
     /**
-     * Creates a new instance of <code>partnerNotFoundException</code> without
+     * Creates a new instance of <code>NoPartnersFoundException</code> without
      * detail message.
      */
-    public partnerNotFoundException() {
+    public NoPartnersFoundException() {
     }
 
     /**
-     * Constructs an instance of <code>partnerNotFoundException</code> with the
+     * Constructs an instance of <code>NoPartnersFoundException</code> with the
      * specified detail message.
      *
      * @param msg the detail message.
      */
-    public partnerNotFoundException(String msg) {
+    public NoPartnersFoundException(String msg) {
         super(msg);
     }
 }
