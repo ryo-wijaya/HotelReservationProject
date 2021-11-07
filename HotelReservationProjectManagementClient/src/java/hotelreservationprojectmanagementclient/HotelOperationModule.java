@@ -426,7 +426,7 @@ public class HotelOperationModule {
         String response = "";
         try {
             RoomType roomType = viewRoomTypeDetails(sc);
-            if(!roomType.getEnabled()) {
+            if (!roomType.getEnabled()) {
                 System.out.println("Room Type is already deleted!");
                 return;
             }
@@ -491,7 +491,7 @@ public class HotelOperationModule {
             Room room = new Room(roomNumber);
             roomSessionBeanRemote.createNewRoom(room, roomType.getRoomTypeId());
             System.out.println("Room Successfully created");
-            
+
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Invalid Room Type");
         }
@@ -584,67 +584,104 @@ public class HotelOperationModule {
 
     private void createNewRoomRate(Scanner sc) {
         RateType rate;
-        double price;
+        double price = 0;
         String startDateString;
         String endDateString;
         Date startDate;
         Date endDate;
+        String roomTypeName;
+        RoomType roomType;
 
         System.out.println("\n-You are now creating a new Room Rate-");
         System.out.println("--------------------------------------\n");
 
-        while (true) {
-            int room = dis
-            for (int i = 0; i < RateType.values().length; i++) {
-                System.out.println((i + 1) + ". " + RateType.values()[i]);
-            }
-            System.out.print("Select a rate from 1-4>");
-            
-            try {
-                i
-            }
-            if (option == 1) {
-                rate = RateType.PUBLISHRATE;
-                break;
-            } else if (option == 2) {
-                rate = RateType.PEAKRATE;
-                break;
-            } else if (option == 3) {
-                rate = RateType.NORMALRATE;
-                break;
-            } else if (option == 4) {
-                rate = RateType.PROMOTIONRATE;
-                break;
-            } else {
-                System.out.println("Invalid choice!");
-            }
-        }
+        System.out.print("Enter the Room Type to associate this new Room Rate to>");
+        roomTypeName = sc.nextLine().trim();
 
-        System.out.print("Input a price>");
-        price = sc.nextDouble();
-        System.out.print("Input Start Date in dd/mm/yyyy (with the slashes)>");
-        startDateString = sc.next();
-        System.out.print("Input End Date in dd/mm/yyyy (with the slashes)>");
-        endDateString = sc.next();
-
-        int[] sDate = Arrays.stream(startDateString.split("/")).mapToInt(Integer::parseInt).toArray();
-        int[] eDate = Arrays.stream(endDateString.split("/")).mapToInt(Integer::parseInt).toArray();
-        startDate = new Date(sDate[3], sDate[2], sDate[1]);
-        endDate = new Date(eDate[3], eDate[2], eDate[1]);
-        int roomTypeRank;
-
-        System.out.print("Which room type to set this room rate to?>");
         try {
-            this.viewAllRoomTypes();
-            System.out.println("Room Types are ordered by rank, select a rank (numeric): ");
-            roomTypeRank = sc.nextInt();
-            RoomRate newRate = new RoomRate(rate, price, startDate, endDate);
-            roomRateSessionBeanRemote.createNewRoomRate(newRate, roomTypeRank);
-        } catch (FailedToCreateRoomRateException ex) {
-            System.out.println("Failed to create Room Rate! Please check that a correct room rank was entered");
-        }
+            roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
+            boolean cannotModify = false;
+            while (true) {
+                int roomRateType;
+                for (int i = 0; i < RateType.values().length; i++) {
+                    System.out.println((i + 1) + ". " + RateType.values()[i]);
+                }
+                System.out.print("Select a rate from 1-4>");
 
+                try {
+                    roomRateType = Integer.parseInt(sc.nextLine().trim());
+                } catch (NumberFormatException ex) {
+                    roomRateType = 404;
+                }
+
+                if (roomRateType == 1) {
+                    for (RoomRate rr : roomType.getListOfRoomRates()) {
+                        if (rr.getRateType() == PUBLISHRATE) {
+                            cannotModify = true;
+                        }
+                    }
+                    rate = RateType.PUBLISHRATE;
+                    break;
+                } else if (roomRateType == 2) {
+                    rate = RateType.PEAKRATE;
+                    break;
+                } else if (roomRateType == 3) {
+                    for (RoomRate rr : roomType.getListOfRoomRates()) {
+                        if (rr.getRateType() == NORMALRATE) {
+                            cannotModify = true;
+                        }
+                    }
+                    rate = RateType.NORMALRATE;
+                    break;
+                } else if (roomRateType == 4) {
+                    rate = RateType.PROMOTIONRATE;
+                    break;
+                } else {
+                    System.out.println("Invalid choice!");
+                }
+            }
+
+            if (!cannotModify) { //the room rate already has a normal or published rate and ur trying to add it
+                RoomRate newRate;
+                
+                while (price != 404) {
+                    try {
+                        System.out.print("Input a price>");
+                        price = Double.parseDouble(sc.nextLine().trim());
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Please input a valid price!");
+                        price = 404;
+                    }
+                }
+
+                if (rate != PUBLISHRATE && rate != NORMALRATE) { //asking for date only if its a promotionrate or peakrate
+                    System.out.print("Input Start Date in dd/mm/yyyy (with the slashes)>");
+                    startDateString = sc.next();
+                    System.out.print("Input End Date in dd/mm/yyyy (with the slashes)>");
+                    endDateString = sc.next();
+
+                    int[] sDate = Arrays.stream(startDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+                    int[] eDate = Arrays.stream(endDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+                    startDate = new Date(sDate[3], sDate[2], sDate[1]);
+                    endDate = new Date(eDate[3], eDate[2], eDate[1]);
+                    newRate = new RoomRate(rate, price, startDate, endDate);
+                } else {
+                    newRate = new RoomRate(rate, price);
+                }
+                
+                roomRateSessionBeanRemote.createNewRoomRate(newRate, roomType.getRoomTypeId());
+                
+            } else {
+                System.out.println("This Room Type already has either a PUBLISHEDRATE or a NORMALRATE");
+            }
+
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Room Type not found!");
+        } catch (FailedToCreateRoomRateException ex) {
+            System.out.println("Room Rate already exists in the Database!");
+        }
     }
+    
 
     private void updateARoomRate(Scanner sc) {
         System.out.println("You are now updating a Room Rate");

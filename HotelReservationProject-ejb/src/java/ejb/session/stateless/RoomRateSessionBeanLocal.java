@@ -27,6 +27,6 @@ public interface RoomRateSessionBeanLocal {
 
     public List<RoomRate> retrieveRoomRates();
 
-    public Long createNewRoomRate(RoomRate roomRate, int roomRank) throws FailedToCreateRoomRateException;
+    public Long createNewRoomRate(RoomRate roomRate, Long roomTypeId) throws FailedToCreateRoomRateException;
     
 }
