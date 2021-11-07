@@ -15,7 +15,7 @@ import java.util.Scanner;
 import util.enumeration.EmployeeRole;
 import util.enumeration.PartnerType;
 import util.exceptions.EmployeeNotFoundException;
-import util.exceptions.PartnerNotFoundException;
+import util.exceptions.NoPartnersFoundException;
 
 /**
  *
@@ -204,7 +204,7 @@ public class SystemAdministrationModule {
             for (Partner p : listOfPartners) {
                 System.out.println("Name: " + p.getName() + " | Username: " + p.getUserName() + " | PartnerType: " + p.getEmployeeType());
             }
-        } catch (PartnerNotFoundException ex) {
+        } catch (NoPartnersFoundException ex) {
             System.out.println("No partners exist in the Database!");
         }
     }

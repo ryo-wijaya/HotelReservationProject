@@ -9,7 +9,7 @@ import entity.Partner;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exceptions.LoginCredentialsInvalidException;
-import util.exceptions.PartnerNotFoundException;
+import util.exceptions.NoPartnersFoundException;
 
 /**
  *
@@ -20,9 +20,9 @@ public interface PartnerSessionBeanRemote {
     
     public Partner createNewPartner(Partner newPartner);
 
-    public List<Partner> retrieveAllPartners() throws PartnerNotFoundException;
+    public List<Partner> retrieveAllPartners() throws NoPartnersFoundException;
 
-    public Partner retrievePartnerByPartnerId(Long partnerId)throws PartnerNotFoundException;
+    public Partner retrievePartnerByPartnerId(Long partnerId)throws NoPartnersFoundException;
 
     public Partner retrievePartnerByUsername(String username);
 

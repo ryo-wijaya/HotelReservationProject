@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exceptions.LoginCredentialsInvalidException;
-import util.exceptions.PartnerNotFoundException;
+import util.exceptions.NoPartnersFoundException;
 
 /**
  *
@@ -38,23 +38,23 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     }
 
     @Override
-    public List<Partner> retrieveAllPartners() throws PartnerNotFoundException {
+    public List<Partner> retrieveAllPartners() throws NoPartnersFoundException {
         Query query = em.createQuery("SELECT p FROM Partner p");
         List<Partner> partners = query.getResultList();
         if (!partners.isEmpty()) {
             return partners;
         } else {
-            throw new PartnerNotFoundException();
+            throw new NoPartnersFoundException();
         }
     }
 
     @Override
-    public Partner retrievePartnerByPartnerId(Long partnerId) throws PartnerNotFoundException {
+    public Partner retrievePartnerByPartnerId(Long partnerId) throws NoPartnersFoundException {
         Partner partner = em.find(Partner.class, partnerId);
         if (partner != null) {
             return partner;
         } else {
-            throw new PartnerNotFoundException();
+            throw new NoPartnersFoundException();
         }
     }
 
