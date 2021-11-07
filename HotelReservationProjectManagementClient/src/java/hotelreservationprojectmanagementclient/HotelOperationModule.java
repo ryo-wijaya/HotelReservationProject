@@ -426,6 +426,10 @@ public class HotelOperationModule {
         String response = "";
         try {
             RoomType roomType = viewRoomTypeDetails(sc);
+            if(!roomType.getEnabled()) {
+                System.out.println("Room Type is already deleted!");
+                return;
+            }
             System.out.println("Confirmation to Delete Room Type. (Y: yes)");
             response = sc.nextLine().trim();
             if ("Y".equals(response)) {
@@ -466,6 +470,7 @@ public class HotelOperationModule {
             for (String amenities : roomType.getAmenities()) {
                 System.out.println("Amentites: " + amenities);
             }
+            System.out.println("Status: " + roomType.getEnabled());
             return roomType;
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("invalid room type name");
@@ -546,6 +551,7 @@ public class HotelOperationModule {
         String roomNumber = sc.nextLine().trim();
         try {
             roomSessionBeanRemote.deleteRoomByRoomNumber(roomNumber);
+            System.out.println("Room successfully deleted!");
         } catch (RoomNotFoundException ex) {
             System.out.println("Room not found!");
         } catch (RoomIsTiedToABookingDeletionException ex) {

@@ -96,7 +96,11 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             if (b.getRooms().contains(roomToDelete)) {
                 throw new RoomIsTiedToABookingDeletionException();
             }
+            else if (b.getRooms().contains(roomToDelete)){
+                b.getRooms().remove(roomToDelete);
+            }
         }
+        
         roomToDelete.getBookings().clear();
         roomToDelete.setEnabled(false);
     }
