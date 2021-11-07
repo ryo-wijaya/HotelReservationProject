@@ -334,7 +334,7 @@ public class HotelOperationModule {
             System.out.print("Select a New Room Type ranking>");
             Integer newRoomTypeRanking = sc.nextInt();
             Integer ranking = newRoomTypeRanking;
-            Integer oldRanking = roomType.getRanking();
+            Integer oldRanking = roomType.getNextHigherRoomType();
             List<RoomType> roomTypeBellowRanking = roomTypeSessionBean.getRoomTypeBetweenRanking(newRoomTypeRanking, oldRanking);
             for (RoomType updateroomType : roomTypeBellowRanking) {
                 try {

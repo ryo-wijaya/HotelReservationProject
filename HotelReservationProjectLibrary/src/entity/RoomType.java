@@ -37,7 +37,7 @@ public class RoomType implements Serializable {
     private String roomName;
     @Column(nullable = false, unique = true)
     @NotNull
-    private Integer ranking;
+    private String NextHigherRoomType;
     private Boolean enabled;
     private String description;
     private String roomSize;
@@ -54,10 +54,8 @@ public class RoomType implements Serializable {
         enabled = true;
     }
 
-    public RoomType(String roomName, Integer ranking, String description, String roomSize, Integer beds, Integer capacity) {
-        this();
+    public RoomType(String roomName, String description, String roomSize, Integer beds, Integer capacity) {
         this.roomName = roomName;
-        this.ranking = ranking;
         this.description = description;
         this.roomSize = roomSize;
         this.beds = beds;
@@ -140,20 +138,6 @@ public class RoomType implements Serializable {
     }
 
     /**
-     * @return the ranking
-     */
-    public Integer getRanking() {
-        return ranking;
-    }
-
-    /**
-     * @param ranking the ranking to set
-     */
-    public void setRanking(Integer ranking) {
-        this.setRanking(ranking);
-    }
-
-    /**
      * @return the description
      */
     public String getDescription() {
@@ -221,5 +205,19 @@ public class RoomType implements Serializable {
      */
     public void setAmenities(List<String> amenities) {
         this.amenities = amenities;
+    }
+
+    /**
+     * @return the NextHigherRoomType
+     */
+    public String getNextHigherRoomType() {
+        return NextHigherRoomType;
+    }
+
+    /**
+     * @param NextHigherRoomType the NextHigherRoomType to set
+     */
+    public void setNextHigherRoomType(String NextHigherRoomType) {
+        this.NextHigherRoomType = NextHigherRoomType;
     }
 }

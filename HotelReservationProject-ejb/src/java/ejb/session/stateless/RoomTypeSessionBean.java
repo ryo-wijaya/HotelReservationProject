@@ -43,7 +43,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         Query query = em.createQuery("SELECT rt FROM RoomType rt");
         List<RoomType> listOfRoomTypes = query.getResultList();
         if (listOfRoomTypes != null) {
-            listOfRoomTypes.sort((x, y) -> x.getRanking() - y.getRanking());
+            listOfRoomTypes.sort((x, y) -> x.getNextHigherRoomType() - y.getNextHigherRoomType());
             return listOfRoomTypes;
         } else {
             throw new RoomTypeNotFoundException();
@@ -117,7 +117,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     public void updateRoomType(Long id, String newName, Integer ranking) throws RoomTypeNotFoundException {
         RoomType roomTypeToUpdate = this.getRoomTypeById(id);
         roomTypeToUpdate.setRoomName(newName);
-        roomTypeToUpdate.setRanking(ranking);
+        roomTypeToUpdate.setNextHigherRoomType(ranking);
         em.merge(roomTypeToUpdate);
     }
 
