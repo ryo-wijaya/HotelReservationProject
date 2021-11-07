@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ import util.exceptions.RoomTypeNotFoundException;
  */
 @Stateless
 public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSessionBeanRemote {
+
+    @EJB
+    private RoomSessionBeanLocal roomSessionBean;
 
     @EJB
     private RoomRateSessionBeanLocal roomRateSessionBeanLocal;
@@ -119,18 +123,21 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     //deleting a roomType involves deleting all its associated RoomRates 
     @Override
     public void deleteRoomType(Long id) throws RoomTypeNotFoundException {
-        try {
-            RoomType roomTypeToDelete = this.getRoomTypeById(id);
-            for (RoomRate rr : roomTypeToDelete.getListOfRoomRates()) {
-                roomRateSessionBeanLocal.deleteRoomRate(rr.getRoomRateId());
-            }
-            roomTypeToDelete.getListOfRoomRates().clear();
-            em.remove(roomTypeToDelete);
+        boolean roomTypeEmpty = roomSessionBean.checkForRoomTypeUsage(getRoomTypeById(id).getRoomName());
+        if (roomTypeEmpty) {
+            try {
+                RoomType roomTypeToDelete = this.getRoomTypeById(id);
+                for (RoomRate rr : roomTypeToDelete.getListOfRoomRates()) {
+                    roomRateSessionBeanLocal.deleteRoomRate(rr.getRoomRateId());
+                }
+                roomTypeToDelete.getListOfRoomRates().clear();
+                em.remove(roomTypeToDelete);
 
-        } catch (RoomTypeNotFoundException | RoomRateNotFoundException ex) {
-            //we don't have to worry about a RoomRate not being found, but we still have to catch the potential exception
-            throw new RoomTypeNotFoundException();
-        }
+            } catch (RoomTypeNotFoundException | RoomRateNotFoundException ex) {
+                //we don't have to worry about a RoomRate not being found, but we still have to catch the potential exception
+                throw new RoomTypeNotFoundException();
+            }
+        } 
     }
     
     @Override

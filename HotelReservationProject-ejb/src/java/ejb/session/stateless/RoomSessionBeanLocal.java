@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Local;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -29,4 +30,6 @@ public interface RoomSessionBeanLocal {
     public void updateRoom(Room room) throws RoomNotFoundException;
 
     public Room getRoomByRoomNumber(String roomNumber) throws RoomNotFoundException;
+
+    public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException;
 }
