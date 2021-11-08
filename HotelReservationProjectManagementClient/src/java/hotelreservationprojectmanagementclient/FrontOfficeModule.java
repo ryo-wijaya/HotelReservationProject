@@ -12,6 +12,8 @@ import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
@@ -115,7 +117,22 @@ public class FrontOfficeModule {
     }
 
     private void walkInReserveRoom(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            walkInSearchRoom(sc);
+            System.out.println("\nYou are now reserving a Room for a walk-in customer");
+            System.out.println("---------------------------------------------------\n");
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            Date startDateString;
+            Date endDateString;
+            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
+            startDateString = inputDateFormat.parse(sc.nextLine().trim());
+            System.out.print("Enter Return Date (dd/mm/yyyy)> ");
+            endDateString = outputDateFormat.parse(sc.nextLine().trim()); 
+        }
+        catch (ParseException ex) {
+            System.out.println("Invalid date input!\n");
+        }
     }
 
     private void checkInGuest(Scanner sc) {
