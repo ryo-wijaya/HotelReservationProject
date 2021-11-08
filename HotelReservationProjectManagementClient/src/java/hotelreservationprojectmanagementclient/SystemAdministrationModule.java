@@ -209,7 +209,7 @@ public class SystemAdministrationModule {
             System.out.println("\n-Viewing a list of Partners-");
             System.out.println("----------------------------\n");
             for (Partner p : listOfPartners) {
-                System.out.println("Name: " + p.getName() + " | Username: " + p.getUserName() + " | PartnerType: " + p.getEmployeeType());
+                System.out.println("Name: " + p.getName() + " | Username: " + p.getUserName() + " | PartnerType: " + p.getPartnerType());
             }
         } catch (NoPartnersFoundException ex) {
             System.out.println("No partners exist in the Database!");

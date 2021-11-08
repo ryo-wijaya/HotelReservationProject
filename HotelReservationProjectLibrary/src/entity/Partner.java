@@ -43,7 +43,7 @@ public class Partner implements Serializable {
     //@Enumerated(EnumType.STRING)
     @Column(nullable = false)
     //@NotNull
-    private PartnerType employeeType;
+    private PartnerType partnerType;
 
     public Partner() {
     }
@@ -52,7 +52,7 @@ public class Partner implements Serializable {
         this.name = name;
         this.userName = userName;
         this.password = password;
-        this.employeeType = employeeType;
+        this.partnerType = employeeType;
     }
 
     public String getName() {
@@ -127,17 +127,17 @@ public class Partner implements Serializable {
     }
 
     /**
-     * @return the employeeType
+     * @return the partnerType
      */
-    public PartnerType getEmployeeType() {
-        return employeeType;
+    public PartnerType getPartnerType() {
+        return partnerType;
     }
 
     /**
-     * @param employeeType the employeeType to set
+     * @param partnerType the partnerType to set
      */
-    public void setEmployeeType(PartnerType employeeType) {
-        this.employeeType = employeeType;
+    public void setPartnerType(PartnerType partnerType) {
+        this.partnerType = partnerType;
     }
     
 }
