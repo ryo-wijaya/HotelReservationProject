@@ -143,7 +143,7 @@ public class SystemAdministrationModule {
             System.out.println("\n-Viewing a list of Employees-");
             System.out.println("-----------------------------\n");
             for (Employee e : listOfEmployees) {
-                System.out.println("Name: " + e.getName() + " | Username: " + e.getUsername() + " | Role: " + e.getErole());
+                System.out.println("Name: " + e.getName() + " | Username: " + e.getUsername() + " | Role: " + e.geteRole());
             }
         } catch (EmployeeNotFoundException ex) {
             System.out.println("No employees exist in the database!");

@@ -43,7 +43,7 @@ public class Employee implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
-    private EmployeeRole Erole;
+    private EmployeeRole eRole;
 
     public Employee() {
     }
@@ -52,7 +52,7 @@ public class Employee implements Serializable {
         this.name = name;
         this.username = username;
         this.password = password;
-        this.Erole = role;
+        this.eRole = role;
     }
 
     public String getName() {
@@ -79,12 +79,12 @@ public class Employee implements Serializable {
         this.password = password;
     }
 
-    public EmployeeRole getErole() {
-        return Erole;
+    public EmployeeRole geteRole() {
+        return eRole;
     }
 
-    public void setErole(EmployeeRole Erole) {
-        this.Erole = Erole;
+    public void seteRole(EmployeeRole eRole) {
+        this.eRole = eRole;
     }
     
     
