@@ -32,11 +32,11 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
     
     // create noew customer
     @Override
-    public Customer registerAsCustomer(Customer newCustomer)
+    public long registerAsCustomer(Customer newCustomer)
     {
         em.persist(newCustomer);
         em.flush();
-        return newCustomer;
+        return newCustomer.getCustomerId();
         // throw customer username exits exception. unkownPersistenceexepction
     }
     
