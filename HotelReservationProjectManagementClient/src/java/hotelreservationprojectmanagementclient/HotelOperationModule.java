@@ -64,9 +64,9 @@ public class HotelOperationModule {
     }
 
     public void runMainMenu() {
-        if (currentEmployee.getErole() == EmployeeRole.OPERATIONMANAGER) {
+        if (currentEmployee.geteRole() == EmployeeRole.OPERATIONMANAGER) {
             this.runOperationsMenu();
-        } else if (currentEmployee.getErole() == EmployeeRole.SALESMANAGER) {
+        } else if (currentEmployee.geteRole() == EmployeeRole.SALESMANAGER) {
             this.runSalesMenu();
         }
     }

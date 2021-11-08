@@ -70,15 +70,15 @@ public class HoRSClientModule {
                         try {
                             doLogin();
                             System.out.print("Login successful!");
-                            if(currentEmployee.getErole() == SYSTEMADMINISTRATOR){
+                            if(currentEmployee.geteRole() == SYSTEMADMINISTRATOR){
                                 systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
                                 systemAdministrationModule.runMainMenu();
                             } 
-                            else if(currentEmployee.getErole() == OPERATIONMANAGER || currentEmployee.getErole() == SALESMANAGER){
+                            else if(currentEmployee.geteRole() == OPERATIONMANAGER || currentEmployee.geteRole() == SALESMANAGER){
                                 hotelOperationModule = new HotelOperationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, bookingSessionBean, roomTypeSessionBean, roomSessionBean, roomRateSessionBeanRemote, currentEmployee);
                                 hotelOperationModule.runMainMenu();
                             }
-                            else if(currentEmployee.getErole() == GUESTRELATIONSOFFICER){
+                            else if(currentEmployee.geteRole() == GUESTRELATIONSOFFICER){
                                 frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote, currentEmployee);
                                 frontOfficeModule.runMainMenu();
                             }
