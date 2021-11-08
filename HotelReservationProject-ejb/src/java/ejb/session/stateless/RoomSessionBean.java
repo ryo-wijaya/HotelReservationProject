@@ -5,7 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entity.Booking;
 import entity.Room;
 import entity.RoomType;
 import java.util.List;
@@ -49,7 +48,8 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
     @Override
     public List<Room> retrieveRooms() throws RoomNotFoundException {
-        Query query = em.createQuery("SELECT r FROM Room r");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.enabled = :inEnabled");
+        query.setParameter("inEnabled", Boolean.TRUE);
         List<Room> listOfRooms = query.getResultList();
         if (!listOfRooms.isEmpty()) {
             return listOfRooms;
@@ -61,7 +61,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     @Override
     public Room getRoomById(Long id) throws RoomNotFoundException {
         Room room = em.find(Room.class, id);
-        if (room != null) {
+        if (room != null && room.isEnabled()) {
             return room;
         } else {
             throw new RoomNotFoundException();
@@ -70,8 +70,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
     @Override
     public Room getRoomByRoomNumber(String roomNumber) throws RoomNotFoundException {
-        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :inRoomNumber");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :inRoomNumber AND r.enabled = :inEnabled");
         query.setParameter("inRoomNumber", roomNumber);
+        query.setParameter("inEnabled", Boolean.TRUE);
         Room room = (Room) query.getSingleResult();
         if (room != null) {
             return room;
@@ -97,9 +98,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     @Override
     public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException {
         RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeByName(typeName);
-        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType AND r.enabled = :inTrue");
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType = :inRoomType AND r.enabled = :inEnabled");
         query.setParameter("inRoomType", roomType);
-        query.setParameter("inTrue", true);
+        query.setParameter("inEnabled", Boolean.TRUE);
         List<Room> rooms = query.getResultList();
         return rooms.isEmpty();
     }

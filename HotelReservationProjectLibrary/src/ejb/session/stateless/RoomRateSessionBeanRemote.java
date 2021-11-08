@@ -21,11 +21,9 @@ public interface RoomRateSessionBeanRemote {
 
     public void deleteRoomRate(Long id) throws RoomRateNotFoundException;
 
-    public void updateRoomRate(Long id, RateType newRatePerNight) throws RoomRateNotFoundException;
-
     public RoomRate getRoomRateById(Long id) throws RoomRateNotFoundException;
 
-    public List<RoomRate> retrieveRoomRates();
+    public List<RoomRate> retrieveRoomRates() throws RoomRateNotFoundException;
 
     public Long createNewRoomRate(RoomRate roomRate, Long roomTypeId) throws FailedToCreateRoomRateException;
 }

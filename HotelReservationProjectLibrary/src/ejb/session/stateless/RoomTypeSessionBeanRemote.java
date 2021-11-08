@@ -30,15 +30,9 @@ public interface RoomTypeSessionBeanRemote {
 
     public RoomType getRoomTypeByName(String roomName) throws RoomTypeNotFoundException;
     
-    public List<RoomType> getRoomTypeBelowRanking(Integer ranking);
-
     public void updateRoomType(RoomType roomType);
     
-    public List<RoomType> getRoomTypeBetweenRanking(Integer newranking, Integer oldranking);
-    
-    public RoomType getRoomTypeByRank(int roomRank) throws RoomTypeNotFoundException;
-    
-    public List<RoomRate> getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException;
+    public List<RoomRate> getRoomRateByRoomNameAndRateType(String roomName, RateType rateType) throws RoomTypeNotFoundException;
     
     public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName);
 }

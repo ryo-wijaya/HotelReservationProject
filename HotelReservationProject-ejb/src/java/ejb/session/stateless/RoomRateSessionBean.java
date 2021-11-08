@@ -48,33 +48,33 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
     }
 
     @Override
-    public List<RoomRate> retrieveRoomRates() {
-        Query query = em.createQuery("SELECT rr FROM RoomRate rr");
+    public List<RoomRate> retrieveRoomRates() throws RoomRateNotFoundException {
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.enabled = :inEnabled");
+        query.setParameter("inEnabled", Boolean.TRUE);
         List<RoomRate> listOfRoomRates = query.getResultList();
-        return listOfRoomRates;
+        
+        if (!listOfRoomRates.isEmpty()) {
+            return listOfRoomRates;
+        } else {
+            throw new RoomRateNotFoundException();
+        }
     }
 
     @Override
     public RoomRate getRoomRateById(Long id) throws RoomRateNotFoundException {
         RoomRate roomRate = em.find(RoomRate.class, id);
-        if (roomRate != null) {
+        if (roomRate != null && roomRate.getEnabled()) {
             return roomRate;
         } else {
             throw new RoomRateNotFoundException();
         }
     }
 
-    //needs to make room rate bidirectional. ADD in RoomTpyeName -> getRoomTypeByName -> add with the query WHERE rr.roomType = roomType
     public RoomRate getRoomRateByRatePerNight(RateType ratePerNight) {
-        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.ratePerNight = :inRatePerNight");
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.ratePerNight = :inRatePerNight AND rr.enabled = :inEnabled");
+        query.setParameter("inEnabled", Boolean.TRUE);
         query.setParameter("inRatePerNight", ratePerNight);
         return (RoomRate) query.getSingleResult();
-    }
-
-    @Override
-    public void updateRoomRate(Long id, RateType newRatePerNight) throws RoomRateNotFoundException {
-        RoomRate roomRateToUpdate = this.getRoomRateById(id);
-        roomRateToUpdate.setRateType(newRatePerNight);
     }
 
     @Override

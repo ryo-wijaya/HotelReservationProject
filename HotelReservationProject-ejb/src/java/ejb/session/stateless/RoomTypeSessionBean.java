@@ -44,7 +44,8 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
 
     @Override
     public List<RoomType> retrieveRoomTypes() throws RoomTypeNotFoundException {
-        Query query = em.createQuery("SELECT rt FROM RoomType rt");
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.enabled = :inEnabled");
+        query.setParameter("inEnabled", Boolean.TRUE);
         List<RoomType> listOfRoomTypes = query.getResultList();
         if (listOfRoomTypes != null) {
             return listOfRoomTypes;
@@ -56,7 +57,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     @Override
     public RoomType getRoomTypeById(Long id) throws RoomTypeNotFoundException {
         RoomType roomType = em.find(RoomType.class, id);
-        if (roomType != null) {
+        if (roomType != null && roomType.getEnabled()) {
             roomType.getListOfRoomRates().size();
             return roomType;
         } else {
@@ -66,7 +67,8 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
 
     @Override
     public RoomType getRoomTypeByName(String roomTypeName) throws RoomTypeNotFoundException {
-        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomTypeName");
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomTypeName AND r.enabled =:inEnabled");
+        query.setParameter("inEnabled", Boolean.TRUE);
         query.setParameter("inRoomTypeName", roomTypeName);
         RoomType roomtype = (RoomType) query.getSingleResult();
 
@@ -77,6 +79,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         }
     }
 
+    /*
     @Override
     public RoomType getRoomTypeByRank(int roomRank) throws RoomTypeNotFoundException {
         Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.ranking = :inRank");
@@ -114,13 +117,13 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             return null;
         }
     }
+    */
 
     @Override
     public void updateRoomType(RoomType roomType) {
         em.merge(roomType);
     }
-
-    //deleting a roomType involves deleting all its associated RoomRates 
+ 
     @Override
     public void deleteRoomType(Long id) throws RoomTypeNotFoundException {
         boolean roomTypeEmpty = roomSessionBean.checkForRoomTypeUsage(getRoomTypeById(id).getRoomName());
@@ -133,14 +136,13 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
                 roomTypeToDelete.getListOfRoomRates().clear();
                 roomTypeToDelete.setEnabled(false);
             } catch (RoomTypeNotFoundException | RoomRateNotFoundException ex) {
-                //we don't have to worry about a RoomRate not being found, but we still have to catch the potential exception
                 throw new RoomTypeNotFoundException();
             }
         } 
     }
     
     @Override
-    public List<RoomRate> getRoomRate(String roomName, RateType rateType) throws RoomTypeNotFoundException {
+    public List<RoomRate> getRoomRateByRoomNameAndRateType(String roomName, RateType rateType) throws RoomTypeNotFoundException {
         RoomType roomType = getRoomTypeByName(roomName);
         List<RoomRate> roomRates = roomType.getListOfRoomRates();
         List<RoomRate> filteredRates = new ArrayList<>();
