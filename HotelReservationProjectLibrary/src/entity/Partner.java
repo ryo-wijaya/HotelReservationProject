@@ -29,20 +29,20 @@ public class Partner implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partnerId;
     @Column(nullable = false, length = 64)
-    @NotNull
-    @Size(min = 1, max = 64)
+    //@NotNull
+    //@Size(min = 1, max = 64)
     private String name;
     @Column(nullable = false, length = 16, unique = true)
-    @NotNull
-    @Size(min = 1, max = 16)
+    //@NotNull
+    //@Size(min = 1, max = 16)
     private String userName;
     @Column(nullable = false, length = 16)
-    @NotNull
-    @Size(min = 1, max = 16)
+    //@NotNull
+    //@Size(min = 1, max = 16)
     private String password;
-    @Enumerated(EnumType.STRING)
+    //@Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull
+    //@NotNull
     private PartnerType employeeType;
 
     public Partner() {

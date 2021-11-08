@@ -32,11 +32,11 @@ public class RoomType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
     @Column(nullable = false, length = 16, unique = true)
-    @NotNull
-    @Size(min = 1, max = 16)
+    //@NotNull
+    //@Size(min = 1, max = 16)
     private String roomName;
     @Column(nullable = false, unique = true)
-    @NotNull
+    //@NotNull
     private String NextHigherRoomType;
     private Boolean enabled;
     private String description;

@@ -5,7 +5,12 @@
  */
 package hotelreservationprojectmanagementclient;
 
+import ejb.session.stateful.HotelReservationBeanRemote;
+import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.RoomRateSessionBeanRemote;
+import ejb.session.stateless.RoomSessionBeanRemote;
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import java.util.Arrays;
 import java.util.Date;
@@ -18,13 +23,25 @@ import java.util.Scanner;
 public class FrontOfficeModule {
 
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
+    private CustomerSessionBeanRemote customerSessionBeanRemote;
+    private RoomSessionBeanRemote roomSessionBeanRemote;
+    private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
+    private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
+    private HotelReservationBeanRemote hotelReservationBeanRemote;
     private Employee employee;
 
     public FrontOfficeModule() {
     }
 
-    public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, Employee employee) {
+    public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote, 
+            RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, 
+            HotelReservationBeanRemote hotelReservationBeanRemote, Employee employee) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
+        this.customerSessionBeanRemote = customerSessionBeanRemote;
+        this.roomSessionBeanRemote = roomSessionBeanRemote;
+        this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
+        this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
+        this.hotelReservationBeanRemote = hotelReservationBeanRemote;
         this.employee = employee;
     }
 
