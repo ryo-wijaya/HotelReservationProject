@@ -48,6 +48,11 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
             throw new FailedToCreateRoomRateException();
         } 
     }
+    
+    @Override
+    public void updateRoomRate(RoomRate roomRate) {
+        em.merge(roomRate);
+    }
 
     @Override
     public List<RoomRate> retrieveRoomRates() throws RoomRateNotFoundException {
