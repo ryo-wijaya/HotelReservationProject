@@ -38,7 +38,7 @@ public class SystemAdministrationModule {
     }
 
     public void runMainMenu() {
-        Scanner sc = new Scanner(System.in);
+       Scanner sc = new Scanner(System.in);
         int choice;
         boolean logout = false;
         while (!logout) {
@@ -77,7 +77,7 @@ public class SystemAdministrationModule {
                 default:
                     System.out.println("Please input a valid choice!");
             }
-        }
+        } 
     }
 
     public void createNewEmployee() {

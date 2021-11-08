@@ -5,17 +5,33 @@
  */
 package hotelreservationprojectreservationclient;
 
+import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.RoomRateSessionBeanRemote;
+import javax.ejb.EJB;
+import util.exceptions.EmployeeNotFoundException;
+
 /**
  *
  * @author ryo20
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
+    @EJB
+    private static RoomRateSessionBeanRemote roomRateSessionBeanRemote;
+
+    //@EJB
+    //private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
+
     
+    
+    
+    public static void main(String[] args) {
+        try {
+            System.out.println("starting!");
+            // System.out.println("id: " + employeeSessionBeanRemote.getEmployeeById(1l));
+            System.out.println(roomRateSessionBeanRemote.getRoomRateById(1l));
+        } catch (Exception ex) {
+            System.out.println("error");
+        }
+    }
 }
