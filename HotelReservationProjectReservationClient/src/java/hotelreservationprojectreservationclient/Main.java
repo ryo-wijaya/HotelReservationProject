@@ -5,8 +5,13 @@
  */
 package hotelreservationprojectreservationclient;
 
+import ejb.session.stateful.HotelReservationBeanRemote;
+import ejb.session.stateless.BookingSessionBeanRemote;
+import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
+import ejb.session.stateless.RoomSessionBeanRemote;
+import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import javax.ejb.EJB;
 import util.exceptions.EmployeeNotFoundException;
 
@@ -17,21 +22,31 @@ import util.exceptions.EmployeeNotFoundException;
 public class Main {
 
     @EJB
+    private static HotelReservationBeanRemote hotelReservationBean;
+
+    @EJB
+    private static CustomerSessionBeanRemote customerSessionBeanRemote;
+
+    @EJB
+    private static RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
+
+    @EJB
+    private static RoomSessionBeanRemote roomSessionBeanRemote;
+
+    @EJB
+    private static BookingSessionBeanRemote bookingSessionBeanRemote;
+
+    @EJB
     private static RoomRateSessionBeanRemote roomRateSessionBeanRemote;
 
-    //@EJB
-    //private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
+    @EJB
+    private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
 
     
     
     
     public static void main(String[] args) {
-        try {
-            System.out.println("starting!");
-            // System.out.println("id: " + employeeSessionBeanRemote.getEmployeeById(1l));
-            System.out.println(roomRateSessionBeanRemote.getRoomRateById(1l));
-        } catch (Exception ex) {
-            System.out.println("error");
-        }
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, bookingSessionBeanRemote, roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, customerSessionBeanRemote, hotelReservationBean);
+        mainApp.runApp();
     }
 }
