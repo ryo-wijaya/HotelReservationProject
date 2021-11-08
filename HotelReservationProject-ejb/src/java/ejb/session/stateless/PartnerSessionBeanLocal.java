@@ -11,6 +11,7 @@ import javax.ejb.Local;
 import util.exceptions.LoginCredentialsInvalidException;
 import util.exceptions.NoPartnersFoundException;
 import util.exceptions.NoPartnersFoundException;
+import util.exceptions.NonUniqueCredentialsException;
 
 /**
  *
@@ -19,13 +20,13 @@ import util.exceptions.NoPartnersFoundException;
 @Local
 public interface PartnerSessionBeanLocal {
 
-    public Partner createNewPartner(Partner newPartner);
+    public Partner createNewPartner(Partner newPartner) throws NonUniqueCredentialsException;
 
     public List<Partner> retrieveAllPartners() throws NoPartnersFoundException;
 
     public Partner retrievePartnerByPartnerId(Long partnerId)throws NoPartnersFoundException;
 
-    public Partner retrievePartnerByUsername(String username);
+    public Partner retrievePartnerByUsername(String username) throws NoPartnersFoundException;
 
     public Partner partnerLogin(String username, String password) throws LoginCredentialsInvalidException;
     

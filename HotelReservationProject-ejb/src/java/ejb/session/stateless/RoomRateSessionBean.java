@@ -11,6 +11,8 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.RateType;
@@ -70,12 +72,19 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
         }
     }
 
-    public RoomRate getRoomRateByRatePerNight(RateType ratePerNight) {
-        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.ratePerNight = :inRatePerNight AND rr.enabled = :inEnabled");
+    /* There might be multiple room rates with the same rate type tho?
+    public RoomRate getRoomRateByRatePerNight(RateType ratePerNight) throws RoomRateNotFoundException {
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.rateType = :inRateType AND rr.enabled = :inEnabled");
         query.setParameter("inEnabled", Boolean.TRUE);
-        query.setParameter("inRatePerNight", ratePerNight);
-        return (RoomRate) query.getSingleResult();
+        query.setParameter("inRateType", ratePerNight);
+        try {
+            RoomRate roomRate = (RoomRate) query.getSingleResult();
+            return roomRate;
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new RoomRateNotFoundException();
+        }
     }
+    */
 
     @Override
     public void deleteRoomRate(Long id) throws RoomRateNotFoundException {

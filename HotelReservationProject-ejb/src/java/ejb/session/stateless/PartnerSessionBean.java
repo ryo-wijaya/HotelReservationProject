@@ -9,10 +9,13 @@ import entity.Partner;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exceptions.LoginCredentialsInvalidException;
 import util.exceptions.NoPartnersFoundException;
+import util.exceptions.NonUniqueCredentialsException;
 
 /**
  *
@@ -24,17 +27,17 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
     private EntityManager em;
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-    public PartnerSessionBean() {
-    }
 
     @Override
-    public Partner createNewPartner(Partner newPartner) {
-        em.persist(newPartner);
-        em.flush();
-        return newPartner;
-        // throw partnerusernameexistexcpetion and unknownpersistenceexception
+    public Partner createNewPartner(Partner newPartner) throws NonUniqueCredentialsException {
+        //DO BEAN VALIDATION INSTEAD OF TRUE
+        if (true) {
+            em.persist(newPartner);
+            em.flush();
+            return newPartner;
+        } else {
+            throw new NonUniqueCredentialsException();
+        }
     }
 
     @Override
@@ -59,11 +62,15 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     }
 
     @Override
-    public Partner retrievePartnerByUsername(String username) {
+    public Partner retrievePartnerByUsername(String username) throws NoPartnersFoundException {
         Query query = em.createQuery("SELECT p FROM Partner p WHERE p.username = :inUsername");
         query.setParameter("inUsername", username);
-        return (Partner) query.getSingleResult();
-        // catch noResultException | NonUniqueResultException
+        try {
+            Partner partner = (Partner) query.getSingleResult();
+            return partner;
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new NoPartnersFoundException();
+        }
     }
 
     @Override
@@ -75,7 +82,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
             } else {
                 throw new LoginCredentialsInvalidException();
             }
-        } catch (LoginCredentialsInvalidException ex) {
+        } catch (LoginCredentialsInvalidException | NoPartnersFoundException ex) {
             throw new LoginCredentialsInvalidException();
         }
     }
