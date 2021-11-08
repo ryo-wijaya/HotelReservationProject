@@ -5,8 +5,10 @@
  */
 package ejb.session.stateless;
 
+import entity.Booking;
 import entity.Room;
 import entity.RoomType;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -106,7 +108,24 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         return rooms.isEmpty();
     }
     
-    public List<Room> walkInSearchRoom(Date startDate, Date endDate) {
-        return null;
+    public List<Room> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException {
+        List<Room> rooms = this.retrieveRooms();
+        List<Room> freeRooms = new ArrayList<>();
+        
+        for (Room r : rooms) {
+            Boolean thisRoomWillBeFree = true;
+            
+            for (Booking b : r.getBookings()) {
+                if (startDate.before(b.getCheckOutDate())) { //THIS MEANS THAT THERES CLASH
+                    if (endDate.after(b.getCheckInDate())) {
+                        thisRoomWillBeFree = false;
+                    }
+                }
+            }
+            if (thisRoomWillBeFree) {
+                freeRooms.add(r);
+            }
+        }
+        return freeRooms;
     }
 }
