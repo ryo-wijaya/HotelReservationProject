@@ -20,7 +20,7 @@ public interface CustomerSessionBeanRemote {
     
     public Customer retrieveCustomerByCustomerId(Long customerId)throws CustomerNotFoundException;
     
-    public Customer registerAsCustomer(Customer newCustomer);
+    public long registerAsCustomer(Customer newCustomer);
     
     public List<Customer> retrieveAllCustomer();
     

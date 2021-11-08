@@ -142,9 +142,24 @@ public class MainApp {
             throw new LoginCredentialsInvalidException("Missing login credential!");
         }
     }
-
-    public void registerGuest() {
-
+    
+    public void registerGuest(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("*** POS System :: System Administration :: Create New Staff ***\n");
+        Customer customer = new Customer();
+        System.out.print("Enter Email> ");
+        customer.setEmail(sc.nextLine().trim());
+        System.out.print("Enter Username> ");
+        customer.setUserName(sc.nextLine().trim());
+        System.out.print("Enter Password> ");
+        customer.setPassword(sc.nextLine().trim());
+        System.out.print("Enter PhoneNumber> ");
+        customer.setPhoneNumber(sc.nextLine().trim());
+        System.out.print("Enter Passport Number> ");
+        customer.setPassportNumber(sc.nextLine().trim());
+        
+        Long newCustomerId = customerSessionBeanRemote.registerAsCustomer(customer);
+        System.out.println("Customer created successfully!: " + newCustomerId + "\n");
     }
 
     public void searchHotelRoom() {
