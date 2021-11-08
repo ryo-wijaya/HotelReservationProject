@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Room;
 import entity.RoomType;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -103,5 +104,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         query.setParameter("inEnabled", Boolean.TRUE);
         List<Room> rooms = query.getResultList();
         return rooms.isEmpty();
+    }
+    
+    public List<Room> walkInSearchRoom(Date startDate, Date endDate) {
+        return null;
     }
 }

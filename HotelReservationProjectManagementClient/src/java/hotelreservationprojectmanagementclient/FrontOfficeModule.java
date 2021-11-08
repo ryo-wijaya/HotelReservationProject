@@ -7,6 +7,8 @@ package hotelreservationprojectmanagementclient;
 
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import entity.Employee;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -72,6 +74,26 @@ public class FrontOfficeModule {
     private void walkInSearchRoom(Scanner sc) {
         System.out.println("\nYou are now searching a Room for a walk-in customer");
         System.out.println("---------------------------------------------------\n");
+        String startDateString;
+        String endDateString;
+        int[] sDate;
+        int[] eDate;
+
+        System.out.print("Input new Start Date in dd/mm/yyyy (with the slashes)>");
+        startDateString = sc.next();
+        System.out.print("Input new End Date in dd/mm/yyyy (with the slashes)>");
+        endDateString = sc.next();
+        sDate = Arrays.stream(startDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+        eDate = Arrays.stream(endDateString.split("/")).mapToInt(Integer::parseInt).toArray();
+        Date startDate = new Date(sDate[3], sDate[2], sDate[1]);
+        Date endDate = new Date(eDate[3], eDate[2], eDate[1]);
+        
+        if (startDate.compareTo(endDate) > 0) {
+            System.out.println("Invalid Operation - start date exceed end date");
+            System.out.println("Cancelling Operation...");
+            return;
+        }
+        
         
     }
 
