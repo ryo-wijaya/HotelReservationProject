@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import util.exceptions.RoomNotFoundException;
 
 /**
  *
@@ -113,7 +114,13 @@ public class FrontOfficeModule {
             return;
         }
         
-        List<Room> rooms = roomSessionBeanRemote.walkInSearch(startDate, endDate);
+        try {
+            List<Room> rooms = roomSessionBeanRemote.walkInSearchRoom(startDate, endDate);
+            
+            
+        } catch (RoomNotFoundException ex) {
+            System.out.println("No rooms are available!");
+        }
     }
 
     private void walkInReserveRoom(Scanner sc) {

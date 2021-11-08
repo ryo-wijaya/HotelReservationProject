@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Room;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
@@ -32,4 +33,6 @@ public interface RoomSessionBeanRemote {
     public Room getRoomByRoomNumber(String roomNumber) throws RoomNotFoundException;
     
     public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException;
+    
+    public List<Room> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException;
 }

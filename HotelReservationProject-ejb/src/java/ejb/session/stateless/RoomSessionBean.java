@@ -108,6 +108,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         return rooms.isEmpty();
     }
     
+    @Override
     public List<Room> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException {
         List<Room> rooms = this.retrieveRooms();
         List<Room> freeRooms = new ArrayList<>();
