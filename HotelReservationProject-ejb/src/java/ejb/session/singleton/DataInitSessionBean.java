@@ -14,6 +14,8 @@ import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -81,33 +83,30 @@ public class DataInitSessionBean {
         employee = new Employee("guest", "guestrelo", "password", GUESTRELATIONSOFFICER);
         employeeSessionBeanLocal.createNewEmployee(employee);
         
-        /*
+        
         try{
-            RoomType roomType = new RoomType("Grand Suite", 1, "Grand Suite", "GRAND", 3, 6);
+            RoomType roomType = new RoomType("Grand Suite", "Grand Suite", "GRAND", 3, 6);
+            roomType.setNextHigherRoomType("None");
             RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 100.00);
             RoomRate normalRoomRate = new RoomRate(NORMALRATE, 50.00);
-            roomType.addToListOfRoomRate(publishRoomRate);
-            //roomType.addToListOfRoomRate(normalRoomRate);
-            roomTypeSessionBean.createNewRoomType(roomType);
-            roomRateSessionBean.createNewRoomRate(normalRoomRate, 1);
-            //roomRateSessionBean.createNewRoomRate(publishRoomRate, 1);
-            Room room = new Room("0105", roomType);
-            roomSessionBean.createNewRoom(room);
-            room = new Room("0205", roomType);
-            roomSessionBean.createNewRoom(room);
-            room = new Room("0305", roomType);
-            roomSessionBean.createNewRoom(room);
-            room = new Room("0405", roomType);
-            roomSessionBean.createNewRoom(room);
-            room = new Room("0505", roomType);
-            roomSessionBean.createNewRoom(room);
-        } catch (EntityInstanceExistsInCollectionException ex) {
-            System.out.print("ERROR 1 ");
+            Long roomTypeId = roomTypeSessionBean.createNewRoomType(roomType);
+            roomRateSessionBean.createNewRoomRate(normalRoomRate, roomTypeId);
+            roomRateSessionBean.createNewRoomRate(publishRoomRate, roomTypeId);
+            Room room = new Room("0105");
+            roomSessionBean.createNewRoom(room, roomTypeId);
+            room = new Room("0205");
+            roomSessionBean.createNewRoom(room, roomTypeId);
+            room = new Room("0305");
+            roomSessionBean.createNewRoom(room, roomTypeId);
+            room = new Room("0405");
+            roomSessionBean.createNewRoom(room, roomTypeId);
+            room = new Room("0505");
+            roomSessionBean.createNewRoom(room, roomTypeId);
         } catch (FailedToCreateRoomRateException ex) {
             System.out.print("ERROR 2 ");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.print("ERROR 3 ");
         }
-        */
-
         
         System.out.println("Successfully deployed");
     }

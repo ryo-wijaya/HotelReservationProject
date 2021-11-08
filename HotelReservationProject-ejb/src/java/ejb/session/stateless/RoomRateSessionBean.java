@@ -8,6 +8,8 @@ package ejb.session.stateless;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -38,15 +40,13 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
     @Override
     public Long createNewRoomRate(RoomRate roomRate, Long roomTypeId) throws FailedToCreateRoomRateException {
         try {
-            Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomTypeId = :inRoomTypeId");
-            query.setParameter("inRoomTypeId", roomTypeId);
             em.persist(roomRate);
-            RoomType roomType = (RoomType) query.getSingleResult();
+            RoomType roomType = em.find(RoomType.class, roomTypeId);
             roomType.addToListOfRoomRate(roomRate);
             return roomRate.getRoomRateId();
         } catch (EntityInstanceExistsInCollectionException ex) {
             throw new FailedToCreateRoomRateException();
-        }
+        } 
     }
 
     @Override

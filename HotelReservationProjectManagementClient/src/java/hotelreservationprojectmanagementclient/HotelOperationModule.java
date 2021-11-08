@@ -947,6 +947,8 @@ public class HotelOperationModule {
                             System.out.println("Room Type Name: " + roomTypeName);
                             System.out.println("Rate Type: " + PEAKRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
+                            System.out.println("Start Date: " + roomRate.getStartDate());
+                            System.out.println("End Date: " + roomRate.getEndDate());
                         }
                         return roomRates;
                     } else {
@@ -959,6 +961,8 @@ public class HotelOperationModule {
                             System.out.println("Room Type Name: " + roomTypeName);
                             System.out.println("Rate Type: " + PROMOTIONRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
+                            System.out.println("Start Date: " + roomRate.getStartDate());
+                            System.out.println("End Date: " + roomRate.getEndDate());
                         }
                         return roomRates;
                     } else {
