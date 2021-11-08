@@ -12,8 +12,10 @@ import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
+import entity.Room;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -111,7 +113,7 @@ public class FrontOfficeModule {
             return;
         }
         
-        
+        List<Room> rooms = roomSessionBeanRemote.walkInSearch(startDate, endDate);
     }
 
     private void walkInReserveRoom(Scanner sc) {
