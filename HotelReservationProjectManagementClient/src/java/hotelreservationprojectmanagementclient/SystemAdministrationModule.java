@@ -12,10 +12,13 @@ import entity.Employee;
 import entity.Partner;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.enumeration.EmployeeRole;
 import util.enumeration.PartnerType;
 import util.exceptions.EmployeeNotFoundException;
 import util.exceptions.NoPartnersFoundException;
+import util.exceptions.NonUniqueCredentialsException;
 
 /**
  *
@@ -193,7 +196,11 @@ public class SystemAdministrationModule {
         }
 
         Partner partner = new Partner(name, username, password, type);
-        partnerSessionBeanRemote.createNewPartner(partner);
+        try {
+            partnerSessionBeanRemote.createNewPartner(partner);
+        } catch (NonUniqueCredentialsException ex) {
+            System.out.println("NonUnique Credentials!");
+        }
     }
 
     public void viewAllPartners() {
