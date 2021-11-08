@@ -54,7 +54,7 @@ public class DataInitSessionBean {
     @EJB
     private RoomTypeSessionBeanLocal roomTypeSessionBean;
 
-    @EJB(name = "EmployeeSessionBeanLocal")
+    @EJB
     private EmployeeSessionBeanLocal employeeSessionBeanLocal;
 
     
