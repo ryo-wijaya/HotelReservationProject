@@ -34,13 +34,13 @@ public class Booking implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    //@Temporal(javax.persistence.TemporalType.DATE)
     @Column(nullable = false)
-    @NotNull
+    //@NotNull
     private Date checkInDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    //@Temporal(javax.persistence.TemporalType.DATE)
     @Column(nullable = false)
-    @NotNull
+    //@NotNull
     private Date checkOutDate;
     private Boolean preBooking;
     

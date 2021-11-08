@@ -44,6 +44,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
         }
     }
     
+    @Override
     public Employee getEmployeeById(Long id) throws EmployeeNotFoundException {
         Employee employee = em.find(Employee.class, id);
         if (employee != null) {
