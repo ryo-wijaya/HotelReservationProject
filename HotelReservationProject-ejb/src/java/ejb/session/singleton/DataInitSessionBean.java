@@ -64,10 +64,8 @@ public class DataInitSessionBean {
     public void postConstruct() {
         try {
             employeeSessionBeanLocal.getEmployeeById(1l);
-            roomRateSessionBean.getRoomRateById(1l);
-            roomTypeSessionBean.getRoomTypeById(1l);
-            roomSessionBean.getRoomById(1l);
-        } catch (EmployeeNotFoundException | RoomRateNotFoundException | RoomTypeNotFoundException | RoomNotFoundException ex) {
+            
+        } catch (EmployeeNotFoundException ex) {
             this.loadData();
         }
     }
