@@ -6,13 +6,17 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import util.enumeration.PartnerType;
@@ -44,11 +48,16 @@ public class Partner implements Serializable {
     @Column(nullable = false)
     //@NotNull
     private PartnerType partnerType;
+    
+    private @OneToMany(mappedBy = "partner", fetch = FetchType.LAZY)
+    List<Booking> bookings;
 
     public Partner() {
+        bookings = new ArrayList<>();
     }
 
     public Partner(String name, String userName, String password, PartnerType employeeType) {
+        this();
         this.name = name;
         this.userName = userName;
         this.password = password;
@@ -62,8 +71,6 @@ public class Partner implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
     
     public Long getPartnerId() {
         return partnerId;

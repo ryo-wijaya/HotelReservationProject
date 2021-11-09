@@ -45,9 +45,11 @@ public class Booking implements Serializable {
     private Boolean preBooking;
     
     // many to one relationship with customer
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {})
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {})
     private Customer customer;
+    
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {})
+    private Partner partner;
 
     // Many to many relationship with rooms
     @ManyToMany(mappedBy = "bookings", fetch = FetchType.LAZY)

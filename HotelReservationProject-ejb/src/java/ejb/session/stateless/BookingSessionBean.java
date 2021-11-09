@@ -29,9 +29,6 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
 
     @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
     private EntityManager em;
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
     
     @Override
     public Booking createNewBooking(Booking booking) {
@@ -57,4 +54,27 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         }
     }
     
+    public List<Booking> getAllBookingsByPartnerId(Long partnerId) throws BookingNotFoundException {
+        Query query = em.createQuery("SELECT b from Booking b WHERE b.partner.partnerId = :inPartnerId");
+        query.setParameter("inPartnerId", partnerId);
+        List<Booking> bookings = query.getResultList();
+        
+        if (!bookings.isEmpty()) {
+            return bookings;
+        } else {
+            throw new BookingNotFoundException();
+        } 
+    }
+    
+    public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException {
+        Query query = em.createQuery("SELECT b from Booking b WHERE b.customer.CustomerId = :inCustomerId");
+        query.setParameter("inCustomerId", customerId);
+        List<Booking> bookings = query.getResultList();
+        
+        if (!bookings.isEmpty()) {
+            return bookings;
+        } else {
+            throw new BookingNotFoundException();
+        } 
+    }
 }
