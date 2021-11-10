@@ -54,6 +54,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
         em.merge(roomRate);
     }
 
+    /* we use the RoomType bean I think
     @Override
     public List<RoomRate> retrieveRoomRates() throws RoomRateNotFoundException {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.enabled = :inEnabled");
@@ -66,6 +67,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
             throw new RoomRateNotFoundException();
         }
     }
+    */
 
     @Override
     public RoomRate getRoomRateById(Long id) throws RoomRateNotFoundException {

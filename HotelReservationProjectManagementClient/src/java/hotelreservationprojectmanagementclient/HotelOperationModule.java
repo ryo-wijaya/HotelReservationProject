@@ -897,15 +897,20 @@ public class HotelOperationModule {
         System.out.println("\n-Displaying a list of Room Rates-");
         System.out.println("---------------------------------\n");
         try {
-            List<RoomRate> listOfRoomRates = roomRateSessionBeanRemote.retrieveRoomRates();
-            for (RoomRate rr : listOfRoomRates) {
-                System.out.println("Rate Type: " + rr.getRateType());
-                System.out.println("Rate Per Night: " + rr.getPrice());
-                System.out.println("Start Date: " + rr.getStartDate());
-                System.out.println("End Date: " + rr.getEndDate());
-                System.out.println("------------------------------------");
+            List<RoomType> listOfRoomTypes = roomTypeSessionBeanRemote.retrieveRoomTypes();
+            for (RoomType rt : listOfRoomTypes) {
+                System.out.println("Room Type: " + rt.getRoomName());
+
+                for (RoomRate rr : rt.getListOfRoomRates()) {
+                    System.out.println("\n------------------------------------");
+                    System.out.println("Rate Type: " + rr.getRateType());
+                    System.out.println("Rate Per Night: " + rr.getPrice());
+                    System.out.println("Start Date: " + rr.getStartDate());
+                    System.out.println("End Date: " + rr.getEndDate());
+                    System.out.println("------------------------------------\n");
+                }
             }
-        } catch (RoomRateNotFoundException ex) {
+        } catch (RoomTypeNotFoundException ex) {
             System.out.println("No Room Rate Exists in the database!");
         }
     }

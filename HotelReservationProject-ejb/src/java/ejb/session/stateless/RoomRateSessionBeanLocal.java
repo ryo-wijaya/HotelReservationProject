@@ -23,8 +23,6 @@ public interface RoomRateSessionBeanLocal {
 
     public RoomRate getRoomRateById(Long id) throws RoomRateNotFoundException;
 
-    public List<RoomRate> retrieveRoomRates() throws RoomRateNotFoundException;
-
     public Long createNewRoomRate(RoomRate roomRate, Long roomTypeId) throws FailedToCreateRoomRateException;
 
     public void updateRoomRate(RoomRate roomRate);
