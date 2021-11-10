@@ -123,20 +123,20 @@ public class FrontOfficeModule {
                 return null;
             }
 
-            List<RoomType> roomTypes = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
+            List<RoomType> fakeRoomTypes = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
             
-            for (RoomType rt : roomTypes) {
+            for (RoomType rt : fakeRoomTypes) {
                 System.out.println("List of available Room Types and quantities:");
                 System.out.println("Room Type Name: " + rt.getRoomName() + " Quantity Left: " + rt.getRoomInventory());
             }
             
             System.out.println("\nInput a Room Type Name> ");
             roomTypeName = sc.nextLine().trim();
-            roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
+            RoomType realRoomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
             
             System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
             
-            while (numOfRooms != 404 || numOfRooms > roomType.getRoomInventory()) {
+            while (numOfRooms != 404 || numOfRooms > realRoomType.getRoomInventory()) {
                 try {
                     numOfRooms = Integer.parseInt(sc.nextLine().trim());
                     break;
@@ -147,7 +147,7 @@ public class FrontOfficeModule {
             }
             
             Booking booking = new Booking(numOfRooms, startDateString, endDateString);
-            booking.setRoomType(roomType);
+            booking.setRoomType(realRoomType);
             
             Double price = bookingSessionBeanRemote.getPublishRatePriceOfBooking(booking.getBookingId());
             
