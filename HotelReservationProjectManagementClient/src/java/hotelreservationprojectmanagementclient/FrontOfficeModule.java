@@ -6,6 +6,7 @@
 package hotelreservationprojectmanagementclient;
 
 import ejb.session.stateful.HotelReservationBeanRemote;
+import ejb.session.stateless.BookingSessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
@@ -23,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import util.exceptions.RoomNotFoundException;
+import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
 /**
@@ -37,6 +39,7 @@ public class FrontOfficeModule {
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private HotelReservationBeanRemote hotelReservationBeanRemote;
+    private BookingSessionBeanRemote bookingSessionBeanRemote;
     private Employee employee;
 
     public FrontOfficeModule() {
@@ -44,12 +47,13 @@ public class FrontOfficeModule {
 
     public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote,
             RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote,
-            HotelReservationBeanRemote hotelReservationBeanRemote, Employee employee) {
+            HotelReservationBeanRemote hotelReservationBeanRemote, BookingSessionBeanRemote bookingSessionBeanRemote, Employee employee) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
+        this.bookingSessionBeanRemote = bookingSessionBeanRemote;
         this.hotelReservationBeanRemote = hotelReservationBeanRemote;
         this.employee = employee;
     }
@@ -145,7 +149,7 @@ public class FrontOfficeModule {
             Booking booking = new Booking(numOfRooms, startDateString, endDateString);
             booking.setRoomType(roomType);
             
-            Double price = bookingSessionBeanRemote.getPublishedRatePriceOfBooking();
+            Double price = bookingSessionBeanRemote.getPublishRatePriceOfBooking(booking.getBookingId());
             
             System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;
@@ -156,25 +160,42 @@ public class FrontOfficeModule {
             System.out.println("Invalid date input!");
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Room Type not found!");
+        } catch (RoomRateNotFoundException ex) {
+            System.out.println("No published rate found!");
         }
         return null;
     }
 
     private void walkInReserveRoom(Scanner sc) {
-        try {
-            walkInSearchRoom(sc);
-            System.out.println("\nYou are now reserving a Room for a walk-in customer");
-            System.out.println("---------------------------------------------------\n");
-            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
-            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-            Date startDateString;
-            Date endDateString;
-            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
-            startDateString = inputDateFormat.parse(sc.nextLine().trim());
-            System.out.print("Enter Return Date (dd/mm/yyyy)> ");
-            endDateString = outputDateFormat.parse(sc.nextLine().trim());
-        } catch (ParseException ex) {
-            System.out.println("Invalid date input!\n");
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        System.out.println("\nYou are now reserving a Room for a walk-in customer");
+        System.out.println("---------------------------------------------------\n");
+        List<Booking> availableRooms = walkInSearchRoom(sc);
+        Integer option = 0;
+        for(Booking bookings : availableRooms) {
+            System.out.println("\nOption " + (option + 1) + ".");
+            System.out.println("Rate Type name: " + bookings.getRoomType().getRoomName());      
+        }
+        Integer response = 0;
+        while (true) {
+            try {
+                System.out.print("Please Select an Option given above> ");
+                response = sc.nextInt();
+                if (response < 1 || response > availableRooms.size()) {
+                    System.out.print("Invalid input> ");
+                } else {
+                    RoomType roomType = availableRooms.get(response - 1).getRoomType();
+                    Date checkIn = availableRooms.get(response - 1).getCheckInDate();
+                    Date checkOut = availableRooms.get(response - 1).getCheckInDate();
+                    Integer numOfRoom = availableRooms.get(response - 1).getNumberOfRooms();
+                    Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+                    bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
+                }
+            }
+            catch (RoomTypeNotFoundException ex) {
+                System.out.print("Invalid Room Type!");
+            }
         }
     }
 

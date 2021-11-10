@@ -9,6 +9,8 @@ import entity.Booking;
 import java.util.List;
 import javax.ejb.Local;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.RoomRateNotFoundException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -17,7 +19,7 @@ import util.exceptions.BookingNotFoundException;
 @Local
 public interface BookingSessionBeanLocal {
 
-    public Booking createNewBooking(Booking booking);
+    public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException;
 
     public List<Booking> retrieveBookings() throws BookingNotFoundException;
 
@@ -26,5 +28,7 @@ public interface BookingSessionBeanLocal {
     public List<Booking> getAllBookingsByPartnerId(Long partnerId) throws BookingNotFoundException;
 
     public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException;
+
+    public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException;
     
 }

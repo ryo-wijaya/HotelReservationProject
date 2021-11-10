@@ -20,6 +20,7 @@ import javax.persistence.Query;
 import util.enumeration.RateType;
 import util.exceptions.BookingNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -27,6 +28,9 @@ import util.exceptions.RoomRateNotFoundException;
  */
 @Stateless
 public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessionBeanRemote {
+
+    @EJB
+    private RoomTypeSessionBeanLocal roomTypeSessionBean;
 
     @EJB
     private RoomSessionBeanLocal roomSessionBean;
@@ -38,10 +42,16 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     private EntityManager em;
 
     @Override
-    public Booking createNewBooking(Booking booking) {
-        em.persist(booking);
-        em.flush();
-        return booking;
+    public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException {
+        RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);
+        if (roomType.getEnabled()) {
+            booking.setRoomType(roomType);
+            em.persist(booking);
+            em.flush();
+            return booking.getBookingId();
+        } else {
+            throw new RoomTypeNotFoundException();
+        }
     }
 
     @Override
@@ -113,6 +123,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         }
     }
     
+    @Override
     public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException {
         Booking booking = em.find(Booking.class, bookingId);
         Double price = 0.0;
