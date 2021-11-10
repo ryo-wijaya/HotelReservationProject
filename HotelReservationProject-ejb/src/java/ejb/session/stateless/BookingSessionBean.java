@@ -145,4 +145,22 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
                 LocalDate.parse((CharSequence) booking.getCheckOutDate()));
         return price;
     }
+    
+    @Override
+    public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException{
+        Query query = em.createQuery("SELECT b from Booking b WHERE b.preBooking = :inPreBooking");
+        query.setParameter("inPreBooking", true);
+        List<Booking> bookings = query.getResultList();
+        if (!bookings.isEmpty()) {
+            for (Booking b : bookings) {
+                b.getPartner();
+                b.getRoomType();
+                b.getCustomer();
+                b.getRooms().size();
+            }
+            return bookings;
+        } else {
+            throw new BookingNotFoundException();
+        }
+    }
 }

@@ -30,4 +30,6 @@ public interface BookingSessionBeanRemote {
     public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException;
     
     public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException;
+    
+    public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException;
 }

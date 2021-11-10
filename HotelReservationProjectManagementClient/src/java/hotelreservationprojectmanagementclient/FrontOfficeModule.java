@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
@@ -167,35 +169,44 @@ public class FrontOfficeModule {
     }
 
     private void walkInReserveRoom(Scanner sc) {
-        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
-        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-        System.out.println("\nYou are now reserving a Room for a walk-in customer");
-        System.out.println("---------------------------------------------------\n");
-        List<Booking> availableRooms = walkInSearchRoom(sc);
-        Integer option = 0;
-        for(Booking bookings : availableRooms) {
+        try {
+            System.out.println("\nYou are now reserving a Room for a walk-in customer");
+            System.out.println("---------------------------------------------------\n");
+            Booking availableBooking = walkInSearchRoom(sc);
+            RoomType roomType = availableBooking.getRoomType();
+            Date checkIn = availableBooking.getCheckInDate();
+            Date checkOut = availableBooking.getCheckInDate();
+            Integer numOfRoom = availableBooking.getNumberOfRooms();
+            Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+            bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
+            /*List<Booking> availableRooms = walkInSearchRoom(sc);
+            Integer option = 0;
+            for(Booking bookings : availableRooms) {
             System.out.println("\nOption " + (option + 1) + ".");
-            System.out.println("Rate Type name: " + bookings.getRoomType().getRoomName());      
-        }
-        Integer response = 0;
-        while (true) {
+            System.out.println("Rate Type name: " + bookings.getRoomType().getRoomName());
+            }
+            Integer response = 0;
+            while (true) {
             try {
-                System.out.print("Please Select an Option given above> ");
-                response = sc.nextInt();
-                if (response < 1 || response > availableRooms.size()) {
-                    System.out.print("Invalid input> ");
-                } else {
-                    RoomType roomType = availableRooms.get(response - 1).getRoomType();
-                    Date checkIn = availableRooms.get(response - 1).getCheckInDate();
-                    Date checkOut = availableRooms.get(response - 1).getCheckInDate();
-                    Integer numOfRoom = availableRooms.get(response - 1).getNumberOfRooms();
-                    Booking booking = new Booking(numOfRoom, checkIn, checkOut);
-                    bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
-                }
+            System.out.print("Please Select an Option given above> ");
+            response = sc.nextInt();
+            if (response < 1 || response > availableRooms.size()) {
+            System.out.print("Invalid input> ");
+            } else {
+            RoomType roomType = availableRooms.get(response - 1).getRoomType();
+            Date checkIn = availableRooms.get(response - 1).getCheckInDate();
+            Date checkOut = availableRooms.get(response - 1).getCheckInDate();
+            Integer numOfRoom = availableRooms.get(response - 1).getNumberOfRooms();
+            Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+            bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
+            }
             }
             catch (RoomTypeNotFoundException ex) {
-                System.out.print("Invalid Room Type!");
+            System.out.print("Invalid Room Type!");
             }
+            }*/
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.print("Invalid Room Type!");
         }
     }
 
