@@ -721,11 +721,13 @@ public class HotelOperationModule {
         } catch (FailedToCreateRoomRateException ex) {
             System.out.println("Room Rate already exists in the Database!");
         } catch (ParseException ex) {
-            Logger.getLogger(HotelOperationModule.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Invalid date input!\n");
         }
     }
 
     private void updateARoomRate(Scanner sc) {
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
         System.out.println("\n-You are now updating a Room Rate-");
         System.out.println("----------------------------------\n");
 
@@ -821,22 +823,22 @@ public class HotelOperationModule {
 
             } else if (editOption == 3) { //editing a start date
                 while (true) {
-                    System.out.println("The old Start Date is: " + roomRateToEdit.getStartDate());
-                    System.out.println("The old End Date is: " + roomRateToEdit.getEndDate());
-                    System.out.print("Input new Start Date in dd/mm/yyyy (with the slashes)>");
-                    String startDateString = sc.next();
-                    System.out.print("Input new End Date in dd/mm/yyyy (with the slashes)>");
-                    String endDateString = sc.next();
-                    int[] sDate = Arrays.stream(startDateString.split("/")).mapToInt(Integer::parseInt).toArray();
-                    int[] eDate = Arrays.stream(endDateString.split("/")).mapToInt(Integer::parseInt).toArray();
-                    Date startDate = new Date(sDate[3], sDate[2], sDate[1]);
-                    Date endDate = new Date(eDate[3], eDate[2], eDate[1]);
-                    if (startDate.compareTo(roomRateToEdit.getEndDate()) > 0) {
-                        System.out.println("Invalid Operation - start date exceed end date");
-                    } else {
-                        roomRateToEdit.setStartDate(startDate);
-                        roomRateToEdit.setEndDate(endDate);
-                        break;
+                    try {
+                        System.out.println("The old Start Date is: " + roomRateToEdit.getStartDate());
+                        System.out.println("The old End Date is: " + roomRateToEdit.getEndDate());
+                        System.out.print("Input new Start Date in dd/mm/yyyy (with the slashes)>");
+                        Date startDate = inputDateFormat.parse(sc.nextLine().trim());
+                        System.out.print("Input new End Date in dd/mm/yyyy (with the slashes)>");
+                        Date endDate = inputDateFormat.parse(sc.nextLine().trim());
+                        if (startDate.compareTo(roomRateToEdit.getEndDate()) > 0) {
+                            System.out.println("Invalid Operation - start date exceed end date");
+                        } else {
+                            roomRateToEdit.setStartDate(startDate);
+                            roomRateToEdit.setEndDate(endDate);
+                            break;
+                        }
+                    } catch (ParseException ex) {
+                        System.out.println("Invalid date input!\n");
                     }
                 }
                 roomRateSessionBeanRemote.updateRoomRate(roomRateToEdit);
