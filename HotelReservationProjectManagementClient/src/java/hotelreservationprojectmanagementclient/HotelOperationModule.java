@@ -17,6 +17,8 @@ import entity.Employee;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -504,10 +506,10 @@ public class HotelOperationModule {
         try {
             System.out.println("\n-You are now creating a new Room-");
             System.out.println("---------------------------------\n");
-            System.out.print("Please enter a room number>");
+            System.out.print("Please enter a room number> ");
             String roomNumber = sc.nextLine().trim();
             this.viewAllRoomTypes();
-            System.out.print("Please enter a room type>");
+            System.out.print("Please enter a room type> ");
             String roomTypeName = sc.nextLine();
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
             Room room = new Room(roomNumber);
@@ -625,8 +627,8 @@ public class HotelOperationModule {
     private void createNewRoomRate(Scanner sc) {
         RateType rate;
         double price = 0;
-        String startDateString;
-        String endDateString;
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
         Date startDate;
         Date endDate;
         String roomTypeName;
@@ -697,14 +699,9 @@ public class HotelOperationModule {
 
                 if (rate != PUBLISHRATE && rate != NORMALRATE) { //asking for date only if its a promotionrate or peakrate
                     System.out.print("Input Start Date in dd/mm/yyyy (with the slashes)>");
-                    startDateString = sc.next();
+                    startDate = inputDateFormat.parse(sc.nextLine().trim());
                     System.out.print("Input End Date in dd/mm/yyyy (with the slashes)>");
-                    endDateString = sc.next();
-
-                    int[] sDate = Arrays.stream(startDateString.split("/")).mapToInt(Integer::parseInt).toArray();
-                    int[] eDate = Arrays.stream(endDateString.split("/")).mapToInt(Integer::parseInt).toArray();
-                    startDate = new Date(sDate[3], sDate[2], sDate[1]);
-                    endDate = new Date(eDate[3], eDate[2], eDate[1]);
+                    endDate = inputDateFormat.parse(sc.nextLine().trim());
                     newRate = new RoomRate(rate, price, startDate, endDate);
                 } else {
                     newRate = new RoomRate(rate, price);
@@ -720,6 +717,8 @@ public class HotelOperationModule {
             System.out.println("Room Type not found!");
         } catch (FailedToCreateRoomRateException ex) {
             System.out.println("Room Rate already exists in the Database!");
+        } catch (ParseException ex) {
+            Logger.getLogger(HotelOperationModule.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
