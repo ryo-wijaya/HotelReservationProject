@@ -147,9 +147,9 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     }
     
     @Override
-    public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException{
+    public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.preBooking = :inPreBooking");
-        query.setParameter("inPreBooking", true);
+        query.setParameter("inPreBooking", Boolean.TRUE);
         List<Booking> bookings = query.getResultList();
         if (!bookings.isEmpty()) {
             for (Booking b : bookings) {

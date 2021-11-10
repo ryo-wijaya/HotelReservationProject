@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Booking;
 import entity.Room;
 import entity.RoomType;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,12 +33,28 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
     @EJB
     private BookingSessionBeanLocal bookingSessionBean;
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
     @Schedule(hour = "2", minute = "0", second = "0", info = "allocateRooms")
-    public void allocateRooms(){
+    public void allocateRooms() {
         try {
             List<Booking> bookings = bookingSessionBean.retrieveUnallocatedBookings();
+            for (Booking b : bookings) {
+                this.findARoomAndAddToIt(b.getBookingId());
+            }
+        } catch () {
+            System.out.println("No bookings to allocate!");
+        }
+    }
+
+    private void findARoomAndAddToIt(Long bookingId) {
+        
+    }
+}
+
+
+
+
+
+/*
             for(Booking booking : bookings){
                 RoomType roomType = booking.getRoomType();
                 Integer numOfRooms = booking.getNumberOfRooms();
@@ -49,10 +66,4 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                     count++;
                 }
             }
-        } catch (BookingNotFoundException ex) {
-            System.out.println("No bookings to allocate!");
-        }
-        
-    }
-    
-}
+ */

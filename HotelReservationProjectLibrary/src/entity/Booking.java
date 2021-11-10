@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
+import util.enumeration.BookingExceptionType;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.EntityInstanceMissingInCollectionException;
 
@@ -45,6 +46,7 @@ public class Booking implements Serializable {
     private Date checkOutDate;
     private Boolean preBooking;
     private Integer numberOfRooms;
+    private BookingExceptionType bookingExceptionType;
     
     // many to one relationship with customer
     @ManyToOne(fetch = FetchType.LAZY, cascade = {})
@@ -63,6 +65,7 @@ public class Booking implements Serializable {
     public Booking() {
         this.rooms = new ArrayList<>();
         preBooking = true;
+        bookingExceptionType = BookingExceptionType.NONE;
     }
 
     public Booking(Integer numberOfRooms, Date checkInDate, Date checkOutDate) {
@@ -70,6 +73,14 @@ public class Booking implements Serializable {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.numberOfRooms = numberOfRooms;
+    }
+
+    public BookingExceptionType getBookingExceptionType() {
+        return bookingExceptionType;
+    }
+
+    public void setBookingExceptionType(BookingExceptionType bookingExceptionType) {
+        this.bookingExceptionType = bookingExceptionType;
     }
 
     public Integer getNumberOfRooms() {
