@@ -686,6 +686,7 @@ public class HotelOperationModule {
                     try {
                         System.out.print("Input a price>");
                         price = Double.parseDouble(sc.nextLine().trim());
+                        break;
                     } catch (NumberFormatException ex) {
                         System.out.println("Please input a valid price!");
                         price = 404;
@@ -723,13 +724,12 @@ public class HotelOperationModule {
     private void updateARoomRate(Scanner sc) {
         System.out.println("\n-You are now updating a Room Rate-");
         System.out.println("----------------------------------\n");
-        String roomNumber = sc.nextLine().trim();
 
         List<RoomRate> roomRate = this.viewRoomRateDetails(sc);
         if (roomRate.isEmpty()) {
             return;
         }
-
+        String roomNumber = sc.nextLine().trim();
         int roomTypeChoice;
 
         for (int i = 0; i < roomRate.size(); i++) {
