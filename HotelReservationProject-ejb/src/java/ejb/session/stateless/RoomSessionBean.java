@@ -139,8 +139,8 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             for (Room r : rooms) {
                 Boolean thisRoomWillBeFree = true;
                 for (Booking b : r.getBookings()) {
-                    if (startDate.before(b.getCheckOutDate())) { //THIS MEANS THAT THERES CLASH
-                        if (endDate.after(b.getCheckInDate())) {
+                    if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
+                        if (endDate.compareTo(b.getCheckInDate()) > 0) {
                             thisRoomWillBeFree = false;
                         }
                     }
@@ -162,8 +162,8 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             for (Room r : rooms) {
                 Boolean thisRoomWillBeFree = true;
                 for (Booking b : r.getBookings()) {
-                    if (startDate.before(b.getCheckOutDate())) { //THIS MEANS THAT THERES CLASH
-                        if (endDate.after(b.getCheckInDate())) {
+                    if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
+                        if (endDate.compareTo(b.getCheckInDate()) > 0) {
                             thisRoomWillBeFree = false;
                         }
                     }

@@ -127,18 +127,18 @@ public class FrontOfficeModule {
             }
 
             List<RoomType> fakeRoomTypes = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
-            
+
             for (RoomType rt : fakeRoomTypes) {
                 System.out.println("List of available Room Types and quantities:");
                 System.out.println("Room Type Name: " + rt.getRoomName() + " Quantity Left: " + rt.getRoomInventory());
             }
-            
+
             System.out.println("\nInput a Room Type Name> ");
             roomTypeName = sc.nextLine().trim();
             RoomType realRoomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
-            
+
             System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
-            
+
             while (numOfRooms != 404 || numOfRooms > realRoomType.getRoomInventory()) {
                 try {
                     numOfRooms = Integer.parseInt(sc.nextLine().trim());
@@ -148,12 +148,12 @@ public class FrontOfficeModule {
                     System.out.println("Enter a valid number!");
                 }
             }
-            
+
             Booking booking = new Booking(numOfRooms, startDateString, endDateString);
             booking.setRoomType(realRoomType);
-            
+
             Double price = bookingSessionBeanRemote.getPublishRatePriceOfBooking(booking.getBookingId());
-            
+
             System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;
 
@@ -214,9 +214,19 @@ public class FrontOfficeModule {
     private void checkInGuest(Scanner sc) {
         try {
             System.out.println("\nYou are now checking in a Guest");
-            System.out.println("---------------------------------------------------\n");
+            System.out.println("-------------------------------\n");
             System.out.println("Please Enter the Booking Id");
-            long bookingId = sc.nextLong();
+            long bookingId = 0;
+
+            while (bookingId != 404) {
+                try {
+                    bookingId = Long.parseLong(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    System.out.println("Enter a valid format for booking ID");
+                }
+            }
+
             Booking booking = bookingSessionBeanRemote.retrieveBookingByBookingId(bookingId);
             System.out.println("Booking ID: " + booking.getBookingId());
             System.out.println("Check in Date: " + booking.getCheckInDate());
@@ -228,7 +238,7 @@ public class FrontOfficeModule {
                 roomSessionBeanRemote.updateRoom(room);
             }
             System.out.println("Check in completed!");
-            System.out.println("---------------------------------------------------\n");
+            System.out.println("-----------------\n");
         } catch (BookingNotFoundException ex) {
             System.out.println("Booking does not exists!");
         } catch (RoomNotFoundException ex) {
@@ -239,9 +249,19 @@ public class FrontOfficeModule {
     private void checkoutGuest(Scanner sc) {
         try {
             System.out.println("\nYou are now checking out a Guest");
-            System.out.println("---------------------------------------------------\n");
+            System.out.println("--------------------------------\n");
             System.out.println("Please Enter the Booking Id");
-            long bookingId = sc.nextLong();
+
+            long bookingId = 0;
+            while (bookingId != 404) {
+                try {
+                    bookingId = Long.parseLong(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    System.out.println("Enter a valid format for booking ID");
+                }
+            }
+
             Booking booking = bookingSessionBeanRemote.retrieveBookingByBookingId(bookingId);
             System.out.println("Booking ID: " + booking.getBookingId());
             System.out.println("Check in Date: " + booking.getCheckInDate());
@@ -252,7 +272,7 @@ public class FrontOfficeModule {
                 roomSessionBeanRemote.updateRoom(room);
             }
             System.out.println("Check out completed!");
-            System.out.println("---------------------------------------------------\n");
+            System.out.println("------------------\n");
         } catch (BookingNotFoundException ex) {
             System.out.println("Booking does not exists!");
         } catch (RoomNotFoundException ex) {
