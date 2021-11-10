@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import util.exceptions.BookingNotFoundException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
@@ -211,10 +212,51 @@ public class FrontOfficeModule {
     }
 
     private void checkInGuest(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            System.out.println("\nYou are now checking in a Guest");
+            System.out.println("---------------------------------------------------\n");
+            System.out.println("Please Enter the Booking Id");
+            long bookingId = sc.nextLong();
+            Booking booking = bookingSessionBeanRemote.retrieveBookingByBookingId(bookingId);
+            System.out.println("Booking ID: " + booking.getBookingId());
+            System.out.println("Check in Date: " + booking.getCheckInDate());
+            System.out.println("Check out Date: " + booking.getCheckOutDate());
+            List<Room> rooms = booking.getRooms();
+            for (Room room : rooms) {
+                System.out.println("Room Number: " + room.getRoomNumber());
+                room.setRoomStatus(Boolean.FALSE);
+                roomSessionBeanRemote.updateRoom(room);
+            }
+            System.out.println("Check in completed!");
+            System.out.println("---------------------------------------------------\n");
+        } catch (BookingNotFoundException ex) {
+            System.out.println("Booking does not exists!");
+        } catch (RoomNotFoundException ex) {
+            System.out.println("Room not found!");
+        }
     }
 
     private void checkoutGuest(Scanner sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            System.out.println("\nYou are now checking out a Guest");
+            System.out.println("---------------------------------------------------\n");
+            System.out.println("Please Enter the Booking Id");
+            long bookingId = sc.nextLong();
+            Booking booking = bookingSessionBeanRemote.retrieveBookingByBookingId(bookingId);
+            System.out.println("Booking ID: " + booking.getBookingId());
+            System.out.println("Check in Date: " + booking.getCheckInDate());
+            System.out.println("Check out Date: " + booking.getCheckOutDate());
+            List<Room> rooms = booking.getRooms();
+            for (Room room : rooms) {
+                room.setRoomStatus(Boolean.TRUE);
+                roomSessionBeanRemote.updateRoom(room);
+            }
+            System.out.println("Check out completed!");
+            System.out.println("---------------------------------------------------\n");
+        } catch (BookingNotFoundException ex) {
+            System.out.println("Booking does not exists!");
+        } catch (RoomNotFoundException ex) {
+            System.out.println("Room not found!");
+        }
     }
 }

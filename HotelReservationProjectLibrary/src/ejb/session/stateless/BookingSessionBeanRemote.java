@@ -11,6 +11,7 @@ import javax.ejb.Remote;
 import util.exceptions.BookingNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.TypeOneNotFoundException;
 
 /**
  *
@@ -28,8 +29,12 @@ public interface BookingSessionBeanRemote {
     public List<Booking> getAllBookingsByPartnerId(Long partnerId) throws BookingNotFoundException;
 
     public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException;
-    
+
     public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException;
-    
+
     public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException;
+
+    public List<Booking> retrieveTypeTwoBookings() throws BookingNotFoundException;
+
+    public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException;
 }

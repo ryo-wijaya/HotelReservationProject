@@ -13,6 +13,7 @@ import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
+import entity.Booking;
 import entity.Employee;
 import entity.Room;
 import entity.RoomRate;
@@ -32,11 +33,13 @@ import static util.enumeration.RateType.NORMALRATE;
 import static util.enumeration.RateType.PEAKRATE;
 import static util.enumeration.RateType.PROMOTIONRATE;
 import static util.enumeration.RateType.PUBLISHRATE;
+import util.exceptions.BookingNotFoundException;
 import util.exceptions.FailedToCreateRoomRateException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.TypeOneNotFoundException;
 
 /**
  *
@@ -615,16 +618,33 @@ public class HotelOperationModule {
     }
 
     private void viewRoomAllocationExceptionReport(Scanner sc) {
-        //Booking probably needs another attribute - exceptionType : Enumeration, where exceptionType = {NONE, UPGRADED, NOUPGRADE}
-        //All Bookings are defaulted to exceptionType = NONE
-        //If during allocation a booking fails we change the type and we check for the type in this method
-
-        System.out.println("\n-You are now viewing a Room Allocation Exception Report-");
-        System.out.println("--------------------------------------------------------\n");
-        System.out.println("Exception Type 1: List of Booking IDs where a room was upgraded\n");
-        //query bookings thru session bean
-        System.out.println("Exception Type 2: List of Booking IDs where no upgrade is available\n");
-        //query bookings thru session bean
+        try {
+            //Booking probably needs another attribute - exceptionType : Enumeration, where exceptionType = {NONE, UPGRADED, NOUPGRADE}
+            //All Bookings are defaulted to exceptionType = NONE
+            //If during allocation a booking fails we change the type and we check for the type in this method
+            
+            System.out.println("\n-You are now viewing a Room Allocation Exception Report-");
+            System.out.println("--------------------------------------------------------\n");
+            System.out.println("Exception Type 1: List of Booking IDs where a room was upgraded\n");
+            List<Booking> typeOneBookings = bookingSessionBeanRemote.retrieveTypeOneBookings();
+            Integer count = 0;
+            for (Booking booking : typeOneBookings) {
+                count++;
+                System.out.println(count + ": " + booking.getBookingId());
+            }
+            System.out.println("--------------------------------------------------------\n");
+            System.out.println("Exception Type 2: List of Booking IDs where no upgrade is available\n");
+            List<Booking> typeTwoBookings = bookingSessionBeanRemote.retrieveTypeTwoBookings();
+            count = 0;
+            for (Booking booking : typeTwoBookings) {
+                count++;
+                System.out.println(count + ": " + booking.getBookingId());
+            }
+        } catch (BookingNotFoundException ex) {
+            System.out.println("No Type Two Exception Report");
+        } catch (TypeOneNotFoundException ex) {
+            System.out.println("No Type One Exception Report");
+        }
     }
 
     private void createNewRoomRate(Scanner sc) {

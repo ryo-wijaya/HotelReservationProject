@@ -11,6 +11,7 @@ import javax.ejb.Local;
 import util.exceptions.BookingNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.TypeOneNotFoundException;
 
 /**
  *
@@ -32,5 +33,9 @@ public interface BookingSessionBeanLocal {
     public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException;
 
     public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException;
+
+    public List<Booking> retrieveTypeTwoBookings() throws BookingNotFoundException;
+
+    public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException;
     
 }

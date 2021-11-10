@@ -17,10 +17,12 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.BookingExceptionType;
 import util.enumeration.RateType;
 import util.exceptions.BookingNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.TypeOneNotFoundException;
 
 /**
  *
@@ -150,6 +152,42 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.preBooking = :inPreBooking");
         query.setParameter("inPreBooking", Boolean.TRUE);
+        List<Booking> bookings = query.getResultList();
+        if (!bookings.isEmpty()) {
+            for (Booking b : bookings) {
+                b.getPartner();
+                b.getRoomType();
+                b.getCustomer();
+                b.getRooms().size();
+            }
+            return bookings;
+        } else {
+            throw new BookingNotFoundException();
+        }
+    }
+    
+    @Override
+    public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException {
+        Query query = em.createQuery("SELECT b from Booking b WHERE b.bookingExceptionType = :inBookingExceptionType");
+        query.setParameter("inPreBooking", BookingExceptionType.TYPE1);
+        List<Booking> bookings = query.getResultList();
+        if (!bookings.isEmpty()) {
+            for (Booking b : bookings) {
+                b.getPartner();
+                b.getRoomType();
+                b.getCustomer();
+                b.getRooms().size();
+            }
+            return bookings;
+        } else {
+            throw new TypeOneNotFoundException();
+        }
+    }
+
+    @Override
+    public List<Booking> retrieveTypeTwoBookings() throws BookingNotFoundException {
+        Query query = em.createQuery("SELECT b from Booking b WHERE b.bookingExceptionType = :inBookingExceptionType");
+        query.setParameter("inPreBooking", BookingExceptionType.TYPE2);
         List<Booking> bookings = query.getResultList();
         if (!bookings.isEmpty()) {
             for (Booking b : bookings) {
