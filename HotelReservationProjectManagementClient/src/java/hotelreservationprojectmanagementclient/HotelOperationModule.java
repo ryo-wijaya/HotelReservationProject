@@ -266,6 +266,7 @@ public class HotelOperationModule {
                 System.out.print("Please input the number of beds (Integer)>");
                 try {
                     numOfBeds = Integer.parseInt(sc.nextLine().trim());
+                    break;
                 } catch (NumberFormatException ex) {
                     System.out.println("Please enter an integer!");
                     numOfBeds = 404;
@@ -276,6 +277,7 @@ public class HotelOperationModule {
                 System.out.print("Please input the room capacity (Integer)>");
                 try {
                     roomCapacity = Integer.parseInt(sc.nextLine().trim());
+                    break;
                 } catch (NumberFormatException ex) {
                     System.out.println("Please enter an integer!");
                     roomCapacity = 404;

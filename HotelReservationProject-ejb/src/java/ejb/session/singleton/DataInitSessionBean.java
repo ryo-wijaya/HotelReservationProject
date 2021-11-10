@@ -90,6 +90,7 @@ public class DataInitSessionBean {
             Long roomTypeId = roomTypeSessionBean.createNewRoomType(roomType);
             roomRateSessionBean.createNewRoomRate(normalRoomRate, roomTypeId);
             roomRateSessionBean.createNewRoomRate(publishRoomRate, roomTypeId);
+            System.out.println("roomtypeID: "+ roomTypeId);
             Room room = new Room("0105");
             roomSessionBean.createNewRoom(room, roomTypeId);
             room = new Room("0205");
