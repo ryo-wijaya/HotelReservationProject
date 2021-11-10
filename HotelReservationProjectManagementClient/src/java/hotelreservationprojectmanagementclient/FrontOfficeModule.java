@@ -11,6 +11,7 @@ import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
+import entity.Booking;
 import entity.Employee;
 import entity.Room;
 import entity.RoomType;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import util.exceptions.RoomNotFoundException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -95,14 +97,17 @@ public class FrontOfficeModule {
         }
     }
 
-    private List<RoomType> walkInSearchRoom(Scanner sc) {
-        System.out.println("\nYou are now searching a Room for a walk-in customer");
-        System.out.println("---------------------------------------------------\n");
+    private Booking walkInSearchRoom(Scanner sc) {
         try {
+            System.out.println("\nYou are now searching a Room for a walk-in customer");
+            System.out.println("---------------------------------------------------\n");
             SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
             SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
             Date startDateString;
             Date endDateString;
+            String roomTypeName;
+            RoomType roomType;
+            int numOfRooms = 0;
             System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
             startDateString = inputDateFormat.parse(sc.nextLine().trim());
             System.out.print("Enter Return Date (dd/mm/yyyy)> ");
@@ -111,17 +116,45 @@ public class FrontOfficeModule {
             if (startDateString.compareTo(endDateString) > 0) {
                 System.out.println("Invalid Operation - start date exceed end date");
                 System.out.println("Cancelling Operation...");
-                return new ArrayList<>();
+                return null;
             }
 
             List<RoomType> roomTypes = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
+            
+            for (RoomType rt : roomTypes) {
+                System.out.println("List of available Room Types and quantities:");
+                System.out.println("Room Type Name: " + rt.getRoomName() + " Quantity Left: " + rt.getRoomInventory());
+            }
+            
+            System.out.println("\nInput a Room Type Name> ");
+            roomTypeName = sc.nextLine().trim();
+            roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
+            
+            System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
+            
+            while (numOfRooms != 404 || numOfRooms > roomType.getRoomInventory()) {
+                try {
+                    numOfRooms = Integer.parseInt(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    numOfRooms = 404;
+                    System.out.println("Enter a valid number!");
+                }
+            }
+            
+            Booking booking = new Booking(numOfRooms, startDateString, endDateString);
+            booking.setRoomType(roomType);
+            
+            return booking;
 
-            return roomTypes;
         } catch (RoomNotFoundException ex) {
             System.out.println("No rooms are available!");
         } catch (ParseException ex) {
-            System.out.println("Invalid date input!\n");
+            System.out.println("Invalid date input!");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Room Type not found!");
         }
+        return null;
     }
 
     private void walkInReserveRoom(Scanner sc) {
