@@ -18,8 +18,6 @@ import entity.Room;
 import entity.RoomType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -170,6 +168,8 @@ public class FrontOfficeModule {
     }
 
     private void walkInReserveRoom(Scanner sc) {
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
         try {
             System.out.println("\nYou are now reserving a Room for a walk-in customer");
             System.out.println("---------------------------------------------------\n");
@@ -180,6 +180,13 @@ public class FrontOfficeModule {
             Integer numOfRoom = availableBooking.getNumberOfRooms();
             Booking booking = new Booking(numOfRoom, checkIn, checkOut);
             bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
+            System.out.println("What is todays date? (dd/mm/yyyy)> ");
+            Date cDate = inputDateFormat.parse(sc.nextLine().trim());
+            System.out.println("What time is the reservation made");
+            Double rtime = sc.nextDouble();
+            if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
+                roomSessionBeanRemote.findARoomAndAddToIt(booking.getBookingId());
+            }
             /*List<Booking> availableRooms = walkInSearchRoom(sc);
             Integer option = 0;
             for(Booking bookings : availableRooms) {
@@ -208,6 +215,10 @@ public class FrontOfficeModule {
             }*/
         } catch (RoomTypeNotFoundException ex) {
             System.out.print("Invalid Room Type!");
+        } catch (ParseException ex) {
+            System.out.print("Invalid Date!");
+        } catch (RoomNotFoundException ex) {
+            System.out.print("Room not found!");
         }
     }
 
