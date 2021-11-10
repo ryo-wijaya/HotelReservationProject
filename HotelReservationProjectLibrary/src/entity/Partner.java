@@ -10,16 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import util.enumeration.PartnerType;
+import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.EntityInstanceMissingInCollectionException;
 
 /**
  *
@@ -146,5 +144,42 @@ public class Partner implements Serializable {
     public void setPartnerType(PartnerType partnerType) {
         this.partnerType = partnerType;
     }
+
+    /**
+     * @return the bookings
+     */
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    /**
+     * @param bookings the bookings to set
+     */
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
     
+    public void addBooking(Booking booking) throws EntityInstanceExistsInCollectionException
+    {
+        if(!this.bookings.contains(booking))
+        {
+            this.bookings.add(booking);
+        }
+        else
+        {
+            throw new EntityInstanceExistsInCollectionException("Booking already exist");
+        }
+    }
+    
+    public void removeBooking(Booking booking) throws EntityInstanceMissingInCollectionException
+    {
+        if(this.bookings.contains(booking))
+        {
+            this.bookings.remove(booking);
+        }
+        else
+        {
+            throw new EntityInstanceMissingInCollectionException("Booking does not exist");
+        }
+    }
 }

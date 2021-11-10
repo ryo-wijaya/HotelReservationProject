@@ -29,12 +29,12 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
 
 
     @Override
-    public Partner createNewPartner(Partner newPartner) throws NonUniqueCredentialsException {
+    public long createNewPartner(Partner newPartner) throws NonUniqueCredentialsException {
         //DO BEAN VALIDATION INSTEAD OF TRUE
         if (true) {
             em.persist(newPartner);
             em.flush();
-            return newPartner;
+            return newPartner.getPartnerId();
         } else {
             throw new NonUniqueCredentialsException();
         }

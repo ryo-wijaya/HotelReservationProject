@@ -6,6 +6,8 @@
 package ejb.session.stateless;
 
 import entity.Booking;
+import entity.Customer;
+import entity.Partner;
 import entity.RoomRate;
 import entity.RoomType;
 import java.time.LocalDate;
@@ -20,6 +22,9 @@ import javax.persistence.Query;
 import util.enumeration.BookingExceptionType;
 import util.enumeration.RateType;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.CustomerNotFoundException;
+import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.NoPartnersFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 import util.exceptions.TypeOneNotFoundException;
@@ -30,6 +35,9 @@ import util.exceptions.TypeOneNotFoundException;
  */
 @Stateless
 public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessionBeanRemote {
+
+    @EJB
+    private PartnerSessionBeanLocal partnerSessionBean;
 
     @EJB
     private RoomTypeSessionBeanLocal roomTypeSessionBean;
@@ -50,6 +58,38 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
             booking.setRoomType(roomType);
             em.persist(booking);
             em.flush();
+            return booking.getBookingId();
+        } else {
+            throw new RoomTypeNotFoundException();
+        }
+    }
+    
+    @Override
+    public long createNewBookingWithCustomer(Booking booking, Long roomTypeId, Long customerId) throws RoomTypeNotFoundException, CustomerNotFoundException, EntityInstanceExistsInCollectionException {
+        RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);
+        Customer customer = customerSessionBean.retrieveCustomerByCustomerId(customerId);
+        if (roomType.getEnabled()) {
+            booking.setRoomType(roomType);
+            booking.setCustomer(customer);
+            em.persist(booking);
+            em.flush();
+            customer.addBooking(booking);
+            return booking.getBookingId();
+        } else {
+            throw new RoomTypeNotFoundException();
+        }
+    }
+    
+    @Override
+    public long createNewBookingWithPartner(Booking booking, Long roomTypeId, Long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException {
+        RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);
+        Partner partner = partnerSessionBean.retrievePartnerByPartnerId(partnerId);
+        if (roomType.getEnabled()) {
+            booking.setRoomType(roomType);
+            booking.setPartner(partner);
+            em.persist(booking);
+            em.flush();
+            partner.addBooking(booking);
             return booking.getBookingId();
         } else {
             throw new RoomTypeNotFoundException();

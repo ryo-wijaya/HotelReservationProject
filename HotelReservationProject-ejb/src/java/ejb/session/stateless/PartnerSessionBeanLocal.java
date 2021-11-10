@@ -20,7 +20,7 @@ import util.exceptions.NonUniqueCredentialsException;
 @Local
 public interface PartnerSessionBeanLocal {
 
-    public Partner createNewPartner(Partner newPartner) throws NonUniqueCredentialsException;
+    public long createNewPartner(Partner newPartner) throws NonUniqueCredentialsException;
 
     public List<Partner> retrieveAllPartners() throws NoPartnersFoundException;
 

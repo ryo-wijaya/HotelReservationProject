@@ -19,7 +19,7 @@ import util.exceptions.NonUniqueCredentialsException;
 @Remote
 public interface PartnerSessionBeanRemote {
     
-    public Partner createNewPartner(Partner newPartner) throws NonUniqueCredentialsException;
+    public long createNewPartner(Partner newPartner) throws NonUniqueCredentialsException;
 
     public List<Partner> retrieveAllPartners() throws NoPartnersFoundException;
 

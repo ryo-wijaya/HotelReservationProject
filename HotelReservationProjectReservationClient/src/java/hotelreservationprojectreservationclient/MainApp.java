@@ -14,10 +14,20 @@ import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Booking;
 import entity.Customer;
+import entity.Room;
+import entity.RoomType;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.CustomerNotFoundException;
+import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.LoginCredentialsInvalidException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -167,7 +177,26 @@ public class MainApp {
     }
 
     public void reserveHotelRoom() {
-
+        try {
+            Scanner sc = new Scanner(System.in);
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            System.out.println("\nYou are now reserving a Hotel Room");
+            System.out.println("------------------------------------\n");
+            Booking availableBooking = searchHotelRoom();
+            RoomType roomType = availableBooking.getRoomType();
+            Date checkIn = availableBooking.getCheckInDate();
+            Date checkOut = availableBooking.getCheckInDate();
+            Integer numOfRoom = availableBooking.getNumberOfRooms();
+            Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+            bookingSessionBeanRemote.createNewBookingWithCustomer(booking, roomType.getRoomTypeId(), currentCustomer.getCustomerId());
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Room not found!");
+        } catch (CustomerNotFoundException ex) {
+            System.out.println("Customer not found!");
+        } catch (EntityInstanceExistsInCollectionException ex) {
+            System.out.println("Room not found!");
+        }
     }
 
     public void viewMyReservationDetails() {
@@ -184,19 +213,32 @@ public class MainApp {
             } catch (NumberFormatException ex) {
                 System.out.println("Please input a valid ID format");
             }
-            
-            //NOT DONE YET
         }
-
+        
+        List<Booking> bookings = currentCustomer.getBookings();
+        for(Booking booking : bookings) {
+            if(Objects.equals(booking.getBookingId(), bookingId)) {
+                System.out.println("Booking Id: " + booking.getBookingId());
+                System.out.println("Check In Date: " + booking.getCheckInDate());
+                System.out.println("Check Out Date: " + booking.getCheckOutDate());
+                System.out.println("Room Type: " + booking.getRoomType());
+                System.out.println("Number of rooms: " + booking.getNumberOfRooms());
+            }
+        }
     }
 
     public void viewAllMyReservations() {
         System.out.println("\nViewing all my reservations!");
         System.out.println("----------------------------\n");
         try {
-            List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByPartnerId(currentCustomer.getCustomerId());
+            List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByCustomerId(currentCustomer.getCustomerId());
             for (Booking b : bookings) {
-                System.out.println("Booking ID: " + b.getBookingId() + "Start Date: " + b.getCheckInDate() + "End Date: " + b.getCheckOutDate());
+                System.out.println("Booking ID: " + b.getBookingId());
+                System.out.println("Start Date: " + b.getCheckInDate());
+                System.out.println("End Date: " + b.getCheckOutDate());
+                System.out.println("Room Type: " + b.getRoomType());
+                System.out.println("Number of rooms: " + b.getNumberOfRooms());
+                System.out.println("");
             }
         } catch (BookingNotFoundException ex) {
             System.out.println("Booking not found!");
