@@ -135,6 +135,7 @@ public class SystemAdministrationModule {
         }
         Employee newEmployee = new Employee(name, username, password, role);
         employeeSessionBeanRemote.createNewEmployee(newEmployee);
+        System.out.println("Employee successfully created!");
     }
 
     public void viewAllEmployees() {

@@ -26,6 +26,7 @@ import util.exceptions.LoginCredentialsInvalidException;
  * @author ryo20
  */
 public class HoRSClientModule {
+
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
@@ -34,15 +35,15 @@ public class HoRSClientModule {
     private RoomSessionBeanRemote roomSessionBean;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private HotelReservationBeanRemote hotelReservationBeanRemote;
-    
+
     private FrontOfficeModule frontOfficeModule;
     private SystemAdministrationModule systemAdministrationModule;
     private HotelOperationModule hotelOperationModule;
-    
+
     private Employee currentEmployee;
 
-    public HoRSClientModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote, 
-            PartnerSessionBeanRemote partnerSessionBeanRemote, BookingSessionBeanRemote bookingSessionBean, RoomTypeSessionBeanRemote roomTypeSessionBean, 
+    public HoRSClientModule(CustomerSessionBeanRemote customerSessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote,
+            PartnerSessionBeanRemote partnerSessionBeanRemote, BookingSessionBeanRemote bookingSessionBean, RoomTypeSessionBeanRemote roomTypeSessionBean,
             RoomSessionBeanRemote roomSessionBean, RoomRateSessionBeanRemote roomRateSessionBeanRemote, HotelReservationBeanRemote hotelReservationBeanRemote) {
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
@@ -53,60 +54,55 @@ public class HoRSClientModule {
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.hotelReservationBeanRemote = hotelReservationBeanRemote;
     }
-   
-    public void runEmployeeLoginPage(){
+
+    public void runEmployeeLoginPage() {
         Scanner sc = new Scanner(System.in);
         int response;
-            
-            while(true){
+
+        while (true) {
+            while (true) {
                 System.out.println("-Welcome to HoRS management client System-\n");
                 System.out.println("1: Login");
-                System.out.println("2: Exit\n");    
-                while (true) {
-                    System.out.print("Enter an option> ");
-                    
-                    try {
-                        response = Integer.parseInt(sc.nextLine().trim());
-                    } catch (NumberFormatException ex) {
-                        response = 404;
-                    }
-                        
-                    if (response == 1) {
-                        try {
-                            doLogin();
-                            System.out.print("Login successful!");
-                            if(currentEmployee.geteRole() == SYSTEMADMINISTRATOR){
-                                systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
-                                systemAdministrationModule.runMainMenu();
-                            } 
-                            else if(currentEmployee.geteRole() == OPERATIONMANAGER || currentEmployee.geteRole() == SALESMANAGER){
-                                hotelOperationModule = new HotelOperationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, bookingSessionBean, roomTypeSessionBean, roomSessionBean, roomRateSessionBeanRemote, currentEmployee);
-                                hotelOperationModule.runMainMenu();
-                            }
-                            else if(currentEmployee.geteRole() == GUESTRELATIONSOFFICER){
-                                frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote, customerSessionBeanRemote, roomSessionBean, roomRateSessionBeanRemote, roomTypeSessionBean, hotelReservationBeanRemote, currentEmployee);
-                                frontOfficeModule.runMainMenu();
-                            }
-                        }
-                        catch (LoginCredentialsInvalidException ex) {
-                            System.out.println("Invalid login credentials!");
-                        }                  
-                    }
-                    else if (response == 2){
-                        break;
-                    }
-                    else {
-                        System.out.println("Invalid option, please try again!");
-                    }
+                System.out.println("2: Exit\n");
+                System.out.print("Enter an option> ");
+
+                try {
+                    response = Integer.parseInt(sc.nextLine().trim());
+                } catch (NumberFormatException ex) {
+                    response = 404;
                 }
-                
-                if (response == 2) {
-                    System.out.println("Exiting application!");
+
+                if (response == 1) {
+                    try {
+                        doLogin();
+                        System.out.println("Login successful!");
+                        if (currentEmployee.geteRole() == SYSTEMADMINISTRATOR) {
+                            systemAdministrationModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
+                            systemAdministrationModule.runMainMenu();
+                        } else if (currentEmployee.geteRole() == OPERATIONMANAGER || currentEmployee.geteRole() == SALESMANAGER) {
+                            hotelOperationModule = new HotelOperationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, bookingSessionBean, roomTypeSessionBean, roomSessionBean, roomRateSessionBeanRemote, currentEmployee);
+                            hotelOperationModule.runMainMenu();
+                        } else if (currentEmployee.geteRole() == GUESTRELATIONSOFFICER) {
+                            frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote, customerSessionBeanRemote, roomSessionBean, roomRateSessionBeanRemote, roomTypeSessionBean, hotelReservationBeanRemote, currentEmployee);
+                            frontOfficeModule.runMainMenu();
+                        }
+                    } catch (LoginCredentialsInvalidException ex) {
+                        System.out.println("Invalid login credentials!");
+                    }
+                } else if (response == 2) {
                     break;
+                } else {
+                    System.out.println("Invalid option, please try again!");
                 }
             }
+
+            if (response == 2) {
+                System.out.println("Exiting application!");
+                break;
+            }
+        }
     }
-    
+
     public void doLogin() throws LoginCredentialsInvalidException {
         Scanner sc = new Scanner(System.in);
         String username = "";
@@ -116,11 +112,10 @@ public class HoRSClientModule {
         username = sc.nextLine().trim();
         System.out.print("Enter password> ");
         password = sc.nextLine().trim();
-        
-        if(username.length() > 0 && password.length() > 0) {
+
+        if (username.length() > 0 && password.length() > 0) {
             currentEmployee = employeeSessionBeanRemote.login(username, password);
-        } 
-        else {
+        } else {
             throw new LoginCredentialsInvalidException("Invalid login credential!");
         }
     }
