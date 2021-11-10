@@ -31,7 +31,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     private EntityManager em;
 
     @Override
-    public Booking createNewBooking(Booking booking) {
+    public Booking createNewBooking(Booking booking, Long roomTypeId) {
         em.persist(booking);
         em.flush();
         return booking;

@@ -17,7 +17,7 @@ import util.exceptions.BookingNotFoundException;
 @Remote
 public interface BookingSessionBeanRemote {
 
-    public Booking createNewBooking(Booking booking);
+    public Booking createNewBooking(Booking booking, Long roomTypeId);
 
     public List<Booking> retrieveBookings() throws BookingNotFoundException;
 

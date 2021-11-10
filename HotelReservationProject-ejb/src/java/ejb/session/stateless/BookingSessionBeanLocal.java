@@ -17,7 +17,7 @@ import util.exceptions.BookingNotFoundException;
 @Local
 public interface BookingSessionBeanLocal {
 
-    public Booking createNewBooking(Booking booking);
+    public Booking createNewBooking(Booking booking, Long roomTypeId);
 
     public List<Booking> retrieveBookings() throws BookingNotFoundException;
 

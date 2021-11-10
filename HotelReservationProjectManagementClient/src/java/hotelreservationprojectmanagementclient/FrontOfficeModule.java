@@ -11,6 +11,7 @@ import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
+import entity.Booking;
 import entity.Employee;
 import entity.Room;
 import entity.RoomType;
@@ -125,24 +126,30 @@ public class FrontOfficeModule {
     }
 
     private void walkInReserveRoom(Scanner sc) {
-        try {
-            walkInSearchRoom(sc);
-            System.out.println("\nYou are now reserving a Room for a walk-in customer");
-            System.out.println("---------------------------------------------------\n");
-            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
-            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-            Date startDateString;
-            Date endDateString;
-            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
-            startDateString = inputDateFormat.parse(sc.nextLine().trim());
-            System.out.print("Enter Return Date (dd/mm/yyyy)> ");
-            endDateString = outputDateFormat.parse(sc.nextLine().trim()); 
-            System.out.print("Enter Room Type Name> ");
-            
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        System.out.println("\nYou are now reserving a Room for a walk-in customer");
+        System.out.println("---------------------------------------------------\n");
+        List<Booking> availableRooms = walkInSearchRoom(sc);
+        Integer option = 0;
+        for(Booking bookings : availableRooms) {
+            System.out.println("\nOption " + (option + 1) + ".");
+            System.out.println("Rate Type name: " + bookings.getRoomType().getRoomName());      
         }
-        catch (ParseException ex) {
-            System.out.println("Invalid date input!\n");
+        Integer response = 0;
+        while (true) {
+            System.out.print("Please Select an Option given above> ");
+            response = sc.nextInt();
+            if (response < 1 || response > availableRooms.size()) {
+                System.out.print("Invalid input> ");
+            } else {
+                RoomType roomType = availableRooms.get(response - 1).getRoomType();
+                Date startDate = availableRooms.get(response - 1).getCheckInDate();
+                Date endDate = availableRooms.get(response - 1).getCheckInDate();
+                bookingSessionBeanRemote.
+            }
         }
+
     }
 
     private void checkInGuest(Scanner sc) {
