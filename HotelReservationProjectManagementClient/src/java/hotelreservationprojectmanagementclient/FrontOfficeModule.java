@@ -38,8 +38,8 @@ public class FrontOfficeModule {
     public FrontOfficeModule() {
     }
 
-    public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote, 
-            RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, 
+    public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote,
+            RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote,
             HotelReservationBeanRemote hotelReservationBeanRemote, Employee employee) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.customerSessionBeanRemote = customerSessionBeanRemote;
@@ -96,32 +96,28 @@ public class FrontOfficeModule {
     private void walkInSearchRoom(Scanner sc) {
         System.out.println("\nYou are now searching a Room for a walk-in customer");
         System.out.println("---------------------------------------------------\n");
-        String startDateString;
-        String endDateString;
-        int[] sDate;
-        int[] eDate;
-
-        System.out.print("Input new Start Date in dd/mm/yyyy (with the slashes)>");
-        startDateString = sc.next();
-        System.out.print("Input new End Date in dd/mm/yyyy (with the slashes)>");
-        endDateString = sc.next();
-        sDate = Arrays.stream(startDateString.split("/")).mapToInt(Integer::parseInt).toArray();
-        eDate = Arrays.stream(endDateString.split("/")).mapToInt(Integer::parseInt).toArray();
-        Date startDate = new Date(sDate[3], sDate[2], sDate[1]);
-        Date endDate = new Date(eDate[3], eDate[2], eDate[1]);
-        
-        if (startDate.compareTo(endDate) > 0) {
-            System.out.println("Invalid Operation - start date exceed end date");
-            System.out.println("Cancelling Operation...");
-            return;
-        }
-        
         try {
-            List<Room> rooms = roomSessionBeanRemote.walkInSearchRoom(startDate, endDate);
-            
-            
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            Date startDateString;
+            Date endDateString;
+            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
+            startDateString = inputDateFormat.parse(sc.nextLine().trim());
+            System.out.print("Enter Return Date (dd/mm/yyyy)> ");
+            endDateString = outputDateFormat.parse(sc.nextLine().trim());
+
+            if (startDateString.compareTo(endDateString) > 0) {
+                System.out.println("Invalid Operation - start date exceed end date");
+                System.out.println("Cancelling Operation...");
+                return;
+            }
+
+            List<Room> rooms = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
+
         } catch (RoomNotFoundException ex) {
             System.out.println("No rooms are available!");
+        } catch (ParseException ex) {
+            System.out.println("Invalid date input!\n");
         }
     }
 
