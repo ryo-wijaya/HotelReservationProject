@@ -735,7 +735,6 @@ public class HotelOperationModule {
         if (roomRate.isEmpty()) {
             return;
         }
-        String roomNumber = sc.nextLine().trim();
         int roomTypeChoice;
 
         for (int i = 0; i < roomRate.size(); i++) {
@@ -751,7 +750,7 @@ public class HotelOperationModule {
         }
 
         //setting a scenario
-        RoomRate roomRateToEdit = roomRate.get(roomTypeChoice);
+        RoomRate roomRateToEdit = roomRate.get(roomTypeChoice - 1);
         int scenario;
         if (roomRateToEdit.getRateType() == NORMALRATE || roomRateToEdit.getRateType() == PUBLISHRATE) {
             scenario = 1;
@@ -791,8 +790,7 @@ public class HotelOperationModule {
                 int newRateChoice;
                 RateType newRate = null;
                 while (true) {
-                    System.out.print("Please choose a new rate type>");
-                    this.viewAllRoomRates();
+                    System.out.print("Please choose a new rate type (1: publish 2: peak 3: normal 4: promotion>");
                     newRateChoice = sc.nextInt();
                     if (newRateChoice == 1) {
                         newRate = RateType.PUBLISHRATE;
@@ -845,8 +843,8 @@ public class HotelOperationModule {
                 System.out.println("Successfully Updated");
             }
             System.out.println("Do you have anything else to edit? (yes/no)");
-            String choice = sc.nextLine().trim();
             while (true) {
+                String choice = sc.nextLine().trim();
                 if (choice.equals("no")) {
                     moreToEdit = false;
                     break;
