@@ -14,6 +14,8 @@ import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Booking;
 import entity.Customer;
+import entity.RoomType;
+import java.text.ParseException;
 import entity.Room;
 import entity.RoomType;
 import java.text.SimpleDateFormat;
@@ -27,6 +29,8 @@ import util.exceptions.BookingNotFoundException;
 import util.exceptions.CustomerNotFoundException;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.LoginCredentialsInvalidException;
+import util.exceptions.RoomNotFoundException;
+import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
 /**
@@ -152,8 +156,8 @@ public class MainApp {
             throw new LoginCredentialsInvalidException("Missing login credential!");
         }
     }
-    
-    public void registerGuest(){
+
+    public void registerGuest() {
         Scanner sc = new Scanner(System.in);
         System.out.println("*** POS System :: System Administration :: Create New Staff ***\n");
         Customer customer = new Customer();
@@ -167,13 +171,75 @@ public class MainApp {
         customer.setPhoneNumber(sc.nextLine().trim());
         System.out.print("Enter Passport Number> ");
         customer.setPassportNumber(sc.nextLine().trim());
-        
+
         Long newCustomerId = customerSessionBeanRemote.registerAsCustomer(customer);
         System.out.println("Customer created successfully!: " + newCustomerId + "\n");
     }
 
-    public void searchHotelRoom() {
+    public Booking searchHotelRoom() {
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("\nYou are now searching a Room for a online guest");
+            System.out.println("-----------------------------------------------\n");
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            Date startDateString;
+            Date endDateString;
+            String roomTypeName;
+            RoomType roomType;
+            int numOfRooms = 0;
+            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
+            startDateString = inputDateFormat.parse(sc.nextLine().trim());
+            System.out.print("Enter Return Date (dd/mm/yyyy)> ");
+            endDateString = outputDateFormat.parse(sc.nextLine().trim());
 
+            if (startDateString.compareTo(endDateString) > 0) {
+                System.out.println("Invalid Operation - start date exceed end date");
+                System.out.println("Cancelling Operation...");
+                return null;
+            }
+
+            List<RoomType> fakeRoomTypes = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
+
+            for (RoomType rt : fakeRoomTypes) {
+                System.out.println("List of available Room Types and quantities:");
+                System.out.println("Room Type Name: " + rt.getRoomName() + " Quantity Left: " + rt.getRoomInventory());
+            }
+
+            System.out.println("\nInput a Room Type Name> ");
+            roomTypeName = sc.nextLine().trim();
+            RoomType realRoomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
+
+            System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
+
+            while (numOfRooms != 404 || numOfRooms > realRoomType.getRoomInventory()) {
+                try {
+                    numOfRooms = Integer.parseInt(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    numOfRooms = 404;
+                    System.out.println("Enter a valid number!");
+                }
+            }
+
+            Booking booking = new Booking(numOfRooms, startDateString, endDateString);
+            booking.setRoomType(realRoomType);
+
+            Double price = bookingSessionBeanRemote.getPublishRatePriceOfBooking(booking.getBookingId());
+
+            System.out.println("\n Price for a booking like this would be: " + price + "\n");
+            return booking;
+
+        } catch (RoomNotFoundException ex) {
+            System.out.println("No rooms are available!");
+        } catch (ParseException ex) {
+            System.out.println("Invalid date input!");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Room Type not found!");
+        } catch (RoomRateNotFoundException ex) {
+            System.out.println("No published rate found!");
+        }
+        return null;
     }
 
     public void reserveHotelRoom() {

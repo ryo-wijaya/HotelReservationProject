@@ -66,6 +66,8 @@ public class Booking implements Serializable {
         this.rooms = new ArrayList<>();
         preBooking = true;
         bookingExceptionType = BookingExceptionType.NONE;
+        this.checkInDate = null;
+        this.checkOutDate = null;
     }
 
     public Booking(Integer numberOfRooms, Date checkInDate, Date checkOutDate) {

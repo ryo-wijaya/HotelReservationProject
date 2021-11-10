@@ -98,4 +98,23 @@ public class RoomRateSessionBean implements RoomRateSessionBeanLocal, RoomRateSe
         RoomRate roomRateToDelete = this.getRoomRateById(id);
         roomRateToDelete.setEnabled(Boolean.FALSE);
     }
+    
+    @Override
+    public List<RoomRate> getRoomRateByRoomType(Long roomTypeId) throws RoomTypeNotFoundException {
+        RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
+        return roomType.getListOfRoomRates();
+    }
+    
+    public RoomRate getNormalRateForRoomType(Long roomTypeId) throws RoomTypeNotFoundException, RoomRateNotFoundException {
+        RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
+        
+        for (RoomRate rr : roomType.getListOfRoomRates()) {
+            if (rr.getRateType() == RateType.NORMALRATE) {
+                return rr;
+            }
+        }
+        
+        //nothing to return
+        throw new RoomRateNotFoundException();
+    }
 }
