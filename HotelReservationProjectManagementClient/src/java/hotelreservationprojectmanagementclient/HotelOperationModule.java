@@ -197,6 +197,7 @@ public class HotelOperationModule {
             System.out.println("3. Delete a Room Rates");
             System.out.println("4. View all Room Rates");
             System.out.println("5. View Room Rates details");
+            System.out.println("6. Exit");
             System.out.print("Please select an option>");
 
             try {
@@ -889,6 +890,7 @@ public class HotelOperationModule {
 
         System.out.println("\n-You are now viewing details of a Room Rate-");
         System.out.println("--------------------------------------------\n");
+        System.out.println("Please enter Room Type name> ");
         String roomTypeName = sc.nextLine().trim();
         try {
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
