@@ -37,4 +37,6 @@ public interface BookingSessionBeanRemote {
     public List<Booking> retrieveTypeTwoBookings() throws BookingNotFoundException;
 
     public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException;
+    
+    public Double getRateForOnlineBooking(Long bookingId);
 }

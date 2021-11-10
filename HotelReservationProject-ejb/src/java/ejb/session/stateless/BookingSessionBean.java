@@ -11,6 +11,9 @@ import entity.RoomType;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import static java.time.temporal.ChronoUnit.DAYS;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -30,6 +33,9 @@ import util.exceptions.TypeOneNotFoundException;
  */
 @Stateless
 public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessionBeanRemote {
+
+    @EJB
+    private RoomRateSessionBeanLocal roomRateSessionBeanLocal;
 
     @EJB
     private RoomTypeSessionBeanLocal roomTypeSessionBean;
@@ -124,7 +130,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
             throw new BookingNotFoundException();
         }
     }
-    
+
     @Override
     public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException {
         Booking booking = em.find(Booking.class, bookingId);
@@ -132,22 +138,75 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         RoomType roomType = booking.getRoomType();
         Integer numOfRooms = booking.getNumberOfRooms();
         RoomRate publishedRate = null;
-        
+
         for (RoomRate rr : roomType.getListOfRoomRates()) {
             if (rr.getRateType() == RateType.PUBLISHRATE) {
                 publishedRate = rr;
             }
         }
-        
+
         if (publishedRate == null) {
             throw new RoomRateNotFoundException();
         }
-        
-        price = publishedRate.getPrice() * numOfRooms * ChronoUnit.DAYS.between(LocalDate.parse((CharSequence) booking.getCheckInDate()), 
+
+        price = publishedRate.getPrice() * numOfRooms * ChronoUnit.DAYS.between(LocalDate.parse((CharSequence) booking.getCheckInDate()),
                 LocalDate.parse((CharSequence) booking.getCheckOutDate()));
         return price;
     }
-    
+
+    public Double getRateForOnlineBooking(Long bookingId) {
+        Double price = 0.0;
+        try {
+            Booking booking = em.find(Booking.class, bookingId);
+            List<RoomRate> roomRates = roomRateSessionBeanLocal.getRoomRateByRoomType(booking.getRoomType().getRoomTypeId());
+            RoomType roomType = booking.getRoomType();
+            Integer numOfRooms = booking.getNumberOfRooms();
+            Date startDate = booking.getCheckInDate();
+            Date endDate = booking.getCheckOutDate();
+            RoomRate normalRate = null;
+
+            while (startDate.before(endDate)) {
+                RoomRate peakRate = null;
+                RoomRate promotionRate = null;
+
+                for (RoomRate rr : roomRates) {
+                    //if the startDate is between the dates for each rate (and the rate is not normal or published rate)
+                    if (rr.getEndDate() != null && rr.getStartDate().compareTo(startDate) * startDate.compareTo(rr.getEndDate()) >= 0) {
+                        if (rr.getRateType() == RateType.PROMOTIONRATE) {
+                            promotionRate = rr;
+                        } else if (rr.getRateType() == RateType.PEAKRATE) {
+                            peakRate = rr;
+                        }
+                    }
+                }
+
+                if (peakRate != null) {
+                    price = price + (peakRate.getPrice() * booking.getNumberOfRooms());
+                } else if (promotionRate != null) {
+                    price = price + (promotionRate.getPrice() * booking.getNumberOfRooms());
+                } else {
+                    //No peak or promotion rate
+                    normalRate = roomRateSessionBeanLocal.getNormalRateForRoomType(booking.getRoomType().getRoomTypeId());
+                    price = price + (normalRate.getPrice() * booking.getNumberOfRooms());
+                }
+
+                //increment date by 1
+                startDate = this.incrementDays(startDate);
+            }
+
+        } catch (RoomRateNotFoundException | RoomTypeNotFoundException ex) {
+            System.out.println("Rate not found!");
+        }
+        return price;
+    }
+
+    private Date incrementDays(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, 1);
+        return cal.getTime();
+    }
+
     @Override
     public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.preBooking = :inPreBooking");
@@ -165,7 +224,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
             throw new BookingNotFoundException();
         }
     }
-    
+
     @Override
     public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.bookingExceptionType = :inBookingExceptionType");
