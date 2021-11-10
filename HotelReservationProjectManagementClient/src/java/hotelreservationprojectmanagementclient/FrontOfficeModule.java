@@ -138,6 +138,8 @@ public class FrontOfficeModule {
             startDateString = inputDateFormat.parse(sc.nextLine().trim());
             System.out.print("Enter Return Date (dd/mm/yyyy)> ");
             endDateString = outputDateFormat.parse(sc.nextLine().trim()); 
+            System.out.print("Enter Room Type Name> ");
+            
         }
         catch (ParseException ex) {
             System.out.println("Invalid date input!\n");
