@@ -602,7 +602,7 @@ public class HotelOperationModule {
                 } else {
                     status = "Empty";
                 }
-                System.out.println("Room number: " + r.getRoomNumber() + " Room Type: " + r.getRoomType().getRoomName() + " Room status: " + status);
+                System.out.println("Room number: " + r.getRoomNumber() + " | Room Type: " + r.getRoomType().getRoomName() + " | Room status: " + status);
             }
         } catch (RoomNotFoundException ex) {
             System.out.println("No Rooms Found");
