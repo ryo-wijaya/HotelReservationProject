@@ -456,10 +456,10 @@ public class HotelOperationModule {
     private void viewAllRoomTypes() {
         try {
             System.out.println("\n-You are now viewing all Room Types-");
-            System.out.println("------------------------------------\n");
+            System.out.println("------------------------------------");
             List<RoomType> listOfRoomTypes = roomTypeSessionBeanRemote.retrieveRoomTypes();
             for (int i = 1; i <= listOfRoomTypes.size(); i++) {
-                System.out.println(i + ". " + listOfRoomTypes.get(i - 1));
+                System.out.println(i + ". " + listOfRoomTypes.get(i - 1).getRoomName());
             }
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("No Rooms Exist in the Database!");
