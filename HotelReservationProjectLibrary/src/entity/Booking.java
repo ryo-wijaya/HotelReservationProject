@@ -44,6 +44,7 @@ public class Booking implements Serializable {
     //@NotNull
     private Date checkOutDate;
     private Boolean preBooking;
+    private Integer numberOfRooms;
     
     // many to one relationship with customer
     @ManyToOne(fetch = FetchType.LAZY, cascade = {})
@@ -64,10 +65,19 @@ public class Booking implements Serializable {
         preBooking = true;
     }
 
-    public Booking(Date checkInDate, Date checkOutDate) {
+    public Booking(Integer numberOfRooms, Date checkInDate, Date checkOutDate) {
         this();
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
+        this.numberOfRooms = numberOfRooms;
+    }
+
+    public Integer getNumberOfRooms() {
+        return numberOfRooms;
+    }
+
+    public void setNumberOfRooms(Integer numberOfRooms) {
+        this.numberOfRooms = numberOfRooms;
     }
 
     public Partner getPartner() {
