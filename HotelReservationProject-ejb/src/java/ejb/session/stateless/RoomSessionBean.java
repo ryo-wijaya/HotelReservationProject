@@ -55,6 +55,12 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         query.setParameter("inEnabled", Boolean.TRUE);
         List<Room> listOfRooms = query.getResultList();
         if (!listOfRooms.isEmpty()) {
+            
+            for (Room r : listOfRooms) {
+                r.getBookings().size();
+                r.getRoomType();
+            }
+            
             return listOfRooms;
         } else {
             throw new RoomNotFoundException();
