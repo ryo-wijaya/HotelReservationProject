@@ -861,13 +861,21 @@ public class HotelOperationModule {
 
     private void deleteARoomRate(Scanner sc) {
         try {
+            int response = 0;
             System.out.println("\n-You are now deleting a Room Rate-");
-            System.out.println("--------------------------------------\n");
+            System.out.println("----------------------------------\n");
             List<RoomRate> roomRates = viewRoomRateDetails(sc);
             if (roomRates.size() > 1) {
-                System.out.println("Please select room rate to delete. (1 - " + roomRates.size() + ")");
+                System.out.print("Please select room rate to delete. (1 - " + roomRates.size() + ")>");
             }
-            Integer response = sc.nextInt();
+            while (response != 404) {
+                try {
+                    response = Integer.parseInt(sc.nextLine().trim());
+                } catch (NumberFormatException ex) {
+                    response = 404;
+                    System.out.println("Please enter a valid response!");
+                }
+            }
             roomRateSessionBeanRemote.deleteRoomRate(roomRates.get(response - 1).getRoomRateId());
 
         } catch (RoomRateNotFoundException ex) {
@@ -918,6 +926,7 @@ public class HotelOperationModule {
                             System.out.println("Rate Type: " + PUBLISHRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
+                        System.out.println("\nDeleted successfully!\n");
                         return roomRates;
                     } else {
                         System.out.println("Rate Type does not exists!");
@@ -930,6 +939,7 @@ public class HotelOperationModule {
                             System.out.println("Rate Type: " + NORMALRATE);
                             System.out.println("Rate per night: " + roomRate.getPrice());
                         }
+                        System.out.println("\nDeleted successfully!\n");
                         return roomRates;
                     } else {
                         System.out.println("Rate Type does not exists!");
@@ -944,6 +954,7 @@ public class HotelOperationModule {
                             System.out.println("Start Date: " + roomRate.getStartDate());
                             System.out.println("End Date: " + roomRate.getEndDate());
                         }
+                        System.out.println("\nDeleted successfully!\n");
                         return roomRates;
                     } else {
                         System.out.println("Rate Type does not exists!");
@@ -958,6 +969,7 @@ public class HotelOperationModule {
                             System.out.println("Start Date: " + roomRate.getStartDate());
                             System.out.println("End Date: " + roomRate.getEndDate());
                         }
+                        System.out.println("\nDeleted successfully!\n");
                         return roomRates;
                     } else {
                         System.out.println("Rate Type does not exists!");
@@ -968,6 +980,7 @@ public class HotelOperationModule {
                     System.out.println("Invalid Room Rate!");
                 }
             }
+            System.out.println("No Room Rate found!");
             return new ArrayList<>();
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Operation cancelled! No room types exist in the database");
