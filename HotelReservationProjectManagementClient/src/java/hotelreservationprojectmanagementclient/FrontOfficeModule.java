@@ -13,8 +13,10 @@ import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Employee;
 import entity.Room;
+import entity.RoomType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -93,7 +95,7 @@ public class FrontOfficeModule {
         }
     }
 
-    private void walkInSearchRoom(Scanner sc) {
+    private List<RoomType> walkInSearchRoom(Scanner sc) {
         System.out.println("\nYou are now searching a Room for a walk-in customer");
         System.out.println("---------------------------------------------------\n");
         try {
@@ -109,11 +111,12 @@ public class FrontOfficeModule {
             if (startDateString.compareTo(endDateString) > 0) {
                 System.out.println("Invalid Operation - start date exceed end date");
                 System.out.println("Cancelling Operation...");
-                return;
+                return new ArrayList<>();
             }
 
-            List<Room> rooms = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
+            List<RoomType> roomTypes = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
 
+            return roomTypes;
         } catch (RoomNotFoundException ex) {
             System.out.println("No rooms are available!");
         } catch (ParseException ex) {

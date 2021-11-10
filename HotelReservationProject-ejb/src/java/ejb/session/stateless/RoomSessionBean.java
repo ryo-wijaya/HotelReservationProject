@@ -117,7 +117,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     }
 
     @Override
-    public List<Room> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException {
+    public List<RoomType> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException {
         List<Room> rooms = this.retrieveRooms();
         List<Room> freeRooms = new ArrayList<>();
 
@@ -135,6 +135,6 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 freeRooms.add(r);
             }
         }
-        return freeRooms;
+        return null;
     }
 }

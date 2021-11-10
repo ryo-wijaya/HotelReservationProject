@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Room;
+import entity.RoomType;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
@@ -34,5 +35,5 @@ public interface RoomSessionBeanRemote {
     
     public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException;
     
-    public List<Room> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException;
+    public List<RoomType> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException;
 }
