@@ -10,6 +10,7 @@ import entity.Room;
 import entity.RoomType;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -125,24 +126,60 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
     @Override
     public List<RoomType> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException {
+
+        //The way to make this method alot simpler is to make RoomType - Room bidirectional - NOTE IN CASE THIS DOESNT WORK
         List<Room> rooms = this.retrieveRooms();
-        List<Room> freeRooms = new ArrayList<>();
-        
+        List<RoomType> freeRoomTypes = new ArrayList<>();
+        HashSet<String> set = new HashSet<String>();
 
-        for (Room r : rooms) {
-            Boolean thisRoomWillBeFree = true;
+        try {
 
-            for (Booking b : r.getBookings()) {
-                if (startDate.before(b.getCheckOutDate())) { //THIS MEANS THAT THERES CLASH
-                    if (endDate.after(b.getCheckInDate())) {
-                        thisRoomWillBeFree = false;
+            for (Room r : rooms) {
+                Boolean thisRoomWillBeFree = true;
+                for (Booking b : r.getBookings()) {
+                    if (startDate.before(b.getCheckOutDate())) { //THIS MEANS THAT THERES CLASH
+                        if (endDate.after(b.getCheckInDate())) {
+                            thisRoomWillBeFree = false;
+                        }
+                    }
+                }
+                if (thisRoomWillBeFree) {
+                    set.add(r.getRoomType().getRoomName()); //these are the room types that are free
+                }
+            }
+
+            RoomType fakeRoomTypeWithUpdatedInventory;
+            for (String s : set) {
+                //Making a copy of the Room Type but with an UPDATED inventory (total inventory - dates its booked)
+                fakeRoomTypeWithUpdatedInventory = new RoomType();
+                //set current inventory to current inventory
+                fakeRoomTypeWithUpdatedInventory.setRoomInventory(roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory());
+                freeRoomTypes.add(fakeRoomTypeWithUpdatedInventory);
+            }
+
+            for (Room r : rooms) {
+                Boolean thisRoomWillBeFree = true;
+                for (Booking b : r.getBookings()) {
+                    if (startDate.before(b.getCheckOutDate())) { //THIS MEANS THAT THERES CLASH
+                        if (endDate.after(b.getCheckInDate())) {
+                            thisRoomWillBeFree = false;
+                        }
+                    }
+                }
+                if (thisRoomWillBeFree) {
+
+                    for (RoomType rt : freeRoomTypes) { //if that room is of the room type, decremenet its inventory by 1
+                        if (rt.getRoomName().equals(r.getRoomType().getRoomName())) {
+                            //the rt in this condition is the room type that this particular room is
+                            //decrement by 1
+                            rt.setRoomInventory(rt.getRoomInventory() - 1);
+                        }
                     }
                 }
             }
-            if (thisRoomWillBeFree) {
-                freeRooms.add(r);
-            }
+            return freeRoomTypes;
+        } catch (RoomTypeNotFoundException ex) {
+            throw new RoomNotFoundException();
         }
-        return null;
     }
 }
