@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Booking;
+import entity.RoomType;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -20,6 +22,9 @@ import util.exceptions.BookingNotFoundException;
  */
 @Stateless
 public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessionBeanRemote {
+
+    @EJB
+    private RoomTypeSessionBeanLocal roomTypeSessionBean;
 
     @EJB
     private RoomSessionBeanLocal roomSessionBean;
@@ -31,10 +36,16 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     private EntityManager em;
 
     @Override
-    public Booking createNewBooking(Booking booking, Long roomTypeId) {
-        em.persist(booking);
-        em.flush();
-        return booking;
+    public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException {
+        RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);
+        if (roomType.getEnabled()) {
+            booking.setRoomType(roomType);
+            em.persist(booking);
+            em.flush();
+            return booking.getBookingId();
+        } else {
+            throw new RoomTypeNotFoundException();
+        }
     }
 
     @Override

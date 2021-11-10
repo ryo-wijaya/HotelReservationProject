@@ -9,6 +9,7 @@ import entity.Booking;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -17,7 +18,7 @@ import util.exceptions.BookingNotFoundException;
 @Remote
 public interface BookingSessionBeanRemote {
 
-    public Booking createNewBooking(Booking booking, Long roomTypeId);
+    public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException;
 
     public List<Booking> retrieveBookings() throws BookingNotFoundException;
 

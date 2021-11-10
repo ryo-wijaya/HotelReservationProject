@@ -6,6 +6,7 @@
 package hotelreservationprojectmanagementclient;
 
 import ejb.session.stateful.HotelReservationBeanRemote;
+import ejb.session.stateless.BookingSessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
@@ -37,6 +38,7 @@ public class FrontOfficeModule {
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private HotelReservationBeanRemote hotelReservationBeanRemote;
+    private BookingSessionBeanRemote bookingSessionBeanRemote;
     private Employee employee;
 
     public FrontOfficeModule() {
@@ -44,12 +46,13 @@ public class FrontOfficeModule {
 
     public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote,
             RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote,
-            HotelReservationBeanRemote hotelReservationBeanRemote, Employee employee) {
+            HotelReservationBeanRemote hotelReservationBeanRemote, BookingSessionBeanRemote bookingSessionBeanRemote, Employee employee) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
+        this.bookingSessionBeanRemote = bookingSessionBeanRemote;
         this.hotelReservationBeanRemote = hotelReservationBeanRemote;
         this.employee = employee;
     }
@@ -170,18 +173,24 @@ public class FrontOfficeModule {
         }
         Integer response = 0;
         while (true) {
-            System.out.print("Please Select an Option given above> ");
-            response = sc.nextInt();
-            if (response < 1 || response > availableRooms.size()) {
-                System.out.print("Invalid input> ");
-            } else {
-                RoomType roomType = availableRooms.get(response - 1).getRoomType();
-                Date startDate = availableRooms.get(response - 1).getCheckInDate();
-                Date endDate = availableRooms.get(response - 1).getCheckInDate();
-                bookingSessionBeanRemote.
+            try {
+                System.out.print("Please Select an Option given above> ");
+                response = sc.nextInt();
+                if (response < 1 || response > availableRooms.size()) {
+                    System.out.print("Invalid input> ");
+                } else {
+                    RoomType roomType = availableRooms.get(response - 1).getRoomType();
+                    Date checkIn = availableRooms.get(response - 1).getCheckInDate();
+                    Date checkOut = availableRooms.get(response - 1).getCheckInDate();
+                    Integer numOfRoom = availableRooms.get(response - 1).getNumberOfRooms();
+                    Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+                    bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
+                }
+            }
+            catch (RoomTypeNotFoundException ex) {
+                System.out.print("Invalid Room Type!");
             }
         }
-
     }
 
     private void checkInGuest(Scanner sc) {

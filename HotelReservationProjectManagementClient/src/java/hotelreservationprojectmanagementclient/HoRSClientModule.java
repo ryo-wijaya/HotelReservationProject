@@ -83,7 +83,7 @@ public class HoRSClientModule {
                             hotelOperationModule = new HotelOperationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, bookingSessionBean, roomTypeSessionBean, roomSessionBean, roomRateSessionBeanRemote, currentEmployee);
                             hotelOperationModule.runMainMenu();
                         } else if (currentEmployee.geteRole() == GUESTRELATIONSOFFICER) {
-                            frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote, customerSessionBeanRemote, roomSessionBean, roomRateSessionBeanRemote, roomTypeSessionBean, hotelReservationBeanRemote, currentEmployee);
+                            frontOfficeModule = new FrontOfficeModule(employeeSessionBeanRemote, customerSessionBeanRemote, roomSessionBean, roomRateSessionBeanRemote, roomTypeSessionBean, hotelReservationBeanRemote, bookingSessionBean, currentEmployee);
                             frontOfficeModule.runMainMenu();
                         }
                     } catch (LoginCredentialsInvalidException ex) {
