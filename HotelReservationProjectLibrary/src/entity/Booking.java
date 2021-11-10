@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 import util.exceptions.EntityInstanceExistsInCollectionException;
@@ -50,6 +51,9 @@ public class Booking implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY, cascade = {})
     private Partner partner;
+    
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    private RoomType roomType;
 
     // Many to many relationship with rooms
     @ManyToMany(mappedBy = "bookings", fetch = FetchType.LAZY)
@@ -64,6 +68,22 @@ public class Booking implements Serializable {
         this();
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
+    }
+
+    public Partner getPartner() {
+        return partner;
+    }
+
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
     
     public Long getBookingId() {
