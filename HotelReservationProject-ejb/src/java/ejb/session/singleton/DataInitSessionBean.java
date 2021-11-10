@@ -101,7 +101,5 @@ public class DataInitSessionBean {
         }
         
         System.out.println("Successfully deployed");
-    
-        
     }
 }
