@@ -13,6 +13,8 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.RateType;
@@ -70,11 +72,11 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomTypeName AND r.enabled =:inEnabled");
         query.setParameter("inEnabled", Boolean.TRUE);
         query.setParameter("inRoomTypeName", roomTypeName);
-        RoomType roomtype = (RoomType) query.getSingleResult();
-
-        if (roomtype != null) {
-            return roomtype;
-        } else {
+        
+        try {
+            RoomType roomType = (RoomType) query.getSingleResult();
+            return roomType;
+        } catch (NoResultException | NonUniqueResultException ex) {
             throw new RoomTypeNotFoundException();
         }
     }
