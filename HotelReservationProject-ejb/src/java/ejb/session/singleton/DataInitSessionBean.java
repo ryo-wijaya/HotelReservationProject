@@ -13,27 +13,19 @@ import entity.Employee;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import util.exceptions.EmployeeNotFoundException;
-import util.enumeration.EmployeeRole;
 import static util.enumeration.EmployeeRole.GUESTRELATIONSOFFICER;
 import static util.enumeration.EmployeeRole.OPERATIONMANAGER;
 import static util.enumeration.EmployeeRole.SALESMANAGER;
 import static util.enumeration.EmployeeRole.SYSTEMADMINISTRATOR;
-import util.enumeration.RateType;
 import static util.enumeration.RateType.NORMALRATE;
 import static util.enumeration.RateType.PUBLISHRATE;
-import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.FailedToCreateRoomRateException;
-import util.exceptions.RoomNotFoundException;
-import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
 /**
@@ -82,7 +74,7 @@ public class DataInitSessionBean {
         employeeSessionBeanLocal.createNewEmployee(employee);
         
         
-        /*
+        
         try{
             RoomType roomType = new RoomType("Grand Suite", "Grand Suite", "GRAND", 3, 6);
             roomType.setNextHigherRoomType("None");
@@ -109,7 +101,7 @@ public class DataInitSessionBean {
         }
         
         System.out.println("Successfully deployed");
-    */
+    
         
     }
 }
