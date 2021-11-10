@@ -586,6 +586,12 @@ public class HotelOperationModule {
             System.out.println("\n-You are now viewing all Rooms-");
             System.out.println("-------------------------------\n");
             List<Room> rooms = roomSessionBeanRemote.retrieveRooms();
+            
+            if (rooms.isEmpty()) {
+                System.out.println("No Rooms Found!");
+                return;
+            }
+            
             for (Room r : rooms) {
                 String status;
                 if (r.getRoomStatus()) {
@@ -596,7 +602,7 @@ public class HotelOperationModule {
                 System.out.println("Room number: " + r.getRoomNumber() + " Room Type: " + r.getRoomType().getRoomName() + " Room status: " + status);
             }
         } catch (RoomNotFoundException ex) {
-            System.out.println("Room not found!");
+            System.out.println("No Rooms Found");
         }
     }
 
