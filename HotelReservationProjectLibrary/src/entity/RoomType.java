@@ -44,6 +44,7 @@ public class RoomType implements Serializable {
     private Integer beds;
     private Integer capacity;
     private List<String> amenities;
+    private Integer roomInventory;
     
     @OneToMany(cascade = {}, fetch = FetchType.LAZY)
     private List<RoomRate> listOfRoomRates;
@@ -52,6 +53,7 @@ public class RoomType implements Serializable {
         listOfRoomRates = new ArrayList<>();
         amenities = new ArrayList<>();
         enabled = true;
+        roomInventory = 0;
     }
 
     public RoomType(String roomName, String description, String roomSize, Integer beds, Integer capacity) {
@@ -61,6 +63,14 @@ public class RoomType implements Serializable {
         this.roomSize = roomSize;
         this.beds = beds;
         this.capacity = capacity;
+    }
+
+    public Integer getRoomInventory() {
+        return roomInventory;
+    }
+
+    public void setRoomInventory(Integer roomInventory) {
+        this.roomInventory = roomInventory;
     }
 
     public Boolean getEnabled() {
