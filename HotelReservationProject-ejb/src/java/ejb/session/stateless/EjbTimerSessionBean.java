@@ -16,6 +16,7 @@ import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.RoomNotFoundException;
 
 /**
  *
@@ -25,45 +26,25 @@ import util.exceptions.BookingNotFoundException;
 public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerSessionBeanLocal {
 
     @EJB
-    private RoomTypeSessionBeanLocal roomTypeSessionBean;
+    private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
 
     @EJB
-    private RoomSessionBeanLocal roomSessionBean;
+    private RoomSessionBeanLocal roomSessionBeanLocal;
 
     @EJB
-    private BookingSessionBeanLocal bookingSessionBean;
+    private BookingSessionBeanLocal bookingSessionBeanLocal;
 
     @Schedule(hour = "2", minute = "0", second = "0", info = "allocateRooms")
     public void allocateRooms() {
         try {
-            List<Booking> bookings = bookingSessionBean.retrieveUnallocatedBookings();
+            List<Booking> bookings = bookingSessionBeanLocal.retrieveUnallocatedBookings();
             for (Booking b : bookings) {
-                this.findARoomAndAddToIt(b.getBookingId());
+                roomSessionBeanLocal.findARoomAndAddToIt(b.getBookingId());
             }
-        } catch () {
+        } catch (BookingNotFoundException ex) {
             System.out.println("No bookings to allocate!");
+        } catch (RoomNotFoundException ex) {
+            System.out.println("No room's to allocate!");
         }
     }
-
-    private void findARoomAndAddToIt(Long bookingId) {
-        
-    }
 }
-
-
-
-
-
-/*
-            for(Booking booking : bookings){
-                RoomType roomType = booking.getRoomType();
-                Integer numOfRooms = booking.getNumberOfRooms();
-                Integer count = 0;
-                while(count < numOfRooms){
-                    //List<Room> availableRooms = 
-                    
-                    
-                    count++;
-                }
-            }
- */

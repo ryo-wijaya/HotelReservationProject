@@ -17,6 +17,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.BookingExceptionType;
+import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
@@ -179,6 +181,72 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             }
             return freeRoomTypes;
         } catch (RoomTypeNotFoundException ex) {
+            throw new RoomNotFoundException();
+        }
+    }
+
+    @Override
+    public List<Room> retrieveRoomsByRoomType(Long roomTypeId) throws RoomNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.enabled = :inEnabled AND r.roomType.roomTypeId = :inRoomTypeId");
+        query.setParameter("inRoomTypeId", roomTypeId);
+        List<Room> listOfRooms = query.getResultList();
+        if (!listOfRooms.isEmpty()) {
+            for (Room r : listOfRooms) {
+                r.getBookings().size();
+                r.getRoomType();
+            }
+            return listOfRooms;
+        } else {
+            throw new RoomNotFoundException();
+        }
+    }
+
+    @Override
+    public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException {
+        Booking booking = em.find(Booking.class, bookingId);
+        List<Room> rooms = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
+        Date startDate = booking.getCheckInDate();
+        Date endDate = booking.getCheckOutDate();
+        Boolean thisRoomWillBeFree = true;
+        
+        booking.setPreBooking(false);
+
+        try {
+            for (Room r : rooms) {
+                thisRoomWillBeFree = true;
+                for (Booking b : r.getBookings()) {
+                    if (startDate.compareTo(b.getCheckOutDate()) < 0) { //if startDate is before a room's booking's checkout date (coz if its after we good to go)
+                        if (endDate.compareTo(b.getCheckInDate()) > 0) { //if endDate stop at a room's booking's checkin date
+                            thisRoomWillBeFree = false; //THIS MEANS THAT THERES CLASH
+                        }
+                    }
+                }
+                if (thisRoomWillBeFree) {
+                    r.addBookings(booking);
+                    booking.setNumberOfRooms(booking.getNumberOfRooms() - 1);
+                    break;
+                }
+            } //thisRoomWillBeFree will end up TRUE if a booking was made, and FALSE if no available rooms exist
+
+            if (!thisRoomWillBeFree) { //no available rooms
+                String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
+
+                if (!nextHigherRoomTypeString.equals("None")) {
+                    RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
+                    booking.setRoomType(nextHigherType);
+                    booking.setBookingExceptionType(BookingExceptionType.TYPE1);
+                    this.findARoomAndAddToIt(bookingId);
+
+                } else { //no available rooms and no available higher room types
+                    booking.setBookingExceptionType(BookingExceptionType.TYPE2);
+                }
+            }
+
+            if (booking.getNumberOfRooms() != 0 && booking.getBookingExceptionType() == BookingExceptionType.NONE) {
+                this.findARoomAndAddToIt(bookingId);
+            }
+
+        } catch (EntityInstanceExistsInCollectionException | RoomTypeNotFoundException ex) {
             throw new RoomNotFoundException();
         }
     }

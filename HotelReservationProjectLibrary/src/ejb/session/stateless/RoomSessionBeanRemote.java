@@ -26,14 +26,18 @@ public interface RoomSessionBeanRemote {
     public List<Room> retrieveRooms() throws RoomNotFoundException;
 
     public Room getRoomById(Long id) throws RoomNotFoundException;
-    
+
     public void deleteRoomByRoomNumber(String roomNumber) throws RoomNotFoundException, RoomIsTiedToABookingDeletionException;
-    
+
     public void updateRoom(Room room) throws RoomNotFoundException;
-    
+
     public Room getRoomByRoomNumber(String roomNumber) throws RoomNotFoundException;
-    
+
     public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException;
-    
+
     public List<RoomType> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException;
+
+    public List<Room> retrieveRoomsByRoomType(Long roomTypeId) throws RoomNotFoundException;
+
+    public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException;
 }

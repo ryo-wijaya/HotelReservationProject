@@ -36,4 +36,8 @@ public interface RoomSessionBeanLocal {
     public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException;
 
     public List<RoomType> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException;
+
+    public List<Room> retrieveRoomsByRoomType(Long roomTypeId) throws RoomNotFoundException;
+
+    public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException;
 }
