@@ -290,6 +290,8 @@ public class HotelOperationModule {
 
             if (nextHigherRoomType != null) { //Saved as a String
                 newRoomType.setNextHigherRoomType(nextHigherRoomTypeName);
+            } else {
+                newRoomType.setNextHigherRoomType("None");
             }
 
             //adding amenities
@@ -314,6 +316,7 @@ public class HotelOperationModule {
                 }
             }
             roomTypeSessionBeanRemote.createNewRoomType(newRoomType);
+            System.out.println("Room Type created!\n");
 
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Next Higher Room Type is not found!");
@@ -339,7 +342,7 @@ public class HotelOperationModule {
                 System.out.println("7. Add amenity to Room Type");
                 System.out.println("8. Remove amenity from Room Type");
                 System.out.println("9. Exit");
-                System.out.print("Please enter a numeric option from 1-9");
+                System.out.print("\nPlease enter a numeric option from 1-9> ");
 
                 try {
                     option = Integer.parseInt(sc.nextLine().trim());
@@ -479,7 +482,7 @@ public class HotelOperationModule {
             System.out.print("Enter a Room Type name>");
             String typeName = sc.nextLine().trim();
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(typeName);
-            System.out.println("Room Type Name: " + roomType.getRoomName());
+            System.out.println("\nRoom Type Name: " + roomType.getRoomName());
             System.out.println("Next Higher Room Type: " + roomType.getNextHigherRoomType());
             System.out.println("Description: " + roomType.getDescription());
             System.out.println("Room Size: " + roomType.getRoomSize());

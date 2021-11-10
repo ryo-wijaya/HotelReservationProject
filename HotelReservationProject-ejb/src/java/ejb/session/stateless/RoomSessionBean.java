@@ -84,6 +84,8 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         query.setParameter("inEnabled", Boolean.TRUE);
         Room room = (Room) query.getSingleResult();
         if (room != null) {
+            room.getRoomType();
+            room.getBookings().size();
             return room;
         } else {
             throw new RoomNotFoundException();
