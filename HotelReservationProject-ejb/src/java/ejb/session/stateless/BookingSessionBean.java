@@ -6,13 +6,20 @@
 package ejb.session.stateless;
 
 import entity.Booking;
+import entity.RoomRate;
+import entity.RoomType;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.RateType;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.RoomRateNotFoundException;
 
 /**
  *
@@ -68,6 +75,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         }
     }
 
+    @Override
     public List<Booking> getAllBookingsByPartnerId(Long partnerId) throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.partner.partnerId = :inPartnerId");
         query.setParameter("inPartnerId", partnerId);
@@ -86,6 +94,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         }
     }
 
+    @Override
     public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.customer.CustomerId = :inCustomerId");
         query.setParameter("inCustomerId", customerId);
@@ -102,5 +111,27 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         } else {
             throw new BookingNotFoundException();
         }
+    }
+    
+    public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException {
+        Booking booking = em.find(Booking.class, bookingId);
+        Double price = 0.0;
+        RoomType roomType = booking.getRoomType();
+        Integer numOfRooms = booking.getNumberOfRooms();
+        RoomRate publishedRate = null;
+        
+        for (RoomRate rr : roomType.getListOfRoomRates()) {
+            if (rr.getRateType() == RateType.PUBLISHRATE) {
+                publishedRate = rr;
+            }
+        }
+        
+        if (publishedRate == null) {
+            throw new RoomRateNotFoundException();
+        }
+        
+        price = publishedRate.getPrice() * numOfRooms * ChronoUnit.DAYS.between(LocalDate.parse((CharSequence) booking.getCheckInDate()), 
+                LocalDate.parse((CharSequence) booking.getCheckOutDate()));
+        return price;
     }
 }

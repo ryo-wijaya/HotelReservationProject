@@ -145,6 +145,9 @@ public class FrontOfficeModule {
             Booking booking = new Booking(numOfRooms, startDateString, endDateString);
             booking.setRoomType(roomType);
             
+            Double price = bookingSessionBeanRemote.getPublishedRatePriceOfBooking();
+            
+            System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;
 
         } catch (RoomNotFoundException ex) {

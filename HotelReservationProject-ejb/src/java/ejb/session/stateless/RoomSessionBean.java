@@ -41,6 +41,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
         if (roomType.getEnabled()) {
             room.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             em.persist(room);
             em.flush();
             return room.getRoomId();
@@ -101,9 +102,15 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     //deleting a roomType involves deleting all its associated RoomRates
     @Override
     public void deleteRoomByRoomNumber(String roomNumber) throws RoomNotFoundException, RoomIsTiedToABookingDeletionException {
-        Room roomToDelete = this.getRoomByRoomNumber(roomNumber);
-        roomToDelete.getBookings().clear();
-        roomToDelete.setEnabled(false);
+        try {
+            Room roomToDelete = this.getRoomByRoomNumber(roomNumber);
+            RoomType roomTypeOfDeletedRoom = roomTypeSessionBeanLocal.getRoomTypeById(roomToDelete.getRoomType().getRoomTypeId());
+            roomTypeOfDeletedRoom.setRoomInventory(roomTypeOfDeletedRoom.getRoomInventory() + 1);
+            roomToDelete.getBookings().clear();
+            roomToDelete.setEnabled(false);
+        } catch (RoomTypeNotFoundException ex) {
+            throw new RoomNotFoundException();
+        }
     }
 
     @Override
@@ -120,6 +127,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     public List<RoomType> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException {
         List<Room> rooms = this.retrieveRooms();
         List<Room> freeRooms = new ArrayList<>();
+        
 
         for (Room r : rooms) {
             Boolean thisRoomWillBeFree = true;
