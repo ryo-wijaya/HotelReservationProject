@@ -29,52 +29,78 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
 
     @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
     private EntityManager em;
-    
+
     @Override
     public Booking createNewBooking(Booking booking) {
         em.persist(booking);
         em.flush();
         return booking;
     }
-    
+
     @Override
-    public List<Booking> retrieveAllProducts(){
+    public List<Booking> retrieveBookings() throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b FROM Booking b");
-        return query.getResultList();
-    }
-    
-    @Override
-    public Booking retrieveBookingByBookingId(Long bookingId) throws BookingNotFoundException{
-        Booking booking = em.find(Booking.class, bookingId);
-        if(booking != null){
-            return booking;
+        List<Booking> bookings = query.getResultList();
+        if (!bookings.isEmpty()) {
+            for (Booking b : bookings) {
+                b.getPartner();
+                b.getRoomType();
+                b.getCustomer();
+                b.getRooms().size();
+            }
+            return bookings;
+        } else {
+            throw new BookingNotFoundException();
         }
-        else {
+    }
+
+    @Override
+    public Booking retrieveBookingByBookingId(Long bookingId) throws BookingNotFoundException {
+        Booking booking = em.find(Booking.class, bookingId);
+        if (booking != null) {
+            booking.getPartner();
+            booking.getRoomType();
+            booking.getCustomer();
+            booking.getRooms().size();
+            return booking;
+        } else {
             throw new BookingNotFoundException("Booking ID" + bookingId + " does not exist!");
         }
     }
-    
+
     public List<Booking> getAllBookingsByPartnerId(Long partnerId) throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.partner.partnerId = :inPartnerId");
         query.setParameter("inPartnerId", partnerId);
         List<Booking> bookings = query.getResultList();
-        
+
         if (!bookings.isEmpty()) {
+            for (Booking b : bookings) {
+                b.getPartner();
+                b.getRoomType();
+                b.getCustomer();
+                b.getRooms().size();
+            }
             return bookings;
         } else {
             throw new BookingNotFoundException();
-        } 
+        }
     }
-    
+
     public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.customer.CustomerId = :inCustomerId");
         query.setParameter("inCustomerId", customerId);
         List<Booking> bookings = query.getResultList();
-        
+
         if (!bookings.isEmpty()) {
+            for (Booking b : bookings) {
+                b.getPartner();
+                b.getRoomType();
+                b.getCustomer();
+                b.getRooms().size();
+            }
             return bookings;
         } else {
             throw new BookingNotFoundException();
-        } 
+        }
     }
 }

@@ -50,6 +50,9 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         query.setParameter("inEnabled", Boolean.TRUE);
         List<RoomType> listOfRoomTypes = query.getResultList();
         if (listOfRoomTypes != null) {
+            for (RoomType rt : listOfRoomTypes) {
+                rt.getListOfRoomRates().size();
+            }
             return listOfRoomTypes;
         } else {
             throw new RoomTypeNotFoundException();
@@ -75,6 +78,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         
         try {
             RoomType roomType = (RoomType) query.getSingleResult();
+            roomType.getListOfRoomRates().size();
             return roomType;
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new RoomTypeNotFoundException();

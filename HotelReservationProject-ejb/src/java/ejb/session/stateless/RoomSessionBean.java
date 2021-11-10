@@ -55,12 +55,10 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         query.setParameter("inEnabled", Boolean.TRUE);
         List<Room> listOfRooms = query.getResultList();
         if (!listOfRooms.isEmpty()) {
-            
             for (Room r : listOfRooms) {
                 r.getBookings().size();
                 r.getRoomType();
             }
-            
             return listOfRooms;
         } else {
             throw new RoomNotFoundException();
@@ -71,6 +69,8 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     public Room getRoomById(Long id) throws RoomNotFoundException {
         Room room = em.find(Room.class, id);
         if (room != null && room.isEnabled()) {
+            room.getBookings().size();
+            room.getRoomType();
             return room;
         } else {
             throw new RoomNotFoundException();
@@ -115,15 +115,15 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         List<Room> rooms = query.getResultList();
         return rooms.isEmpty();
     }
-    
+
     @Override
     public List<Room> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException {
         List<Room> rooms = this.retrieveRooms();
         List<Room> freeRooms = new ArrayList<>();
-        
+
         for (Room r : rooms) {
             Boolean thisRoomWillBeFree = true;
-            
+
             for (Booking b : r.getBookings()) {
                 if (startDate.before(b.getCheckOutDate())) { //THIS MEANS THAT THERES CLASH
                     if (endDate.after(b.getCheckInDate())) {

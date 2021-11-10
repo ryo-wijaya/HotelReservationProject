@@ -19,7 +19,7 @@ public interface BookingSessionBeanLocal {
 
     public Booking createNewBooking(Booking booking);
 
-    public List<Booking> retrieveAllProducts();
+    public List<Booking> retrieveBookings() throws BookingNotFoundException;
 
     public Booking retrieveBookingByBookingId(Long bookingId) throws BookingNotFoundException;
 
