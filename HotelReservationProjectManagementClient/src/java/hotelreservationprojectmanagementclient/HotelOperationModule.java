@@ -512,7 +512,7 @@ public class HotelOperationModule {
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
             Room room = new Room(roomNumber);
             roomSessionBeanRemote.createNewRoom(room, roomType.getRoomTypeId());
-            System.out.println("Room Successfully created");
+            System.out.println("\nRoom Successfully created\n");
 
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Invalid Room Type");
@@ -523,7 +523,7 @@ public class HotelOperationModule {
     private void updateARoom(Scanner sc) {
         System.out.println("\n-You are now updating a Room-");
         System.out.println("-----------------------------\n");
-        System.out.println("");
+        System.out.print("Enter a Room Number>");
         String roomNumber = sc.nextLine().trim();
         try {
             Room room = roomSessionBeanRemote.getRoomByRoomNumber(roomNumber);
@@ -550,10 +550,10 @@ public class HotelOperationModule {
                 } else if (option == 2) {
                     if (room.getRoomStatus()) {
                         System.out.println("Room status changed from in-use to not-in-use");
-                        room.setRoomStatus(true);
+                        room.setRoomStatus(false);
                     } else {
                         System.out.println("Room changed from not-in-use to in-use");
-                        room.setRoomStatus(false);
+                        room.setRoomStatus(true);
                     }
                     roomSessionBeanRemote.updateRoom(room);
                     System.out.println("Successfully updated!");
