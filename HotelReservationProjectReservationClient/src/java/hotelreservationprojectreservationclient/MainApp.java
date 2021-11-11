@@ -141,17 +141,17 @@ public class MainApp {
 
     public void doLogin() throws LoginCredentialsInvalidException {
         Scanner scanner = new Scanner(System.in);
-        String email = "";
+        String username = "";
         String password = "";
 
         System.out.println("*** Welcome to HoRS Reservation Client :: Login ***\n");
-        System.out.print("Enter email> ");
-        email = scanner.nextLine().trim();
+        System.out.print("Enter username> ");
+        username = scanner.nextLine().trim();
         System.out.print("Enter password> ");
         password = scanner.nextLine().trim();
 
-        if (email.length() > 0 && password.length() > 0) {
-            currentCustomer = customerSessionBeanRemote.customerLogin(email, password);
+        if (username.length() > 0 && password.length() > 0) {
+            currentCustomer = customerSessionBeanRemote.customerLogin(username, password);
         } else {
             throw new LoginCredentialsInvalidException("Missing login credential!");
         }
@@ -172,7 +172,7 @@ public class MainApp {
         System.out.print("Enter Passport Number> ");
         customer.setPassportNumber(sc.nextLine().trim());
 
-        Long newCustomerId = customerSessionBeanRemote.registerAsCustomer(customer);
+        long newCustomerId = customerSessionBeanRemote.registerAsCustomer(customer);
         System.out.println("Customer created successfully!: " + newCustomerId + "\n");
     }
 
@@ -191,7 +191,7 @@ public class MainApp {
             System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
             startDateString = inputDateFormat.parse(sc.nextLine().trim());
             System.out.print("Enter Return Date (dd/mm/yyyy)> ");
-            endDateString = outputDateFormat.parse(sc.nextLine().trim());
+            endDateString = inputDateFormat.parse(sc.nextLine().trim());
 
             if (startDateString.compareTo(endDateString) > 0) {
                 System.out.println("Invalid Operation - start date exceed end date");

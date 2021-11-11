@@ -66,8 +66,8 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
     @Override
     public Customer retrieveCustomerByUsername(String username)
     {
-        Query query = em.createQuery("SELECT s FROM Customer c WHERE s.userName = :inUsername");
-        query.setParameter("inUserName", username);
+        Query query = em.createQuery("SELECT c FROM Customer c WHERE c.userName = :inUsername");
+        query.setParameter("inUsername", username);
         // catch noresult exception | nonuniqueresultexception
         return (Customer)query.getSingleResult();
     }

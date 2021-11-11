@@ -201,24 +201,6 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="getAllBookingsByPartnerId">
-<xs:sequence>
-<xs:element name="partnerId" type="xs:long"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="getAllBookingsByPartnerIdResponse">
-<xs:sequence>
-<xs:element name="return" type="tns:booking" minOccurs="0" maxOccurs="unbounded"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="EntityInstanceMissingInCollectionException">
-<xs:sequence>
-<xs:element name="message" type="xs:string" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
 <xs:complexType name="walkInSearchRoom">
 <xs:sequence>
 <xs:element name="startDate" type="xs:dateTime" minOccurs="0"/>
@@ -233,6 +215,24 @@
 </xs:complexType>
 
 <xs:complexType name="RoomNotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllBookingsByPartnerId">
+<xs:sequence>
+<xs:element name="partnerId" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllBookingsByPartnerIdResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:booking" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="EntityInstanceMissingInCollectionException">
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>
