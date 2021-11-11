@@ -142,11 +142,10 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             for (Room r : rooms) {
                 Boolean thisRoomWillBeFree = true;
                 for (Booking b : r.getBookings()) {
-                    if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
-                        if (endDate.compareTo(b.getCheckInDate()) > 0) {
-                            thisRoomWillBeFree = false;
-                            break;
-                        }
+                    if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) { //THIS MEANS THAT THERES CLASH
+                        thisRoomWillBeFree = false;
+                        break;
+
                     }
                 }
                 if (thisRoomWillBeFree) {
@@ -162,22 +161,14 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             }
 
             for (Room r : rooms) {
-                Boolean thisRoomWillBeFree = true;
                 for (Booking b : r.getBookings()) {
-                    if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
-                        if (endDate.compareTo(b.getCheckInDate()) > 0) {
-                            thisRoomWillBeFree = false;
+                    if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) { //THIS MEANS THAT THERES CLASH
+                        for (RoomType rt : freeRoomTypes) { //if that room is of the room type, decremenet its inventory by 1
+                            if (rt.getRoomName().equals(r.getRoomType().getRoomName())) {
+                                rt.setRoomInventory(rt.getRoomInventory() - 1);
+                            }
                         }
-                    }
-                }
-                if (!thisRoomWillBeFree) {
-
-                    for (RoomType rt : freeRoomTypes) { //if that room is of the room type, decremenet its inventory by 1
-                        if (rt.getRoomName().equals(r.getRoomType().getRoomName())) {
-                            //the rt in this condition is the room type that this particular room is
-                            //decrement by 1
-                            rt.setRoomInventory(rt.getRoomInventory() - 1);
-                        }
+                        break;
                     }
                 }
             }
@@ -191,11 +182,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 List<Booking> bookings = query.getResultList(); //list of bookings of the same room type
 
                 for (Booking b : bookings) {
-                    if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
-                        if (endDate.compareTo(b.getCheckInDate()) > 0) {
-                            rt.setRoomInventory(rt.getRoomInventory() - b.getNumberOfRooms());
-                            break;
-                        }
+                    if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) { //THIS MEANS THAT THERES CLASH
+                        rt.setRoomInventory(rt.getRoomInventory() - b.getNumberOfRooms());
+                        break;
                     }
                 }
             }
