@@ -515,7 +515,7 @@ public class HotelOperationModule {
             System.out.print("Please enter a room number> ");
             String roomNumber = sc.nextLine().trim();
             this.viewAllRoomTypes();
-            System.out.print("Please enter a room type> ");
+            System.out.print("Please enter a room type name> ");
             String roomTypeName = sc.nextLine();
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
             Room room = new Room(roomNumber);
