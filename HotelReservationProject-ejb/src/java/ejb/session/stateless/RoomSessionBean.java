@@ -154,6 +154,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             for (String s : set) {
                 //Making a copy of the Room Type but with an UPDATED inventory (total inventory - dates its booked)
                 fakeRoomTypeWithUpdatedInventory = new RoomType();
+                fakeRoomTypeWithUpdatedInventory.setRoomName(s);
                 //set current inventory to current inventory
                 fakeRoomTypeWithUpdatedInventory.setRoomInventory(roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory());
                 freeRoomTypes.add(fakeRoomTypeWithUpdatedInventory);
