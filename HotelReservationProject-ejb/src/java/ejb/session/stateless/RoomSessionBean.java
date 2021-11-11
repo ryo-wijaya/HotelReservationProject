@@ -10,6 +10,7 @@ import entity.Room;
 import entity.RoomType;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import javax.ejb.EJB;
@@ -18,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.BookingExceptionType;
+import util.exceptions.BookingNotFoundException;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
@@ -126,6 +128,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         return rooms.isEmpty();
     }
 
+    /*
     @Override
     public List<RoomType> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException {
 
@@ -189,6 +192,42 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         } catch (RoomTypeNotFoundException ex) {
             throw new RoomNotFoundException();
         }
+    }
+    
+     */
+    @Override
+    public HashMap<Long, Integer> walkInSearchRoom(Date startDate, Date endDate) throws RoomTypeNotFoundException {
+        // New and improved method, unlike the shitty monstrocity above
+        // Two things, for the given date:
+        // 1. Check for any allocated bookings, subtract the booked rooms
+        // 2. Check for any unallocated bookings, subtract the booked rooms
+
+        // Mapping from Room Type ID to number of free rooms left
+        // Remember to do the check in the clients
+        HashMap<Long, Integer> map = new HashMap<>();
+        
+        try {
+            //pre-processing step
+            List<RoomType> roomTypes = roomTypeSessionBeanLocal.retrieveRoomTypes();
+            for (RoomType rt : roomTypes) {
+                //The map now contains every single Room Type mapped to its current inventory
+                map.put(rt.getRoomTypeId(), rt.getRoomInventory());
+            }
+            
+            List<Booking> bookings = bookingSessionBeanLocal.retrieveBookings();
+            for (Booking b : bookings) {
+                // If the search date interval clashes with the booking in question
+                if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) {
+                    // Updating the number of free rooms for that specific Room Type
+                    Long roomTypeToUpdate = b.getRoomType().getRoomTypeId();
+                    map.replace(roomTypeToUpdate, map.get(roomTypeToUpdate) - b.getNumberOfRooms());
+                }
+            }
+        } catch (BookingNotFoundException | RoomTypeNotFoundException ex) {
+            throw new RoomTypeNotFoundException();
+        }
+        
+        return map;
     }
 
     @Override

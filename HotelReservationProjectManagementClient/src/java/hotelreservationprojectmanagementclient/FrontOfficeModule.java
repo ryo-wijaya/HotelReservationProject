@@ -19,7 +19,9 @@ import entity.RoomType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -124,15 +126,13 @@ public class FrontOfficeModule {
                 return null;
             }
 
-            List<RoomType> fakeRoomTypes = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
-            
-            if (fakeRoomTypes.isEmpty()) {
-                return null;
-            }
+            // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
+            HashMap<Long, Integer> map = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
 
-            for (RoomType rt : fakeRoomTypes) {
-                System.out.println("List of available Room Types and quantities:");
-                System.out.println("Room Type Name: " + rt.getRoomName() + " Quantity Left: " + rt.getRoomInventory());
+            //Iterating over each Room Type and Inventory mapping
+            for (Map.Entry<Long, Integer> pair : map.entrySet()) {
+                System.out.println("Room Type: " + roomTypeSessionBeanRemote.getRoomTypeById(pair.getKey()).getRoomName() + " | "
+                        + "Number Of Rooms Left: " + pair.getValue());
             }
 
             System.out.println("\nInput a Room Type Name> ");
@@ -141,7 +141,7 @@ public class FrontOfficeModule {
 
             System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
 
-            while (numOfRooms != 404 || numOfRooms > realRoomType.getRoomInventory()) {
+            while (numOfRooms != 404) {
                 try {
                     numOfRooms = Integer.parseInt(sc.nextLine().trim());
                     break;
@@ -151,6 +151,10 @@ public class FrontOfficeModule {
                 }
             }
 
+            if (numOfRooms > map.get(realRoomType.getRoomTypeId())) { //checking if the user chose a room number not exceeding the available room type
+                return null;
+            }
+
             Booking booking = new Booking(numOfRooms, startDateString, endDateString);
             booking.setRoomType(realRoomType);
 
@@ -158,9 +162,7 @@ public class FrontOfficeModule {
 
             System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;
-
-        } catch (RoomNotFoundException ex) {
-            System.out.println("No rooms are available!");
+            
         } catch (ParseException ex) {
             System.out.println("Invalid date input!");
         } catch (RoomTypeNotFoundException ex) {
@@ -188,7 +190,7 @@ public class FrontOfficeModule {
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
             System.out.println("What time is the reservation made");
             Double rtime = sc.nextDouble();
-            if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
+            if (booking.getCheckInDate().equals(cDate) && rtime >= 2) {
                 roomSessionBeanRemote.findARoomAndAddToIt(booking.getBookingId());
             }
             System.out.println("Hotel room(s) successfully reserved!");

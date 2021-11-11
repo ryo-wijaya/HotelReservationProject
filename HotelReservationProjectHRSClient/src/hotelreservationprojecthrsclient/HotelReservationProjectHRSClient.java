@@ -10,11 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.Port;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -227,20 +227,18 @@ public class HotelReservationProjectHRSClient {
                 return null;
             }
 
-            List<RoomType> fakeRoomTypes = port.walkInSearchRoom(start, end);
+           // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
+            HashMap<Long, Integer> map = port.walkInSearchRoom(start, end);
 
-            if (fakeRoomTypes.isEmpty()) {
-                return null;
-            }
-
-            for (RoomType rt : fakeRoomTypes) {
-                System.out.println("List of available Room Types and quantities:");
-                System.out.println("Room Type Name: " + rt.getRoomName() + " Quantity Left: " + rt.getRoomInventory());
+            //Iterating over each Room Type and Inventory mapping
+            for (Map.Entry<Long, Integer> pair : map.entrySet()) {
+                System.out.println("Room Type: " + port.getRoomTypeById(pair.getKey()).getRoomName() + " | "
+                    + "Number Of Rooms Left: " + pair.getValue());
             }
 
             System.out.println("\nInput a Room Type Name> ");
             roomTypeName = sc.nextLine().trim();
-            RoomType realRoomType = port.getRoomTypeByName(roomTypeName);  //use web service bean
+            RoomType realRoomType = port.getRoomTypeByName(roomTypeName);
 
             System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
 
@@ -254,14 +252,7 @@ public class HotelReservationProjectHRSClient {
                 }
             }
 
-            RoomType chosenFakeRoomType = null; //this is the room type we chose
-            for (RoomType rt : fakeRoomTypes) {
-                if (rt.getRoomName().equals(roomTypeName)) {
-                    chosenFakeRoomType = rt;
-                    break;
-                }
-            }
-            if (numOfRooms > chosenFakeRoomType.getRoomInventory()) { //checking if the user chose a room number not exceeding the available room type
+            if (numOfRooms > map.get(realRoomType.getRoomTypeId())) { //checking if the user chose a room number not exceeding the available room type
                 return null;
             }
 
@@ -284,8 +275,6 @@ public class HotelReservationProjectHRSClient {
             System.out.println("Date Error!");
         } catch (ParseException ex) {
             System.out.println("Invalid date input!");
-        } catch (RoomNotFoundException_Exception ex) {
-            System.out.println("Room Type not found!");
         } catch (RoomTypeNotFoundException_Exception ex) {
             System.out.println("No published rate found!");
         } catch (RoomRateNotFoundException_Exception ex) {

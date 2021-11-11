@@ -15,6 +15,7 @@ import entity.Partner;
 import entity.Room;
 import entity.RoomType;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.jws.WebService;
@@ -71,13 +72,18 @@ public class WebServiceSessionBean {
     }
 
     @WebMethod(operationName = "walkInSearchRoom")
-    public List<RoomType> walkInSearchRoom(@WebParam(name = "startDate") Date startDate, @WebParam(name = "endDate") Date endDate) throws RoomNotFoundException {
+    public HashMap<Long, Integer> walkInSearchRoom(@WebParam(name = "startDate") Date startDate, @WebParam(name = "endDate") Date endDate) throws RoomNotFoundException, RoomTypeNotFoundException {
         return roomSessionBean.walkInSearchRoom(startDate, endDate);
     }
 
     @WebMethod(operationName = "getRoomTypeByName")
     public RoomType getRoomTypeByName(@WebParam(name = "roomName") String roomName) throws RoomTypeNotFoundException {
         return roomTypeSessionBean.getRoomTypeByName(roomName);
+    }
+    
+     @WebMethod(operationName = "getRoomTypeById")
+    public RoomType getRoomTypeById(@WebParam(name = "roomTypeId") Long roomTypeId) throws RoomTypeNotFoundException {
+        return roomTypeSessionBean.getRoomTypeById(roomTypeId);
     }
 
     @WebMethod(operationName = "createNewBookingWithPartner")

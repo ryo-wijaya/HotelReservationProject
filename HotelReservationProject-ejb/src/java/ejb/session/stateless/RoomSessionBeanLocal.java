@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Room;
 import entity.RoomType;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
@@ -35,7 +36,7 @@ public interface RoomSessionBeanLocal {
 
     public boolean checkForRoomTypeUsage(String typeName) throws RoomTypeNotFoundException;
 
-    public List<RoomType> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException;
+    public HashMap<Long, Integer> walkInSearchRoom(Date startDate, Date endDate) throws RoomTypeNotFoundException;
 
     public List<Room> retrieveRoomsByRoomType(Long roomTypeId) throws RoomNotFoundException;
 
