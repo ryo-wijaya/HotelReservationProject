@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:8080/WebServiceSessionBean/WebServiceSessionBean?wsdl" uri="xml-resources/web-service-references/WebServiceSessionBean/wsdl/localhost_8080/WebServiceSessionBean/WebServiceSessionBean.wsdl"/>
+    <system systemId="http://localhost:8080/WebServiceSessionBean/WebServiceSessionBean?xsd=1" uri="xml-resources/web-service-references/WebServiceSessionBean/wsdl/localhost_8080/WebServiceSessionBean/WebServiceSessionBean.xsd_1.xsd"/>
+</catalog>
