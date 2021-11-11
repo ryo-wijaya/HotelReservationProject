@@ -110,6 +110,7 @@ public class HotelReservationProjectHRSClient {
             if (username.length() > 0 && password.length() > 0) {
                 //call web service
                 long currentPartnerId = port.doLogin(username, password).getPartnerId();
+                //currentPartner = 
             }
         } catch (LoginCredentialsInvalidException_Exception ex) {
             System.out.println("Invalid login credentials");
@@ -319,8 +320,13 @@ public class HotelReservationProjectHRSClient {
         Long bookingId;
         System.out.println("\nViewing my reservation details!");
         System.out.println("-------------------------------\n");
+        List<Booking> bookings = currentPartner.getBookings();
+        
         System.out.print("Enter a Booking ID>");
-
+        if (bookings.isEmpty()) {
+            System.out.print("No existing reservations!\n");
+            return;
+        }
         while (true) {
             try {
                 bookingId = Long.parseLong(sc.nextLine().trim());
@@ -329,8 +335,6 @@ public class HotelReservationProjectHRSClient {
                 System.out.println("Please input a valid ID format");
             }
         }
-
-        List<Booking> bookings = currentPartner.getBookings();
         for (Booking booking : bookings) {
             if (Objects.equals(booking.getBookingId(), bookingId)) {
                 System.out.println("Booking Id: " + booking.getBookingId());
@@ -349,18 +353,18 @@ public class HotelReservationProjectHRSClient {
 
         System.out.println("\nViewing all my reservations!");
         System.out.println("----------------------------\n");
-        try {
-            List<Booking> bookings = port.getAllBookingsByPartnerId(currentPartner.getPartnerId());
-            for (Booking b : bookings) {
-                System.out.println("Booking ID: " + b.getBookingId());
-                System.out.println("Start Date: " + b.getCheckInDate());
-                System.out.println("End Date: " + b.getCheckOutDate());
-                System.out.println("Room Type: " + b.getRoomType());
-                System.out.println("Number of rooms: " + b.getNumberOfRooms());
-                System.out.println("");
-            }
-        } catch (BookingNotFoundException_Exception | EntityInstanceMissingInCollectionException_Exception ex) {
-            Logger.getLogger(HotelReservationProjectHRSClient.class.getName()).log(Level.SEVERE, null, ex);
+        List<Booking> bookings = currentPartner.getBookings();
+        if(bookings.isEmpty()) {
+            System.out.print("No existing reservations!\n");
+            return;
+        }
+        for (Booking b : bookings) {
+            System.out.println("Booking ID: " + b.getBookingId());
+            System.out.println("Start Date: " + b.getCheckInDate());
+            System.out.println("End Date: " + b.getCheckOutDate());
+            System.out.println("Room Type: " + b.getRoomType());
+            System.out.println("Number of rooms: " + b.getNumberOfRooms());
+            System.out.println("");
         }
 
 

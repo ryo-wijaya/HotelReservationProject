@@ -267,56 +267,51 @@ public class MainApp {
     }
 
     public void viewMyReservationDetails() {
-        try {
-            Scanner sc = new Scanner(System.in);
-            Long bookingId;
-            System.out.println("\nViewing my reservation details!");
-            System.out.println("-------------------------------\n");
-            List<Booking> bookings = customerSessionBeanRemote.retrieveCustomerByCustomerId(currentCustomer.getCustomerId()).getBookings();
-            if(bookings.isEmpty()) {
-                System.out.print("No existing reservations!\n");
-                return;
+        Scanner sc = new Scanner(System.in);
+        Long bookingId;
+        System.out.println("\nViewing my reservation details!");
+        System.out.println("-------------------------------\n");
+        List<Booking> bookings = currentCustomer.getBookings();
+        if(bookings.isEmpty()) {
+            System.out.print("No existing reservations!\n");
+            return;
+        }
+        System.out.print("Enter a Booking ID>");
+        while (true) {
+            try {
+                bookingId = Long.parseLong(sc.nextLine().trim());
+                break;
+            } catch (NumberFormatException ex) {
+                System.out.println("Please input a valid ID format");
             }
-            System.out.print("Enter a Booking ID>");
-            
-            while (true) {
-                try {
-                    bookingId = Long.parseLong(sc.nextLine().trim());
-                    break;
-                } catch (NumberFormatException ex) {
-                    System.out.println("Please input a valid ID format");
-                }
+        }
+        for (Booking booking : bookings) {
+            if (Objects.equals(booking.getBookingId(), bookingId)) {
+                System.out.println("Booking Id: " + booking.getBookingId());
+                System.out.println("Check In Date: " + booking.getCheckInDate());
+                System.out.println("Check Out Date: " + booking.getCheckOutDate());
+                System.out.println("Room Type: " + booking.getRoomType());
+                System.out.println("Number of rooms: " + booking.getNumberOfRooms());
             }
-
-            for (Booking booking : bookings) {
-                if (Objects.equals(booking.getBookingId(), bookingId)) {
-                    System.out.println("Booking Id: " + booking.getBookingId());
-                    System.out.println("Check In Date: " + booking.getCheckInDate());
-                    System.out.println("Check Out Date: " + booking.getCheckOutDate());
-                    System.out.println("Room Type: " + booking.getRoomType());
-                    System.out.println("Number of rooms: " + booking.getNumberOfRooms());
-                }
-            }
-        } catch (CustomerNotFoundException ex) {
-            System.out.println("Customer not found!");
         }
     }
 
     public void viewAllMyReservations() {
         System.out.println("\nViewing all my reservations!");
         System.out.println("----------------------------\n");
-        try {
-            List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByCustomerId(currentCustomer.getCustomerId());
-            for (Booking b : bookings) {
-                System.out.println("Booking ID: " + b.getBookingId());
-                System.out.println("Start Date: " + b.getCheckInDate());
-                System.out.println("End Date: " + b.getCheckOutDate());
-                System.out.println("Room Type: " + b.getRoomType());
-                System.out.println("Number of rooms: " + b.getNumberOfRooms());
-                System.out.println("");
-            }
-        } catch (BookingNotFoundException ex) {
-            System.out.println("Booking not found!");
+        //List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByCustomerId(currentCustomer.getCustomerId());
+        List<Booking> bookings = currentCustomer.getBookings();
+        if(bookings.isEmpty()) {
+            System.out.print("No existing reservations!\n");
+            return;
+        }
+        for (Booking b : bookings) {
+            System.out.println("Booking ID: " + b.getBookingId());
+            System.out.println("Start Date: " + b.getCheckInDate());
+            System.out.println("End Date: " + b.getCheckOutDate());
+            System.out.println("Room Type: " + b.getRoomType());
+            System.out.println("Number of rooms: " + b.getNumberOfRooms());
+            System.out.println("");
         }
     }
 }
