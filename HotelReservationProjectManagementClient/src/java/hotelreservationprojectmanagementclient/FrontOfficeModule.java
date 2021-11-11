@@ -180,7 +180,7 @@ public class FrontOfficeModule {
             Booking availableBooking = walkInSearchRoom(sc);
             RoomType roomType = availableBooking.getRoomType();
             Date checkIn = availableBooking.getCheckInDate();
-            Date checkOut = availableBooking.getCheckInDate();
+            Date checkOut = availableBooking.getCheckOutDate();
             Integer numOfRoom = availableBooking.getNumberOfRooms();
             Booking booking = new Booking(numOfRoom, checkIn, checkOut);
             bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
@@ -191,6 +191,7 @@ public class FrontOfficeModule {
             if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
                 roomSessionBeanRemote.findARoomAndAddToIt(booking.getBookingId());
             }
+            System.out.println("Hotel room(s) successfully reserved!");
             /*List<Booking> availableRooms = walkInSearchRoom(sc);
             Integer option = 0;
             for(Booking bookings : availableRooms) {

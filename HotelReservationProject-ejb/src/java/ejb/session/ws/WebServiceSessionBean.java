@@ -123,4 +123,10 @@ public class WebServiceSessionBean {
         }
         return partner;
     }
+    
+    @WebMethod(operationName = "findARoomAndAddToIt")
+    public void findARoomAndAddToIt(@WebParam(name = "bookingId") long bookingId) throws RoomNotFoundException {
+        roomSessionBean.findARoomAndAddToIt(bookingId);
+    }
+    
 }
