@@ -256,6 +256,7 @@ public class MainApp {
             Integer numOfRoom = availableBooking.getNumberOfRooms();
             Booking booking = new Booking(numOfRoom, checkIn, checkOut);
             bookingSessionBeanRemote.createNewBookingWithCustomer(booking, roomType.getRoomTypeId(), currentCustomer.getCustomerId());
+            System.out.println("Hotel rooms successfully reserved!");
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Room not found!");
         } catch (CustomerNotFoundException ex) {
