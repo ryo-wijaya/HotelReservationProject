@@ -41,6 +41,8 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
 
     @EJB
     private PartnerSessionBeanLocal partnerSessionBean;
+    
+    @EJB
     private RoomRateSessionBeanLocal roomRateSessionBeanLocal;
 
     @EJB
@@ -191,9 +193,12 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         return price;
     }
 
+    @Override
     public Double getRateForOnlineBooking(Booking booking) throws RoomRateNotFoundException {
         Double price = 0.0;
         try {
+            System.out.println("booking.getRoomType(): " + booking.getRoomType());
+            System.out.println("roomtype's ID: " + booking.getRoomType().getRoomTypeId());
             List<RoomRate> roomRates = roomRateSessionBeanLocal.getRoomRateByRoomType(booking.getRoomType().getRoomTypeId());
             RoomType roomType = booking.getRoomType();
             Integer numOfRooms = booking.getNumberOfRooms();

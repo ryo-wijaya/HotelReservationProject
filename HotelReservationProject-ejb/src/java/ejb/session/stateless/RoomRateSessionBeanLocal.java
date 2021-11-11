@@ -28,7 +28,7 @@ public interface RoomRateSessionBeanLocal {
 
     public void updateRoomRate(RoomRate roomRate);
 
-    public List<RoomRate> getRoomRateByRoomType(Long roomTypeId) throws RoomTypeNotFoundException;
+    public List<RoomRate> getRoomRateByRoomType(Long roomTypeId) throws RoomTypeNotFoundException, RoomRateNotFoundException;
 
     public RoomRate getNormalRateForRoomType(Long roomTypeId) throws RoomTypeNotFoundException, RoomRateNotFoundException;
     

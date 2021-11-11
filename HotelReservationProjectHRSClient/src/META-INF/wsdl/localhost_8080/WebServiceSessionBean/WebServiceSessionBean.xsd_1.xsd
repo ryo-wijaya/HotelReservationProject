@@ -205,22 +205,15 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="walkInSearchRoom">
+<xs:complexType name="retrievePartnerByPartnerId">
 <xs:sequence>
-<xs:element name="startDate" type="xs:dateTime" minOccurs="0"/>
-<xs:element name="endDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="partnerId" type="xs:long"/>
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="walkInSearchRoomResponse">
+<xs:complexType name="retrievePartnerByPartnerIdResponse">
 <xs:sequence>
-<xs:element name="return" type="tns:roomType" minOccurs="0" maxOccurs="unbounded"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="RoomNotFoundException">
-<xs:sequence>
-<xs:element name="message" type="xs:string" minOccurs="0"/>
+<xs:element name="return" type="tns:partner" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -242,15 +235,22 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="retrievePartnerByPartnerId">
+<xs:complexType name="walkInSearchRoom">
 <xs:sequence>
-<xs:element name="partnerId" type="xs:long"/>
+<xs:element name="startDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="endDate" type="xs:dateTime" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="retrievePartnerByPartnerIdResponse">
+<xs:complexType name="walkInSearchRoomResponse">
 <xs:sequence>
-<xs:element name="return" type="tns:partner" minOccurs="0"/>
+<xs:element name="return" type="tns:roomType" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="RoomNotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
