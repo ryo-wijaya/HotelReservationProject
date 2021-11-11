@@ -151,15 +151,10 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                     set.add(r.getRoomType().getRoomName()); //these are the room types that are free
                 }
             }
-            
-            System.out.println("SET: " + set);
 
             for (String s : set) {
                 //Making a copy of the Room Type but with an UPDATED inventory (total inventory - dates its booked)
                 //set current inventory to current inventory
-                System.out.println("String in Set: "+ s);
-                System.out.println("Room Type session bean get name by name: " + roomTypeSessionBeanLocal.getRoomTypeByName(s));
-                System.out.println("Room Type session bean inventory size: " + roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory());
                 freeRoomTypes.add(new RoomType(s, roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory()));
                 
             }
@@ -176,7 +171,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                         }
                     }
                 }
-                if (thisRoomWillBeFree) {
+                if (!thisRoomWillBeFree) {
 
                     for (RoomType rt : freeRoomTypes) { //if that room is of the room type, decremenet its inventory by 1
                         System.out.println("rt.getRoomTypeName: " + rt.getRoomName());
@@ -187,8 +182,8 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                             rt.setRoomInventory(rt.getRoomInventory() - 1);
                         }
                     }
-                }
             }
+                }
             return freeRoomTypes;
         } catch (RoomTypeNotFoundException ex) {
             throw new RoomNotFoundException();
