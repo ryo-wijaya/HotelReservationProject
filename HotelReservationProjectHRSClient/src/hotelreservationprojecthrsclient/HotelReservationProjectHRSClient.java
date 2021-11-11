@@ -7,12 +7,21 @@ package hotelreservationprojecthrsclient;
 
 import entity.Booking;
 import entity.Partner;
+import entity.RoomType;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import util.enumeration.PartnerType;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.CustomerNotFoundException;
+import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.LoginCredentialsInvalidException;
+import util.exceptions.RoomNotFoundException;
+import util.exceptions.RoomRateNotFoundException;
+import util.exceptions.RoomTypeNotFoundException;
 
 /**
  *
@@ -83,7 +92,7 @@ public class HotelReservationProjectHRSClient {
 
         if (username.length() > 0 && password.length() > 0) {
             //call web service
-            
+
         } else {
             throw new LoginCredentialsInvalidException("Invalid login credential!");
         }
@@ -164,16 +173,108 @@ public class HotelReservationProjectHRSClient {
             }
         }
     }
-    
-    private static void searchRoom(){
-        
+
+    private static Booking searchRoom() {
+        try {
+            //instantiating web service _service class and assigning port
+            WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
+            WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
+
+            Scanner sc = new Scanner(System.in);
+            System.out.println("\nYou are a partner search a room");
+            System.out.println("-------------------------------\n");
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            Date startDateString;
+            Date endDateString;
+            String roomTypeName;
+            RoomType roomType;
+            int numOfRooms = 0;
+            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
+            startDateString = inputDateFormat.parse(sc.nextLine().trim());
+            System.out.print("Enter Return Date (dd/mm/yyyy)> ");
+            endDateString = outputDateFormat.parse(sc.nextLine().trim());
+
+            if (startDateString.compareTo(endDateString) > 0) {
+                System.out.println("Invalid Operation - start date exceed end date");
+                System.out.println("Cancelling Operation...");
+                return null;
+            }
+
+            List<RoomType> fakeRoomTypes = port.walkInSearchRoom(startDateString, endDateString); //use web service bean
+
+            for (RoomType rt : fakeRoomTypes) {
+                System.out.println("List of available Room Types and quantities:");
+                System.out.println("Room Type Name: " + rt.getRoomName() + " Quantity Left: " + rt.getRoomInventory());
+            }
+
+            System.out.println("\nInput a Room Type Name> ");
+            roomTypeName = sc.nextLine().trim();
+            RoomType realRoomType = port.getRoomTypeByName(roomTypeName);  //use web service bean
+
+            System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
+
+            while (numOfRooms != 404 || numOfRooms > realRoomType.getRoomInventory()) {
+                try {
+                    numOfRooms = Integer.parseInt(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    numOfRooms = 404;
+                    System.out.println("Enter a valid number!");
+                }
+            }
+
+            Booking booking = new Booking(numOfRooms, startDateString, endDateString);
+            booking.setRoomType(realRoomType);
+
+            Double price = port.getRateForOnlineBooking(booking.getBookingId());  //use web service bean
+
+            System.out.println("\n Price for a booking like this would be: " + price + "\n");
+            return booking;
+
+        } catch (RoomNotFoundException ex) {
+            System.out.println("No rooms are available!");
+        } catch (ParseException ex) {
+            System.out.println("Invalid date input!");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Room Type not found!");
+        } catch (RoomRateNotFoundException ex) {
+            System.out.println("No published rate found!");
+        }
+        return null;
     }
-    
+
     private static void reserveRoom() {
-        
+
+        try {
+            //instantiating web service _service class and assigning port
+            WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
+            WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
+
+            Scanner sc = new Scanner(System.in);
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            System.out.println("\nYou are now reserving a Hotel Room");
+            System.out.println("------------------------------------\n");
+            Booking availableBooking = searchRoom();
+            RoomType roomType = availableBooking.getRoomType();
+            Date checkIn = availableBooking.getCheckInDate();
+            Date checkOut = availableBooking.getCheckInDate();
+            Integer numOfRoom = availableBooking.getNumberOfRooms();
+            Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+            port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Room not found!");
+        } catch (PartnerNotFoundException ex) {
+            System.out.println("Partner not found!");
+        } catch (EntityInstanceExistsInCollectionException ex) {
+            System.out.println("Room not found!");
+        }
     }
-    
+
     private static void viewReservationDetails() {
+        //maybe use the bean to get bookings for partner so its updated
+        
         Scanner sc = new Scanner(System.in);
         Long bookingId;
         System.out.println("\nViewing my reservation details!");
@@ -188,10 +289,10 @@ public class HotelReservationProjectHRSClient {
                 System.out.println("Please input a valid ID format");
             }
         }
-        
+
         List<Booking> bookings = currentPartner.getBookings();
-        for(Booking booking : bookings) {
-            if(Objects.equals(booking.getBookingId(), bookingId)) {
+        for (Booking booking : bookings) {
+            if (Objects.equals(booking.getBookingId(), bookingId)) {
                 System.out.println("Booking Id: " + booking.getBookingId());
                 System.out.println("Check In Date: " + booking.getCheckInDate());
                 System.out.println("Check Out Date: " + booking.getCheckOutDate());
@@ -200,12 +301,16 @@ public class HotelReservationProjectHRSClient {
             }
         }
     }
+
     private static void viewAllPartnerReservation() {
+        //instantiating web service _service class and assigning port
+        WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
+        WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
+
         System.out.println("\nViewing all my reservations!");
         System.out.println("----------------------------\n");
-        /*try {
-            THIS LINE NEED TO DO WS
-            List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByPartnerId(currentCustomer.getCustomerId());
+        try {
+            List<Booking> bookings = port.getAllBookingsByPartnerId(currentPartner.getPartnerId());
             for (Booking b : bookings) {
                 System.out.println("Booking ID: " + b.getBookingId());
                 System.out.println("Start Date: " + b.getCheckInDate());
@@ -216,6 +321,6 @@ public class HotelReservationProjectHRSClient {
             }
         } catch (BookingNotFoundException ex) {
             System.out.println("Booking not found!");
-        }*/
+        }
     }
 }
