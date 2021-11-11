@@ -7,6 +7,7 @@ package hotelreservationprojecthrsclient;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import util.enumeration.BookingExceptionType;
 import ws.client.Booking;
 import ws.client.BookingNotFoundException;
 import ws.client.BookingNotFoundException_Exception;
@@ -293,6 +295,8 @@ public class HotelReservationProjectHRSClient {
             booking.setCheckInDate(checkIn);
             booking.setCheckOutDate(checkOut);
             booking.setNumberOfRooms(numOfRoom);
+            booking.setBookingExceptionType(ws.client.BookingExceptionType.NONE);
+            booking.setPreBooking(Boolean.TRUE);
             port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
         } catch (BookingNotFoundException_Exception | EntityInstanceExistsInCollectionException_Exception | NoPartnersFoundException_Exception | RoomTypeNotFoundException_Exception ex) {
             Logger.getLogger(HotelReservationProjectHRSClient.class.getName()).log(Level.SEVERE, null, ex);
