@@ -16,6 +16,8 @@ import java.util.Objects;
 import java.util.Scanner;
 import util.enumeration.PartnerType;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.CustomerNotFoundException;
+import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.LoginCredentialsInvalidException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
@@ -174,6 +176,10 @@ public class HotelReservationProjectHRSClient {
 
     private static Booking searchRoom() {
         try {
+            //instantiating web service _service class and assigning port
+            WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
+            WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
+
             Scanner sc = new Scanner(System.in);
             System.out.println("\nYou are a partner search a room");
             System.out.println("-------------------------------\n");
@@ -195,7 +201,7 @@ public class HotelReservationProjectHRSClient {
                 return null;
             }
 
-            List<RoomType> fakeRoomTypes = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString); //use web service bean
+            List<RoomType> fakeRoomTypes = port.walkInSearchRoom(startDateString, endDateString); //use web service bean
 
             for (RoomType rt : fakeRoomTypes) {
                 System.out.println("List of available Room Types and quantities:");
@@ -204,7 +210,7 @@ public class HotelReservationProjectHRSClient {
 
             System.out.println("\nInput a Room Type Name> ");
             roomTypeName = sc.nextLine().trim();
-            RoomType realRoomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);  //use web service bean
+            RoomType realRoomType = port.getRoomTypeByName(roomTypeName);  //use web service bean
 
             System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
 
@@ -221,7 +227,7 @@ public class HotelReservationProjectHRSClient {
             Booking booking = new Booking(numOfRooms, startDateString, endDateString);
             booking.setRoomType(realRoomType);
 
-            Double price = bookingSessionBeanRemote.getPublishRatePriceOfBooking(booking.getBookingId());  //use web service bean
+            Double price = port.getRateForOnlineBooking(booking.getBookingId());  //use web service bean
 
             System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;
@@ -240,6 +246,30 @@ public class HotelReservationProjectHRSClient {
 
     private static void reserveRoom() {
 
+        try {
+            //instantiating web service _service class and assigning port
+            WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
+            WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
+
+            Scanner sc = new Scanner(System.in);
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            System.out.println("\nYou are now reserving a Hotel Room");
+            System.out.println("------------------------------------\n");
+            Booking availableBooking = searchRoom();
+            RoomType roomType = availableBooking.getRoomType();
+            Date checkIn = availableBooking.getCheckInDate();
+            Date checkOut = availableBooking.getCheckInDate();
+            Integer numOfRoom = availableBooking.getNumberOfRooms();
+            Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+            port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getCustomerId());
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Room not found!");
+        } catch (CustomerNotFoundException ex) {
+            System.out.println("Customer not found!");
+        } catch (EntityInstanceExistsInCollectionException ex) {
+            System.out.println("Room not found!");
+        }
     }
 
     private static void viewReservationDetails() {
@@ -271,11 +301,14 @@ public class HotelReservationProjectHRSClient {
     }
 
     private static void viewAllPartnerReservation() {
+        //instantiating web service _service class and assigning port
+        WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
+        WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
+
         System.out.println("\nViewing all my reservations!");
         System.out.println("----------------------------\n");
-        /*try {
-            THIS LINE NEED TO DO WS
-            List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByPartnerId(currentCustomer.getCustomerId());
+        try {
+            List<Booking> bookings = port.getAllBookingsByPartnerId(currentPartner.getPartnerId());
             for (Booking b : bookings) {
                 System.out.println("Booking ID: " + b.getBookingId());
                 System.out.println("Start Date: " + b.getCheckInDate());
@@ -286,6 +319,6 @@ public class HotelReservationProjectHRSClient {
             }
         } catch (BookingNotFoundException ex) {
             System.out.println("Booking not found!");
-        }*/
+        }
     }
 }

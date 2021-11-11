@@ -225,7 +225,7 @@ public class MainApp {
             Booking booking = new Booking(numOfRooms, startDateString, endDateString);
             booking.setRoomType(realRoomType);
 
-            Double price = bookingSessionBeanRemote.getPublishRatePriceOfBooking(booking.getBookingId());
+            Double price = bookingSessionBeanRemote.getRateForOnlineBooking(booking.getBookingId());
 
             System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;
@@ -236,8 +236,6 @@ public class MainApp {
             System.out.println("Invalid date input!");
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Room Type not found!");
-        } catch (RoomRateNotFoundException ex) {
-            System.out.println("No published rate found!");
         }
         return null;
     }
