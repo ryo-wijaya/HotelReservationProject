@@ -227,7 +227,7 @@ public class HotelReservationProjectHRSClient {
             }
 
             List<RoomType> fakeRoomTypes = port.walkInSearchRoom(start, end);
-            
+
             if (fakeRoomTypes.isEmpty()) {
                 return null;
             }
@@ -243,7 +243,7 @@ public class HotelReservationProjectHRSClient {
 
             System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
 
-            while (numOfRooms != 404 || numOfRooms > realRoomType.getRoomInventory()) {
+            while (numOfRooms != 404) {
                 try {
                     numOfRooms = Integer.parseInt(sc.nextLine().trim());
                     break;
@@ -251,6 +251,17 @@ public class HotelReservationProjectHRSClient {
                     numOfRooms = 404;
                     System.out.println("Enter a valid number!");
                 }
+            }
+
+            RoomType chosenFakeRoomType = null; //this is the room type we chose
+            for (RoomType rt : fakeRoomTypes) {
+                if (rt.getRoomName().equals(roomTypeName)) {
+                    chosenFakeRoomType = rt;
+                    break;
+                }
+            }
+            if (numOfRooms > chosenFakeRoomType.getRoomInventory()) { //checking if the user chose a room number not exceeding the available room type
+                return null;
             }
 
             Booking booking = new Booking();
@@ -324,7 +335,7 @@ public class HotelReservationProjectHRSClient {
         System.out.println("\nViewing my reservation details!");
         System.out.println("-------------------------------\n");
         List<Booking> bookings = currentPartner.getBookings();
-        
+
         System.out.print("Enter a Booking ID>");
         if (bookings.isEmpty()) {
             System.out.print("No existing reservations!\n");
@@ -357,7 +368,7 @@ public class HotelReservationProjectHRSClient {
         System.out.println("\nViewing all my reservations!");
         System.out.println("----------------------------\n");
         List<Booking> bookings = currentPartner.getBookings();
-        if(bookings.isEmpty()) {
+        if (bookings.isEmpty()) {
             System.out.print("No existing reservations!\n");
             return;
         }
@@ -369,7 +380,6 @@ public class HotelReservationProjectHRSClient {
             System.out.println("Number of rooms: " + b.getNumberOfRooms());
             System.out.println("");
         }
-
 
     }
 }

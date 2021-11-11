@@ -267,7 +267,7 @@ public class MainApp {
             Booking availableBooking = searchHotelRoom();
             RoomType roomType = availableBooking.getRoomType();
             Date checkIn = availableBooking.getCheckInDate();
-            Date checkOut = availableBooking.getCheckInDate();
+            Date checkOut = availableBooking.getCheckOutDate();
             Integer numOfRoom = availableBooking.getNumberOfRooms();
             Booking booking = new Booking(numOfRoom, checkIn, checkOut);
             bookingSessionBeanRemote.createNewBookingWithCustomer(booking, roomType.getRoomTypeId(), currentCustomer.getCustomerId());

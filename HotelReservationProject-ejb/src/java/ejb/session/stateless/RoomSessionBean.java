@@ -141,7 +141,6 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 for (Booking b : r.getBookings()) {
                     if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
                         if (endDate.compareTo(b.getCheckInDate()) > 0) {
-                            System.out.println("CHECK 1: This room has a clashing bookings");
                             thisRoomWillBeFree = false;
                             break;
                         }
@@ -156,17 +155,14 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 //Making a copy of the Room Type but with an UPDATED inventory (total inventory - dates its booked)
                 //set current inventory to current inventory
                 freeRoomTypes.add(new RoomType(s, roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory()));
-                
+
             }
-            
-            System.out.println("freeRoomTypes: " + freeRoomTypes);
 
             for (Room r : rooms) {
                 Boolean thisRoomWillBeFree = true;
                 for (Booking b : r.getBookings()) {
                     if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
                         if (endDate.compareTo(b.getCheckInDate()) > 0) {
-                            System.out.println("CHECK 2: This room has a clashing bookings");
                             thisRoomWillBeFree = false;
                         }
                     }
@@ -174,16 +170,32 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 if (!thisRoomWillBeFree) {
 
                     for (RoomType rt : freeRoomTypes) { //if that room is of the room type, decremenet its inventory by 1
-                        System.out.println("rt.getRoomTypeName: " + rt.getRoomName());
-                        System.out.println("r.getRoomTypeName: " + r.getRoomType().getRoomName());
                         if (rt.getRoomName().equals(r.getRoomType().getRoomName())) {
                             //the rt in this condition is the room type that this particular room is
                             //decrement by 1
                             rt.setRoomInventory(rt.getRoomInventory() - 1);
                         }
                     }
-            }
                 }
+            }
+
+            //CHECKING ALL PRE BOOKINGS FOR NUMBER OF ROOMS BOOKED ON THAT DATE AND MINUSING IT FROM INVENTORY OF THE FAKEROOMTYPE RETURNED
+            for (RoomType rt : freeRoomTypes) {
+
+                Query query = em.createQuery("SELECT b FROM Booking b WHERE b.preBooking = :inPreBooking AND b.roomType.roomTypeId = :inRoomTypeId");
+                query.setParameter("inPreBooking", Boolean.TRUE);
+                query.setParameter("inRoomTypeId", rt.getRoomTypeId());
+                List<Booking> bookings = query.getResultList(); //list of bookings of the same room type
+
+                for (Booking b : bookings) {
+                    if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
+                        if (endDate.compareTo(b.getCheckInDate()) > 0) {
+                            rt.setRoomInventory(rt.getRoomInventory() - b.getNumberOfRooms());
+                            break;
+                        }
+                    }
+                }
+            }
             return freeRoomTypes;
         } catch (RoomTypeNotFoundException ex) {
             throw new RoomNotFoundException();
@@ -213,7 +225,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         Date startDate = booking.getCheckInDate();
         Date endDate = booking.getCheckOutDate();
         Boolean thisRoomWillBeFree = true;
-        
+
         booking.setPreBooking(false);
 
         try {
@@ -237,12 +249,12 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
 
                 if (!nextHigherRoomTypeString.equals("None")) {
-                    
+
                     if (booking.getBookingExceptionType() == BookingExceptionType.TYPE1) {
                         booking.setBookingExceptionType(BookingExceptionType.TYPE2);
                         return;
                     }
-                    
+
                     RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
                     booking.setRoomType(nextHigherType);
                     booking.setBookingExceptionType(BookingExceptionType.TYPE1);
