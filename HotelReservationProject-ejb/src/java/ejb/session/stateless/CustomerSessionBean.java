@@ -47,6 +47,7 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
         
         if(customer != null)
         {
+            customer.getBookings().size();
             return customer;
         }
         else 

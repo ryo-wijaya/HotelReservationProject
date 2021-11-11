@@ -188,9 +188,9 @@ public class MainApp {
             String roomTypeName;
             RoomType roomType;
             int numOfRooms = 0;
-            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
+            System.out.print("Enter Check In Date (dd/mm/yyyy)> ");
             startDateString = inputDateFormat.parse(sc.nextLine().trim());
-            System.out.print("Enter Return Date (dd/mm/yyyy)> ");
+            System.out.print("Enter Check Out Date (dd/mm/yyyy)> ");
             endDateString = inputDateFormat.parse(sc.nextLine().trim());
 
             if (startDateString.compareTo(endDateString) > 0) {
@@ -272,8 +272,13 @@ public class MainApp {
             Long bookingId;
             System.out.println("\nViewing my reservation details!");
             System.out.println("-------------------------------\n");
+            List<Booking> bookings = customerSessionBeanRemote.retrieveCustomerByCustomerId(currentCustomer.getCustomerId()).getBookings();
+            if(bookings.isEmpty()) {
+                System.out.print("No existing reservations!\n");
+                return;
+            }
             System.out.print("Enter a Booking ID>");
-
+            
             while (true) {
                 try {
                     bookingId = Long.parseLong(sc.nextLine().trim());
@@ -283,7 +288,6 @@ public class MainApp {
                 }
             }
 
-            List<Booking> bookings = customerSessionBeanRemote.retrieveCustomerByCustomerId(currentCustomer.getCustomerId()).getBookings();
             for (Booking booking : bookings) {
                 if (Objects.equals(booking.getBookingId(), bookingId)) {
                     System.out.println("Booking Id: " + booking.getBookingId());
