@@ -125,6 +125,10 @@ public class FrontOfficeModule {
             }
 
             List<RoomType> fakeRoomTypes = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
+            
+            if (fakeRoomTypes.isEmpty()) {
+                return null;
+            }
 
             for (RoomType rt : fakeRoomTypes) {
                 System.out.println("List of available Room Types and quantities:");

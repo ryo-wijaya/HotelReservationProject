@@ -141,6 +141,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 for (Booking b : r.getBookings()) {
                     if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
                         if (endDate.compareTo(b.getCheckInDate()) > 0) {
+                            System.out.println("CHECK 1: This room has a clashing bookings");
                             thisRoomWillBeFree = false;
                             break;
                         }
@@ -150,18 +151,27 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                     set.add(r.getRoomType().getRoomName()); //these are the room types that are free
                 }
             }
+            
+            System.out.println("SET: " + set);
 
             for (String s : set) {
                 //Making a copy of the Room Type but with an UPDATED inventory (total inventory - dates its booked)
                 //set current inventory to current inventory
+                System.out.println("String in Set: "+ s);
+                System.out.println("Room Type session bean get name by name: " + roomTypeSessionBeanLocal.getRoomTypeByName(s));
+                System.out.println("Room Type session bean inventory size: " + roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory());
                 freeRoomTypes.add(new RoomType(s, roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory()));
+                
             }
+            
+            System.out.println("freeRoomTypes: " + freeRoomTypes);
 
             for (Room r : rooms) {
                 Boolean thisRoomWillBeFree = true;
                 for (Booking b : r.getBookings()) {
                     if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
                         if (endDate.compareTo(b.getCheckInDate()) > 0) {
+                            System.out.println("CHECK 2: This room has a clashing bookings");
                             thisRoomWillBeFree = false;
                         }
                     }
@@ -169,6 +179,8 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 if (thisRoomWillBeFree) {
 
                     for (RoomType rt : freeRoomTypes) { //if that room is of the room type, decremenet its inventory by 1
+                        System.out.println("rt.getRoomTypeName: " + rt.getRoomName());
+                        System.out.println("r.getRoomTypeName: " + r.getRoomType().getRoomName());
                         if (rt.getRoomName().equals(r.getRoomType().getRoomName())) {
                             //the rt in this condition is the room type that this particular room is
                             //decrement by 1

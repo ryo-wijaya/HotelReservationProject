@@ -228,6 +228,10 @@ public class HotelReservationProjectHRSClient {
             }
 
             List<RoomType> fakeRoomTypes = port.walkInSearchRoom(start, end);
+            
+            if (fakeRoomTypes.isEmpty()) {
+                return null;
+            }
 
             for (RoomType rt : fakeRoomTypes) {
                 System.out.println("List of available Room Types and quantities:");
