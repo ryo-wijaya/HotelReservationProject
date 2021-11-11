@@ -111,4 +111,9 @@ public class WebServiceSessionBean {
     public Double getRateForOnlineBooking(@WebParam(name = "bookingId") long bookingId) throws RoomRateNotFoundException {
         return bookingSessionBean.getRateForOnlineBooking(bookingId);
     }
+    
+    @WebMethod(operationName = "retrievePartnerByPartnerId")
+    public Partner retrievePartnerByPartnerId(@WebParam(name = "partnerId") long partnerId) throws NoPartnersFoundException {
+        return partnerSessionBean.retrievePartnerByPartnerId(partnerId);
+    }
 }

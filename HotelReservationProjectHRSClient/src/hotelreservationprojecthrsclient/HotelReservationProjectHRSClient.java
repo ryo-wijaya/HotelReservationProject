@@ -110,7 +110,7 @@ public class HotelReservationProjectHRSClient {
             if (username.length() > 0 && password.length() > 0) {
                 //call web service
                 long currentPartnerId = port.doLogin(username, password).getPartnerId();
-                //currentPartner = 
+                //currentPartner = port.retrievePartnerByPartnerId(currentPartnerId);
             }
         } catch (LoginCredentialsInvalidException_Exception ex) {
             System.out.println("Invalid login credentials");
@@ -212,12 +212,12 @@ public class HotelReservationProjectHRSClient {
             String roomTypeName;
             RoomType roomType;
             int numOfRooms = 0;
-            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
+            System.out.print("Enter Check In Date (dd/mm/yyyy)> ");
             startDateString = inputDateFormat.parse(sc.nextLine().trim());
             gc.setTime(startDateString);
             start = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
-            System.out.print("Enter Return Date (dd/mm/yyyy)> ");
-            endDateString = outputDateFormat.parse(sc.nextLine().trim());
+            System.out.print("Enter Check Out Date (dd/mm/yyyy)> ");
+            endDateString = inputDateFormat.parse(sc.nextLine().trim());
             gc.setTime(endDateString);
             end = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
 
