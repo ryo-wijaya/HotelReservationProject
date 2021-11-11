@@ -142,6 +142,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                     if (startDate.compareTo(b.getCheckOutDate()) < 0) { //THIS MEANS THAT THERES CLASH
                         if (endDate.compareTo(b.getCheckInDate()) > 0) {
                             thisRoomWillBeFree = false;
+                            break;
                         }
                     }
                 }
@@ -150,14 +151,10 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 }
             }
 
-            RoomType fakeRoomTypeWithUpdatedInventory;
             for (String s : set) {
                 //Making a copy of the Room Type but with an UPDATED inventory (total inventory - dates its booked)
-                fakeRoomTypeWithUpdatedInventory = new RoomType();
-                fakeRoomTypeWithUpdatedInventory.setRoomName(s);
                 //set current inventory to current inventory
-                fakeRoomTypeWithUpdatedInventory.setRoomInventory(roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory());
-                freeRoomTypes.add(fakeRoomTypeWithUpdatedInventory);
+                freeRoomTypes.add(new RoomType(s, roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory()));
             }
 
             for (Room r : rooms) {
