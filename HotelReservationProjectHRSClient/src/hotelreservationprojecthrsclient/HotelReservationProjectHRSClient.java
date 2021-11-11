@@ -12,18 +12,25 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import ws.client.Booking;
 import ws.client.BookingNotFoundException;
+import ws.client.BookingNotFoundException_Exception;
 import ws.client.EntityInstanceExistsInCollectionException;
+import ws.client.EntityInstanceExistsInCollectionException_Exception;
+import ws.client.EntityInstanceMissingInCollectionException_Exception;
 import ws.client.LoginCredentialsInvalidException;
 import ws.client.LoginCredentialsInvalidException_Exception;
+import ws.client.NoPartnersFoundException_Exception;
 import ws.client.Partner;
 import ws.client.PartnerType;
 import ws.client.RoomNotFoundException;
 import ws.client.RoomType;
 import ws.client.RoomTypeNotFoundException;
+import ws.client.RoomTypeNotFoundException_Exception;
 import ws.client.WebServiceSessionBean;
 import ws.client.WebServiceSessionBean_Service;
 
@@ -59,15 +66,11 @@ public class HotelReservationProjectHRSClient {
                 }
 
                 if (response == 1) {
-                    try {
-                        doLogin();
-                        if (currentPartner.getPartnerType() == PartnerType.PARTNEREMPLOYEE) {
-                            runPartnerEmployeeMenu();
-                        } else if (currentPartner.getPartnerType() == PartnerType.PARTNERRESERVATIONMANAGER) {
-                            runPartnerManagerMenu();
-                        }
-                    } catch (LoginCredentialsInvalidException ex) {
-                        System.out.println("Invalid login credentials!");
+                    doLogin();
+                    if (currentPartner.getPartnerType() == PartnerType.PARTNEREMPLOYEE) {
+                        runPartnerEmployeeMenu();
+                    } else if (currentPartner.getPartnerType() == PartnerType.PARTNERRESERVATIONMANAGER) {
+                        runPartnerManagerMenu();
                     }
                 } else if (response == 2) {
                     break;
@@ -269,21 +272,25 @@ public class HotelReservationProjectHRSClient {
             Scanner sc = new Scanner(System.in);
             SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
             SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            GregorianCalendar gc = new GregorianCalendar();
+            XMLGregorianCalendar checkIn;
+            XMLGregorianCalendar checkOut;
             System.out.println("\nYou are now reserving a Hotel Room");
             System.out.println("------------------------------------\n");
             Booking availableBooking = searchRoom();
             RoomType roomType = availableBooking.getRoomType();
-            Date checkIn = availableBooking.getCheckInDate();
-            Date checkOut = availableBooking.getCheckInDate();
+            checkIn = availableBooking.getCheckInDate();
+            checkOut = availableBooking.getCheckInDate();
+            Date checkInDate = checkIn.toGregorianCalendar().getTime();
+            Date checkOutDate = checkOut.toGregorianCalendar().getTime();
             Integer numOfRoom = availableBooking.getNumberOfRooms();
-            Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+            Booking booking = new Booking();
+            booking.setCheckInDate(checkIn);
+            booking.setCheckOutDate(checkOut);
+            booking.setNumberOfRooms(numOfRoom);
             port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
-        } catch (RoomTypeNotFoundException ex) {
-            System.out.println("Room not found!");
-        } catch (PartnerNotFoundException ex) {
-            System.out.println("Partner not found!");
-        } catch (EntityInstanceExistsInCollectionException ex) {
-            System.out.println("Room not found!");
+        } catch (BookingNotFoundException_Exception | EntityInstanceExistsInCollectionException_Exception | NoPartnersFoundException_Exception | RoomTypeNotFoundException_Exception ex) {
+            Logger.getLogger(HotelReservationProjectHRSClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -334,10 +341,9 @@ public class HotelReservationProjectHRSClient {
                 System.out.println("Number of rooms: " + b.getNumberOfRooms());
                 System.out.println("");
             }
-        } catch (BookingNotFoundException ex) {
-            System.out.println("Booking not found!");
+        } catch (BookingNotFoundException_Exception | EntityInstanceMissingInCollectionException_Exception ex) {
+            Logger.getLogger(HotelReservationProjectHRSClient.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-
 }
