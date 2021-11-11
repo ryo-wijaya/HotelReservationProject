@@ -261,13 +261,13 @@ public class MainApp {
             Date checkOut = availableBooking.getCheckOutDate();
             Integer numOfRoom = availableBooking.getNumberOfRooms();
             Booking booking = new Booking(numOfRoom, checkIn, checkOut);
-            bookingSessionBeanRemote.createNewBookingWithCustomer(booking, roomType.getRoomTypeId(), currentCustomer.getCustomerId());
+            long bookingId = bookingSessionBeanRemote.createNewBookingWithCustomer(booking, roomType.getRoomTypeId(), currentCustomer.getCustomerId());
             System.out.println("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
             System.out.println("What time is the reservation made");
             Double rtime = sc.nextDouble();
-            if (booking.getCheckInDate().equals(cDate) && rtime >= 2) {
-                roomSessionBeanRemote.findARoomAndAddToIt(booking.getBookingId());
+            if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
+                roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
             }
             System.out.println("Hotel room(s) successfully reserved!");
         } catch (RoomTypeNotFoundException ex) {
@@ -280,6 +280,8 @@ public class MainApp {
             System.out.println("invalid date!");
         } catch (RoomNotFoundException ex) {
             System.out.println("Room not found!");
+        } catch (BookingNotFoundException ex) {
+            System.out.println("Booking not found!");
         }
     }
 
