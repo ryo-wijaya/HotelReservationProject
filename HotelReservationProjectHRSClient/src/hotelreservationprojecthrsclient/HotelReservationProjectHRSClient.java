@@ -12,6 +12,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import ws.client.Booking;
 import ws.client.BookingNotFoundException;
 import ws.client.EntityInstanceExistsInCollectionException;
@@ -191,15 +193,22 @@ public class HotelReservationProjectHRSClient {
             System.out.println("-------------------------------\n");
             SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
             SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-            GregorianCalendar startDateString;
-            GregorianCalendar endDateString;
+            GregorianCalendar gc = new GregorianCalendar();
+            Date startDateString;
+            Date endDateString;
+            XMLGregorianCalendar start = null;
+            XMLGregorianCalendar end = null;
             String roomTypeName;
             RoomType roomType;
             int numOfRooms = 0;
             System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
             startDateString = inputDateFormat.parse(sc.nextLine().trim());
+            gc.setTime(startDateString);
+            start = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
             System.out.print("Enter Return Date (dd/mm/yyyy)> ");
             endDateString = outputDateFormat.parse(sc.nextLine().trim());
+            gc.setTime(endDateString);
+            end = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
 
             if (startDateString.compareTo(endDateString) > 0) {
                 System.out.println("Invalid Operation - start date exceed end date");
@@ -207,7 +216,7 @@ public class HotelReservationProjectHRSClient {
                 return null;
             }
 
-            List<RoomType> fakeRoomTypes = port.walkInSearchRoom(startDateString, endDateString);
+            List<RoomType> fakeRoomTypes = port.walkInSearchRoom(start, end);
 
             for (RoomType rt : fakeRoomTypes) {
                 System.out.println("List of available Room Types and quantities:");
