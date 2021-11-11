@@ -236,6 +236,8 @@ public class MainApp {
             System.out.println("Invalid date input!");
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Room Type not found!");
+        } catch (RoomRateNotFoundException ex) {
+            System.out.println("Room Rate not found!");
         }
         return null;
     }

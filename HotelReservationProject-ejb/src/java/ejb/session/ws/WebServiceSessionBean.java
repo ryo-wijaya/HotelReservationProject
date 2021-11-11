@@ -5,7 +5,6 @@
  */
 package ejb.session.ws;
 
-import com.sun.javafx.tk.FocusCause;
 import ejb.session.stateless.BookingSessionBeanLocal;
 import ejb.session.stateless.PartnerSessionBeanLocal;
 import ejb.session.stateless.RoomSessionBeanLocal;
@@ -30,6 +29,7 @@ import util.exceptions.EntityInstanceMissingInCollectionException;
 import util.exceptions.LoginCredentialsInvalidException;
 import util.exceptions.NoPartnersFoundException;
 import util.exceptions.RoomNotFoundException;
+import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
 /**
@@ -48,15 +48,13 @@ public class WebServiceSessionBean {
 
     @EJB
     private PartnerSessionBeanLocal partnerSessionBean;
-    
+
     @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
     private EntityManager em;
 
     @EJB
     private BookingSessionBeanLocal bookingSessionBean;
 
-    
-    
     /**
      * This is a sample web service operation
      */
@@ -65,49 +63,52 @@ public class WebServiceSessionBean {
         Partner partner = partnerSessionBean.partnerLogin(username, password);
         em.detach(partner);
         List<Booking> bookings = partner.getBookings();
-        for(Booking booking : bookings) {
+        for (Booking booking : bookings) {
             em.detach(booking);
             booking.setPartner(null);
         }
         return partner;
     }
-    
+
     @WebMethod(operationName = "walkInSearchRoom")
     public List<RoomType> walkInSearchRoom(@WebParam(name = "startDate") Date startDate, @WebParam(name = "endDate") Date endDate) throws RoomNotFoundException {
         return roomSessionBean.walkInSearchRoom(startDate, endDate);
     }
-    
+
     @WebMethod(operationName = "getRoomTypeByName")
     public RoomType getRoomTypeByName(@WebParam(name = "roomName") String roomName) throws RoomTypeNotFoundException {
         return roomTypeSessionBean.getRoomTypeByName(roomName);
     }
-    
+
     @WebMethod(operationName = "createNewBookingWithPartner")
     public void createNewBookingWithPartner(@WebParam(name = "booking") Booking booking, @WebParam(name = "roomTypeId") long roomTypeId, @WebParam(name = "partnerId") long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException, BookingNotFoundException {
         bookingSessionBean.createNewBookingWithPartner(booking, roomTypeId, partnerId);
     }
-    
+
     @WebMethod(operationName = "getAllBookingsByPartnerId")
     public List<Booking> getAllBookingsByPartnerId(@WebParam(name = "partnerId") long partnerId) throws BookingNotFoundException, EntityInstanceMissingInCollectionException {
         List<Booking> bookings = bookingSessionBean.getAllBookingsByPartnerId(partnerId);
-        for(Booking booking : bookings) {
+        for (Booking booking : bookings) {
             em.detach(booking);
-            
-            Partner partner  = booking.getPartner();
+
+            Partner partner = booking.getPartner();
             em.detach(partner);
             partner.removeBooking(booking);
-            
+
             Customer customer = booking.getCustomer();
             em.detach(customer);
             customer.removeBooking(booking);
-            
-            for(Room room : booking.getRooms()) {
+
+            for (Room room : booking.getRooms()) {
                 em.detach(room);
                 room.removeBookings(booking);
             }
         }
-        
         return bookings;
     }
-    
+
+    @WebMethod(operationName = "getRateForOnlineBooking")
+    public Double getRateForOnlineBooking(@WebParam(name = "bookingId") long bookingId) throws RoomRateNotFoundException {
+        return bookingSessionBean.getRateForOnlineBooking(bookingId);
+    }
 }

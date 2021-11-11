@@ -192,7 +192,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         return price;
     }
 
-    public Double getRateForOnlineBooking(Long bookingId) {
+    public Double getRateForOnlineBooking(Long bookingId) throws RoomRateNotFoundException {
         Double price = 0.0;
         try {
             Booking booking = em.find(Booking.class, bookingId);
@@ -233,7 +233,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
             }
 
         } catch (RoomRateNotFoundException | RoomTypeNotFoundException ex) {
-            System.out.println("Rate not found!");
+            throw new RoomRateNotFoundException();
         }
         return price;
     }

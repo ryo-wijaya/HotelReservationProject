@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import ws.client.Booking;
@@ -22,8 +23,10 @@ import ws.client.LoginCredentialsInvalidException_Exception;
 import ws.client.Partner;
 import ws.client.PartnerType;
 import ws.client.RoomNotFoundException;
+import ws.client.RoomNotFoundException_Exception;
 import ws.client.RoomType;
 import ws.client.RoomTypeNotFoundException;
+import ws.client.RoomTypeNotFoundException_Exception;
 import ws.client.WebServiceSessionBean;
 import ws.client.WebServiceSessionBean_Service;
 
@@ -59,16 +62,14 @@ public class HotelReservationProjectHRSClient {
                 }
 
                 if (response == 1) {
-                    try {
-                        doLogin();
-                        if (currentPartner.getPartnerType() == PartnerType.PARTNEREMPLOYEE) {
-                            runPartnerEmployeeMenu();
-                        } else if (currentPartner.getPartnerType() == PartnerType.PARTNERRESERVATIONMANAGER) {
-                            runPartnerManagerMenu();
-                        }
-                    } catch (LoginCredentialsInvalidException ex) {
-                        System.out.println("Invalid login credentials!");
+
+                    doLogin();
+                    if (currentPartner.getPartnerType() == PartnerType.PARTNEREMPLOYEE) {
+                        runPartnerEmployeeMenu();
+                    } else if (currentPartner.getPartnerType() == PartnerType.PARTNERRESERVATIONMANAGER) {
+                        runPartnerManagerMenu();
                     }
+
                 } else if (response == 2) {
                     break;
                 } else {
@@ -239,7 +240,10 @@ public class HotelReservationProjectHRSClient {
                 }
             }
 
-            Booking booking = new Booking(numOfRooms, startDateString, endDateString);
+            Booking booking = new Booking();
+            booking.setNumberOfRooms(numOfRooms);
+            booking.setCheckInDate(start);
+            booking.setCheckOutDate(end);
             booking.setRoomType(realRoomType);
 
             Double price = port.getRateForOnlineBooking(booking.getBookingId());  //use web service bean
@@ -247,13 +251,13 @@ public class HotelReservationProjectHRSClient {
             System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;
 
-        } catch (RoomNotFoundException ex) {
+        } catch (DatatypeConfigurationException ex) {
             System.out.println("No rooms are available!");
         } catch (ParseException ex) {
             System.out.println("Invalid date input!");
-        } catch (RoomTypeNotFoundException ex) {
+        } catch (RoomNotFoundException_Exception ex) {
             System.out.println("Room Type not found!");
-        } catch (RoomRateNotFoundException ex) {
+        } catch (RoomTypeNotFoundException_Exception ex) {
             System.out.println("No published rate found!");
         }
         return null;

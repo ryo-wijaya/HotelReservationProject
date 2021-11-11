@@ -41,7 +41,8 @@ public interface BookingSessionBeanRemote {
 
     public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException;
     
-    public Double getRateForOnlineBooking(Long bookingId);
+    public Double getRateForOnlineBooking(Long bookingId) throws RoomRateNotFoundException;
+            
     public long createNewBookingWithCustomer(Booking booking, Long roomTypeId, Long customerId) throws RoomTypeNotFoundException, CustomerNotFoundException, EntityInstanceExistsInCollectionException;
     
     public long createNewBookingWithPartner(Booking booking, Long roomTypeId, Long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException;
