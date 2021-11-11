@@ -170,8 +170,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     }
 
     @Override
-    public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException {
-        Booking booking = em.find(Booking.class, bookingId);
+    public Double getPublishRatePriceOfBooking(Booking booking) throws RoomRateNotFoundException {
         Double price = 0.0;
         RoomType roomType = booking.getRoomType();
         Integer numOfRooms = booking.getNumberOfRooms();
@@ -192,10 +191,9 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         return price;
     }
 
-    public Double getRateForOnlineBooking(Long bookingId) throws RoomRateNotFoundException {
+    public Double getRateForOnlineBooking(Booking booking) throws RoomRateNotFoundException {
         Double price = 0.0;
         try {
-            Booking booking = em.find(Booking.class, bookingId);
             List<RoomRate> roomRates = roomRateSessionBeanLocal.getRoomRateByRoomType(booking.getRoomType().getRoomTypeId());
             RoomType roomType = booking.getRoomType();
             Integer numOfRooms = booking.getNumberOfRooms();

@@ -33,7 +33,7 @@ public interface BookingSessionBeanRemote {
 
     public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException;
 
-    public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException;
+    public Double getPublishRatePriceOfBooking(Booking booking) throws RoomRateNotFoundException;
 
     public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException;
 
@@ -41,7 +41,7 @@ public interface BookingSessionBeanRemote {
 
     public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException;
     
-    public Double getRateForOnlineBooking(Long bookingId) throws RoomRateNotFoundException;
+    public Double getRateForOnlineBooking(Booking booking) throws RoomRateNotFoundException;
             
     public long createNewBookingWithCustomer(Booking booking, Long roomTypeId, Long customerId) throws RoomTypeNotFoundException, CustomerNotFoundException, EntityInstanceExistsInCollectionException;
     

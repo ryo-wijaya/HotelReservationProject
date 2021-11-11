@@ -170,7 +170,7 @@
 
 <xs:complexType name="getRateForOnlineBooking">
 <xs:sequence>
-<xs:element name="bookingId" type="xs:long"/>
+<xs:element name="booking" type="tns:booking" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
