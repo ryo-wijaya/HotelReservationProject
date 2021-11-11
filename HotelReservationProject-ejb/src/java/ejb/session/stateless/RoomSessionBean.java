@@ -232,6 +232,12 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
 
                 if (!nextHigherRoomTypeString.equals("None")) {
+                    
+                    if (booking.getBookingExceptionType() == BookingExceptionType.TYPE1) {
+                        booking.setBookingExceptionType(BookingExceptionType.TYPE2);
+                        return;
+                    }
+                    
                     RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
                     booking.setRoomType(nextHigherType);
                     booking.setBookingExceptionType(BookingExceptionType.TYPE1);

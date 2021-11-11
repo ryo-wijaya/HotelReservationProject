@@ -172,6 +172,7 @@ public class HotelReservationProjectHRSClient {
     private static void reserveRoom() {
         
     }
+    
     private static void viewReservationDetails() {
         Scanner sc = new Scanner(System.in);
         Long bookingId;
