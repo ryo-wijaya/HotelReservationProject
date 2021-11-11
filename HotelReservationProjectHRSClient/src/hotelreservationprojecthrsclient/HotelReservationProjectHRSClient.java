@@ -80,6 +80,8 @@ public class HotelReservationProjectHRSClient {
     }
 
     public static void doLogin() throws LoginCredentialsInvalidException {
+        WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
+        WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
         Scanner sc = new Scanner(System.in);
         String username = "";
         String password = "";
@@ -92,7 +94,7 @@ public class HotelReservationProjectHRSClient {
 
         if (username.length() > 0 && password.length() > 0) {
             //call web service
-
+            long currentPartnerId = port.doLogin(username, password);
         } else {
             throw new LoginCredentialsInvalidException("Invalid login credential!");
         }
