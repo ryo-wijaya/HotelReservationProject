@@ -110,10 +110,12 @@ public class HotelReservationProjectHRSClient {
             if (username.length() > 0 && password.length() > 0) {
                 //call web service
                 long currentPartnerId = port.doLogin(username, password).getPartnerId();
-                //currentPartner = port.retrievePartnerByPartnerId(currentPartnerId);
+                currentPartner = port.retrievePartnerByPartnerId(currentPartnerId);
             }
         } catch (LoginCredentialsInvalidException_Exception ex) {
             System.out.println("Invalid login credentials");
+        } catch (NoPartnersFoundException_Exception ex) {
+            System.out.println("Invalid partner id");
         }
     }
 

@@ -633,6 +633,12 @@ public class HotelOperationModule {
                 System.out.println(count + ": " + booking.getBookingId());
             }
             System.out.println("--------------------------------------------------------\n");
+        } catch (TypeOneNotFoundException ex) {
+            System.out.println("No Type One Exception Report");
+        }
+        try {
+            Integer count = 0;
+            System.out.println("--------------------------------------------------------\n");
             System.out.println("Exception Type 2: List of Booking IDs where no upgrade is available\n");
             List<Booking> typeTwoBookings = bookingSessionBeanRemote.retrieveTypeTwoBookings();
             count = 0;
@@ -640,11 +646,10 @@ public class HotelOperationModule {
                 count++;
                 System.out.println(count + ": " + booking.getBookingId());
             }
+            System.out.println("--------------------------------------------------------\n");
         } catch (BookingNotFoundException ex) {
             System.out.println("No Type Two Exception Report");
-        } catch (TypeOneNotFoundException ex) {
-            System.out.println("No Type One Exception Report");
-        }
+        } 
     }
 
     private void createNewRoomRate(Scanner sc) {

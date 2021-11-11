@@ -68,7 +68,7 @@ public class FrontOfficeModule {
             System.out.println("---------------------------------------------------------\n");
             System.out.println("1. Walk-in Search Room");
             System.out.println("2. Walk-in Reserver Room");
-            System.out.println("3. Create-in Guest");
+            System.out.println("3. Check-in Guest");
             System.out.println("4. Check-out Guest");
             System.out.println("5. Logout");
 
@@ -116,7 +116,7 @@ public class FrontOfficeModule {
             System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
             startDateString = inputDateFormat.parse(sc.nextLine().trim());
             System.out.print("Enter Return Date (dd/mm/yyyy)> ");
-            endDateString = outputDateFormat.parse(sc.nextLine().trim());
+            endDateString = inputDateFormat.parse(sc.nextLine().trim());
 
             if (startDateString.compareTo(endDateString) > 0) {
                 System.out.println("Invalid Operation - start date exceed end date");
