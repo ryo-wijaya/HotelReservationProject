@@ -266,7 +266,7 @@ public class HotelReservationProjectHRSClient {
             booking.setCheckOutDate(end);
             booking.setRoomType(realRoomType);
 
-            Double price = port.getRateForOnlineBooking(booking.getBookingId());  //use web service bean
+            Double price = port.getRateForOnlineBooking(booking);  //use web service bean
 
             System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;

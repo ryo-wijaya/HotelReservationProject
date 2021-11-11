@@ -33,7 +33,7 @@ public interface BookingSessionBeanLocal {
 
     public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException;
 
-    public Double getPublishRatePriceOfBooking(Long bookingId) throws RoomRateNotFoundException;
+    public Double getPublishRatePriceOfBooking(Booking booking) throws RoomRateNotFoundException;
 
     public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException;
 
@@ -45,6 +45,6 @@ public interface BookingSessionBeanLocal {
 
     public long createNewBookingWithPartner(Booking booking, Long roomTypeId, Long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException;
     
-    public Double getRateForOnlineBooking(Long bookingId) throws RoomRateNotFoundException;
+    public Double getRateForOnlineBooking(Booking booking) throws RoomRateNotFoundException;
     
 }
