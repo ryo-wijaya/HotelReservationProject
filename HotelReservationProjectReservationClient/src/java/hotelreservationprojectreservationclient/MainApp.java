@@ -264,30 +264,34 @@ public class MainApp {
     }
 
     public void viewMyReservationDetails() {
-        Scanner sc = new Scanner(System.in);
-        Long bookingId;
-        System.out.println("\nViewing my reservation details!");
-        System.out.println("-------------------------------\n");
-        System.out.print("Enter a Booking ID>");
+        try {
+            Scanner sc = new Scanner(System.in);
+            Long bookingId;
+            System.out.println("\nViewing my reservation details!");
+            System.out.println("-------------------------------\n");
+            System.out.print("Enter a Booking ID>");
 
-        while (true) {
-            try {
-                bookingId = Long.parseLong(sc.nextLine().trim());
-                break;
-            } catch (NumberFormatException ex) {
-                System.out.println("Please input a valid ID format");
+            while (true) {
+                try {
+                    bookingId = Long.parseLong(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    System.out.println("Please input a valid ID format");
+                }
             }
-        }
-        
-        List<Booking> bookings = currentCustomer.getBookings();
-        for(Booking booking : bookings) {
-            if(Objects.equals(booking.getBookingId(), bookingId)) {
-                System.out.println("Booking Id: " + booking.getBookingId());
-                System.out.println("Check In Date: " + booking.getCheckInDate());
-                System.out.println("Check Out Date: " + booking.getCheckOutDate());
-                System.out.println("Room Type: " + booking.getRoomType());
-                System.out.println("Number of rooms: " + booking.getNumberOfRooms());
+
+            List<Booking> bookings = customerSessionBeanRemote.retrieveCustomerByCustomerId(currentCustomer.getCustomerId()).getBookings();
+            for (Booking booking : bookings) {
+                if (Objects.equals(booking.getBookingId(), bookingId)) {
+                    System.out.println("Booking Id: " + booking.getBookingId());
+                    System.out.println("Check In Date: " + booking.getCheckInDate());
+                    System.out.println("Check Out Date: " + booking.getCheckOutDate());
+                    System.out.println("Room Type: " + booking.getRoomType());
+                    System.out.println("Number of rooms: " + booking.getNumberOfRooms());
+                }
             }
+        } catch (CustomerNotFoundException ex) {
+            System.out.println("Customer not found!");
         }
     }
 
