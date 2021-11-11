@@ -262,17 +262,19 @@ public class HotelReservationProjectHRSClient {
             Date checkOut = availableBooking.getCheckInDate();
             Integer numOfRoom = availableBooking.getNumberOfRooms();
             Booking booking = new Booking(numOfRoom, checkIn, checkOut);
-            port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getCustomerId());
+            port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Room not found!");
-        } catch (CustomerNotFoundException ex) {
-            System.out.println("Customer not found!");
+        } catch (PartnerNotFoundException ex) {
+            System.out.println("Partner not found!");
         } catch (EntityInstanceExistsInCollectionException ex) {
             System.out.println("Room not found!");
         }
     }
 
     private static void viewReservationDetails() {
+        //maybe use the bean to get bookings for partner so its updated
+        
         Scanner sc = new Scanner(System.in);
         Long bookingId;
         System.out.println("\nViewing my reservation details!");
