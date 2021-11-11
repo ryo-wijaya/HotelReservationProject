@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.BookingExceptionType;
+import util.exceptions.BookingNotFoundException;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
@@ -205,6 +208,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     @Override
     public List<Room> retrieveRoomsByRoomType(Long roomTypeId) throws RoomNotFoundException {
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.enabled = :inEnabled AND r.roomType.roomTypeId = :inRoomTypeId");
+        query.setParameter("inEnabled", true);
         query.setParameter("inRoomTypeId", roomTypeId);
         List<Room> listOfRooms = query.getResultList();
         if (!listOfRooms.isEmpty()) {
@@ -219,8 +223,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     }
 
     @Override
-    public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException {
-        Booking booking = em.find(Booking.class, bookingId);
+    public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException, BookingNotFoundException {
+        Booking booking;
+        booking = bookingSessionBeanLocal.retrieveBookingByBookingId(bookingId);
         List<Room> rooms = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
         Date startDate = booking.getCheckInDate();
         Date endDate = booking.getCheckOutDate();

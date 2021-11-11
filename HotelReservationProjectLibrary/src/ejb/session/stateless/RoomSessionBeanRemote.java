@@ -10,6 +10,7 @@ import entity.RoomType;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exceptions.BookingNotFoundException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
@@ -39,5 +40,5 @@ public interface RoomSessionBeanRemote {
 
     public List<Room> retrieveRoomsByRoomType(Long roomTypeId) throws RoomNotFoundException;
 
-    public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException;
+    public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException, BookingNotFoundException;
 }
