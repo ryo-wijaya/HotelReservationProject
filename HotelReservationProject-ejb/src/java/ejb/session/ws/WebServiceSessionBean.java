@@ -114,6 +114,13 @@ public class WebServiceSessionBean {
     
     @WebMethod(operationName = "retrievePartnerByPartnerId")
     public Partner retrievePartnerByPartnerId(@WebParam(name = "partnerId") long partnerId) throws NoPartnersFoundException {
-        return partnerSessionBean.retrievePartnerByPartnerId(partnerId);
+        Partner partner = partnerSessionBean.retrievePartnerByPartnerId(partnerId);
+        em.detach(partner);
+        List<Booking> bookings = partner.getBookings();
+        for (Booking booking : bookings) {
+            em.detach(booking);
+            booking.setPartner(null);
+        }
+        return partner;
     }
 }

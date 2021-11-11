@@ -36,6 +36,10 @@
 
 <xs:element name="getRoomTypeByNameResponse" type="tns:getRoomTypeByNameResponse"/>
 
+<xs:element name="retrievePartnerByPartnerId" type="tns:retrievePartnerByPartnerId"/>
+
+<xs:element name="retrievePartnerByPartnerIdResponse" type="tns:retrievePartnerByPartnerIdResponse"/>
+
 <xs:element name="walkInSearchRoom" type="tns:walkInSearchRoom"/>
 
 <xs:element name="walkInSearchRoomResponse" type="tns:walkInSearchRoomResponse"/>
@@ -235,6 +239,18 @@
 <xs:complexType name="EntityInstanceMissingInCollectionException">
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="retrievePartnerByPartnerId">
+<xs:sequence>
+<xs:element name="partnerId" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="retrievePartnerByPartnerIdResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:partner" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
