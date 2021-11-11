@@ -95,7 +95,7 @@ public class HotelReservationProjectHRSClient {
 
         while (true) {
             System.out.println("\nYou are logged in as a Partner Employee!");
-            System.out.println("-------------------------------------------------------\n");
+            System.out.println("----------------------------------------\n");
             System.out.println("1: Search Room");
             System.out.println("2: Exit\n");
             while (true) {
@@ -129,7 +129,7 @@ public class HotelReservationProjectHRSClient {
 
         while (true) {
             System.out.println("\nYou are logged in as a Partner Manager!");
-            System.out.println("-------------------------------------------------------\n");
+            System.out.println("---------------------------------------\n");
             System.out.println("1: Search Room");
             System.out.println("2: Reserve Room");
             System.out.println("3: View Reservation Details");
