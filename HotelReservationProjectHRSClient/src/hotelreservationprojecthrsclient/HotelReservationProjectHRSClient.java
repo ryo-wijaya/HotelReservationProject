@@ -58,11 +58,11 @@ public class HotelReservationProjectHRSClient {
         int response;
 
         while (true) {
-            System.out.println("\nWelcome to the Holiday Reservation System for Partners!");
-            System.out.println("-------------------------------------------------------\n");
-            System.out.println("1: Login");
-            System.out.println("2: Exit\n");
             while (true) {
+                System.out.println("\nWelcome to the Holiday Reservation System for Partners!");
+                System.out.println("-------------------------------------------------------\n");
+                System.out.println("1: Login");
+                System.out.println("2: Exit\n");
                 System.out.print("Enter an option> ");
 
                 try {
@@ -109,13 +109,10 @@ public class HotelReservationProjectHRSClient {
         try {
             if (username.length() > 0 && password.length() > 0) {
                 //call web service
-                long currentPartnerId = port.doLogin(username, password).getPartnerId();
-                currentPartner = port.retrievePartnerByPartnerId(currentPartnerId);
+                currentPartner = port.doLogin(username, password);
             }
         } catch (LoginCredentialsInvalidException_Exception ex) {
             System.out.println("Invalid login credentials");
-        } catch (NoPartnersFoundException_Exception ex) {
-            System.out.println("Invalid partner id");
         }
     }
 
@@ -158,14 +155,14 @@ public class HotelReservationProjectHRSClient {
         int response;
 
         while (true) {
-            System.out.println("\nYou are logged in as a Partner Manager!");
-            System.out.println("---------------------------------------\n");
-            System.out.println("1: Search Room");
-            System.out.println("2: Reserve Room");
-            System.out.println("3: View Reservation Details");
-            System.out.println("4: View All Reservations");
-            System.out.println("5: Exit\n");
             while (true) {
+                System.out.println("\nYou are logged in as a Partner Manager!");
+                System.out.println("---------------------------------------\n");
+                System.out.println("1: Search Room");
+                System.out.println("2: Reserve Room");
+                System.out.println("3: View Reservation Details");
+                System.out.println("4: View All Reservations");
+                System.out.println("5: Exit\n");
                 System.out.print("Enter an option> ");
 
                 try {
@@ -188,7 +185,7 @@ public class HotelReservationProjectHRSClient {
                     System.out.println("Invalid option, please try again!");
                 }
             }
-            if (response == 2) {
+            if (response == 5) {
                 System.out.println("Logging out!");
                 break;
             }
