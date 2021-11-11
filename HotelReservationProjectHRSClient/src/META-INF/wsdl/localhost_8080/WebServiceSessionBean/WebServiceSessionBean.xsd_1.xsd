@@ -12,6 +12,8 @@
 
 <xs:element name="RoomNotFoundException" type="tns:RoomNotFoundException"/>
 
+<xs:element name="RoomRateNotFoundException" type="tns:RoomRateNotFoundException"/>
+
 <xs:element name="RoomTypeNotFoundException" type="tns:RoomTypeNotFoundException"/>
 
 <xs:element name="createNewBookingWithPartner" type="tns:createNewBookingWithPartner"/>
@@ -25,6 +27,10 @@
 <xs:element name="getAllBookingsByPartnerId" type="tns:getAllBookingsByPartnerId"/>
 
 <xs:element name="getAllBookingsByPartnerIdResponse" type="tns:getAllBookingsByPartnerIdResponse"/>
+
+<xs:element name="getRateForOnlineBooking" type="tns:getRateForOnlineBooking"/>
+
+<xs:element name="getRateForOnlineBookingResponse" type="tns:getRateForOnlineBookingResponse"/>
 
 <xs:element name="getRoomTypeByName" type="tns:getRoomTypeByName"/>
 
@@ -153,6 +159,24 @@
 </xs:complexType>
 
 <xs:complexType name="BookingNotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getRateForOnlineBooking">
+<xs:sequence>
+<xs:element name="bookingId" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getRateForOnlineBookingResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:double" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="RoomRateNotFoundException">
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>

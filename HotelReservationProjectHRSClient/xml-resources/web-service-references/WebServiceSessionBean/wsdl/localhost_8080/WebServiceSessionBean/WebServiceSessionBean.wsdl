@@ -4,6 +4,15 @@
 <xsd:import namespace="http://ws.session.ejb/" schemaLocation="http://localhost:8080/WebServiceSessionBean/WebServiceSessionBean?xsd=1"/>
 </xsd:schema>
 </types>
+<message name="doLogin">
+<part name="parameters" element="tns:doLogin"/>
+</message>
+<message name="doLoginResponse">
+<part name="parameters" element="tns:doLoginResponse"/>
+</message>
+<message name="LoginCredentialsInvalidException">
+<part name="fault" element="tns:LoginCredentialsInvalidException"/>
+</message>
 <message name="getRoomTypeByName">
 <part name="parameters" element="tns:getRoomTypeByName"/>
 </message>
@@ -12,6 +21,27 @@
 </message>
 <message name="RoomTypeNotFoundException">
 <part name="fault" element="tns:RoomTypeNotFoundException"/>
+</message>
+<message name="getRateForOnlineBooking">
+<part name="parameters" element="tns:getRateForOnlineBooking"/>
+</message>
+<message name="getRateForOnlineBookingResponse">
+<part name="parameters" element="tns:getRateForOnlineBookingResponse"/>
+</message>
+<message name="RoomRateNotFoundException">
+<part name="fault" element="tns:RoomRateNotFoundException"/>
+</message>
+<message name="getAllBookingsByPartnerId">
+<part name="parameters" element="tns:getAllBookingsByPartnerId"/>
+</message>
+<message name="getAllBookingsByPartnerIdResponse">
+<part name="parameters" element="tns:getAllBookingsByPartnerIdResponse"/>
+</message>
+<message name="BookingNotFoundException">
+<part name="fault" element="tns:BookingNotFoundException"/>
+</message>
+<message name="EntityInstanceMissingInCollectionException">
+<part name="fault" element="tns:EntityInstanceMissingInCollectionException"/>
 </message>
 <message name="createNewBookingWithPartner">
 <part name="parameters" element="tns:createNewBookingWithPartner"/>
@@ -25,27 +55,6 @@
 <message name="NoPartnersFoundException">
 <part name="fault" element="tns:NoPartnersFoundException"/>
 </message>
-<message name="BookingNotFoundException">
-<part name="fault" element="tns:BookingNotFoundException"/>
-</message>
-<message name="getAllBookingsByPartnerId">
-<part name="parameters" element="tns:getAllBookingsByPartnerId"/>
-</message>
-<message name="getAllBookingsByPartnerIdResponse">
-<part name="parameters" element="tns:getAllBookingsByPartnerIdResponse"/>
-</message>
-<message name="EntityInstanceMissingInCollectionException">
-<part name="fault" element="tns:EntityInstanceMissingInCollectionException"/>
-</message>
-<message name="doLogin">
-<part name="parameters" element="tns:doLogin"/>
-</message>
-<message name="doLoginResponse">
-<part name="parameters" element="tns:doLoginResponse"/>
-</message>
-<message name="LoginCredentialsInvalidException">
-<part name="fault" element="tns:LoginCredentialsInvalidException"/>
-</message>
 <message name="walkInSearchRoom">
 <part name="parameters" element="tns:walkInSearchRoom"/>
 </message>
@@ -56,10 +65,26 @@
 <part name="fault" element="tns:RoomNotFoundException"/>
 </message>
 <portType name="WebServiceSessionBean">
+<operation name="doLogin">
+<input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/doLoginRequest" message="tns:doLogin"/>
+<output wsam:Action="http://ws.session.ejb/WebServiceSessionBean/doLoginResponse" message="tns:doLoginResponse"/>
+<fault message="tns:LoginCredentialsInvalidException" name="LoginCredentialsInvalidException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/doLogin/Fault/LoginCredentialsInvalidException"/>
+</operation>
 <operation name="getRoomTypeByName">
 <input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getRoomTypeByNameRequest" message="tns:getRoomTypeByName"/>
 <output wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getRoomTypeByNameResponse" message="tns:getRoomTypeByNameResponse"/>
 <fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getRoomTypeByName/Fault/RoomTypeNotFoundException"/>
+</operation>
+<operation name="getRateForOnlineBooking">
+<input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getRateForOnlineBookingRequest" message="tns:getRateForOnlineBooking"/>
+<output wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getRateForOnlineBookingResponse" message="tns:getRateForOnlineBookingResponse"/>
+<fault message="tns:RoomRateNotFoundException" name="RoomRateNotFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getRateForOnlineBooking/Fault/RoomRateNotFoundException"/>
+</operation>
+<operation name="getAllBookingsByPartnerId">
+<input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getAllBookingsByPartnerIdRequest" message="tns:getAllBookingsByPartnerId"/>
+<output wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getAllBookingsByPartnerIdResponse" message="tns:getAllBookingsByPartnerIdResponse"/>
+<fault message="tns:BookingNotFoundException" name="BookingNotFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getAllBookingsByPartnerId/Fault/BookingNotFoundException"/>
+<fault message="tns:EntityInstanceMissingInCollectionException" name="EntityInstanceMissingInCollectionException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getAllBookingsByPartnerId/Fault/EntityInstanceMissingInCollectionException"/>
 </operation>
 <operation name="createNewBookingWithPartner">
 <input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/createNewBookingWithPartnerRequest" message="tns:createNewBookingWithPartner"/>
@@ -69,17 +94,6 @@
 <fault message="tns:NoPartnersFoundException" name="NoPartnersFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/createNewBookingWithPartner/Fault/NoPartnersFoundException"/>
 <fault message="tns:BookingNotFoundException" name="BookingNotFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/createNewBookingWithPartner/Fault/BookingNotFoundException"/>
 </operation>
-<operation name="getAllBookingsByPartnerId">
-<input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getAllBookingsByPartnerIdRequest" message="tns:getAllBookingsByPartnerId"/>
-<output wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getAllBookingsByPartnerIdResponse" message="tns:getAllBookingsByPartnerIdResponse"/>
-<fault message="tns:BookingNotFoundException" name="BookingNotFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getAllBookingsByPartnerId/Fault/BookingNotFoundException"/>
-<fault message="tns:EntityInstanceMissingInCollectionException" name="EntityInstanceMissingInCollectionException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getAllBookingsByPartnerId/Fault/EntityInstanceMissingInCollectionException"/>
-</operation>
-<operation name="doLogin">
-<input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/doLoginRequest" message="tns:doLogin"/>
-<output wsam:Action="http://ws.session.ejb/WebServiceSessionBean/doLoginResponse" message="tns:doLoginResponse"/>
-<fault message="tns:LoginCredentialsInvalidException" name="LoginCredentialsInvalidException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/doLogin/Fault/LoginCredentialsInvalidException"/>
-</operation>
 <operation name="walkInSearchRoom">
 <input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/walkInSearchRoomRequest" message="tns:walkInSearchRoom"/>
 <output wsam:Action="http://ws.session.ejb/WebServiceSessionBean/walkInSearchRoomResponse" message="tns:walkInSearchRoomResponse"/>
@@ -88,6 +102,18 @@
 </portType>
 <binding name="WebServiceSessionBeanPortBinding" type="tns:WebServiceSessionBean">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<operation name="doLogin">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="LoginCredentialsInvalidException">
+<soap:fault name="LoginCredentialsInvalidException" use="literal"/>
+</fault>
+</operation>
 <operation name="getRoomTypeByName">
 <soap:operation soapAction=""/>
 <input>
@@ -98,6 +124,33 @@
 </output>
 <fault name="RoomTypeNotFoundException">
 <soap:fault name="RoomTypeNotFoundException" use="literal"/>
+</fault>
+</operation>
+<operation name="getRateForOnlineBooking">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="RoomRateNotFoundException">
+<soap:fault name="RoomRateNotFoundException" use="literal"/>
+</fault>
+</operation>
+<operation name="getAllBookingsByPartnerId">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="BookingNotFoundException">
+<soap:fault name="BookingNotFoundException" use="literal"/>
+</fault>
+<fault name="EntityInstanceMissingInCollectionException">
+<soap:fault name="EntityInstanceMissingInCollectionException" use="literal"/>
 </fault>
 </operation>
 <operation name="createNewBookingWithPartner">
@@ -119,33 +172,6 @@
 </fault>
 <fault name="BookingNotFoundException">
 <soap:fault name="BookingNotFoundException" use="literal"/>
-</fault>
-</operation>
-<operation name="getAllBookingsByPartnerId">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-<fault name="BookingNotFoundException">
-<soap:fault name="BookingNotFoundException" use="literal"/>
-</fault>
-<fault name="EntityInstanceMissingInCollectionException">
-<soap:fault name="EntityInstanceMissingInCollectionException" use="literal"/>
-</fault>
-</operation>
-<operation name="doLogin">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-<fault name="LoginCredentialsInvalidException">
-<soap:fault name="LoginCredentialsInvalidException" use="literal"/>
 </fault>
 </operation>
 <operation name="walkInSearchRoom">

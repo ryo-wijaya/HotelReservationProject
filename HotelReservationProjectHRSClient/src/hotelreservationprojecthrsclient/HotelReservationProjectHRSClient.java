@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import util.enumeration.BookingExceptionType;
 import ws.client.Booking;
 import ws.client.BookingExceptionType;
 import ws.client.BookingNotFoundException;
@@ -251,7 +250,7 @@ public class HotelReservationProjectHRSClient {
             }
 
             Booking booking = new Booking();
-            booking.setBookingExceptionType(BookingExceptionType.NONE);
+            booking.setBookingExceptionType(ws.client.BookingExceptionType.NONE);
             booking.setPreBooking(Boolean.TRUE);
             booking.setCheckInDate(null);
             booking.setCheckOutDate(null);
