@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.Port;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -311,7 +312,7 @@ public class HotelReservationProjectHRSClient {
             Booking availableBooking = searchRoom();
             RoomType roomType = availableBooking.getRoomType();
             checkIn = availableBooking.getCheckInDate();
-            checkOut = availableBooking.getCheckInDate();
+            checkOut = availableBooking.getCheckOutDate();
             Date checkInDate = checkIn.toGregorianCalendar().getTime();
             Date checkOutDate = checkOut.toGregorianCalendar().getTime();
             Integer numOfRoom = availableBooking.getNumberOfRooms();
@@ -322,63 +323,81 @@ public class HotelReservationProjectHRSClient {
             booking.setBookingExceptionType(ws.client.BookingExceptionType.NONE);
             booking.setPreBooking(Boolean.TRUE);
             port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
-        } catch (BookingNotFoundException_Exception | EntityInstanceExistsInCollectionException_Exception | NoPartnersFoundException_Exception | RoomTypeNotFoundException_Exception ex) {
-            Logger.getLogger(HotelReservationProjectHRSClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("What is todays date? (dd/mm/yyyy)> ");
+            Date cDate = inputDateFormat.parse(sc.nextLine().trim());
+            System.out.println("What time is the reservation made");
+            Double rtime = sc.nextDouble();
+            if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
+                port.findARoomAndAddToIt(booking.getBookingId());
+            }
+            System.out.println("Hotel room(s) successfully reserved!");
+        } catch (BookingNotFoundException_Exception | EntityInstanceExistsInCollectionException_Exception | NoPartnersFoundException_Exception | RoomTypeNotFoundException_Exception | ParseException | RoomNotFoundException_Exception ex) {
+            System.out.println("ERROR!");
         }
     }
 
     private static void viewReservationDetails() {
-        //maybe use the bean to get bookings for partner so its updated
-
-        Scanner sc = new Scanner(System.in);
-        Long bookingId;
-        System.out.println("\nViewing my reservation details!");
-        System.out.println("-------------------------------\n");
-        List<Booking> bookings = currentPartner.getBookings();
-
-        System.out.print("Enter a Booking ID>");
-        if (bookings.isEmpty()) {
-            System.out.print("No existing reservations!\n");
-            return;
-        }
-        while (true) {
-            try {
-                bookingId = Long.parseLong(sc.nextLine().trim());
-                break;
-            } catch (NumberFormatException ex) {
-                System.out.println("Please input a valid ID format");
+        try {
+            //maybe use the bean to get bookings for partner so its updated
+            WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
+            WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
+            
+            Scanner sc = new Scanner(System.in);
+            Long bookingId;
+            System.out.println("\nViewing my reservation details!");
+            System.out.println("-------------------------------\n");
+            List<Booking> bookings = port.retrievePartnerByPartnerId(currentPartner.getPartnerId()).getBookings();
+            
+            System.out.print("Enter a Booking ID>");
+            if (bookings.isEmpty()) {
+                System.out.print("No existing reservations!\n");
+                return;
             }
-        }
-        for (Booking booking : bookings) {
-            if (Objects.equals(booking.getBookingId(), bookingId)) {
-                System.out.println("Booking Id: " + booking.getBookingId());
-                System.out.println("Check In Date: " + booking.getCheckInDate());
-                System.out.println("Check Out Date: " + booking.getCheckOutDate());
-                System.out.println("Room Type: " + booking.getRoomType());
-                System.out.println("Number of rooms: " + booking.getNumberOfRooms());
+            while (true) {
+                try {
+                    bookingId = Long.parseLong(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    System.out.println("Please input a valid ID format");
+                }
             }
+            for (Booking booking : bookings) {
+                if (Objects.equals(booking.getBookingId(), bookingId)) {
+                    System.out.println("Booking Id: " + booking.getBookingId());
+                    System.out.println("Check In Date: " + booking.getCheckInDate());
+                    System.out.println("Check Out Date: " + booking.getCheckOutDate());
+                    System.out.println("Room Type: " + booking.getRoomType());
+                    System.out.println("Number of rooms: " + booking.getNumberOfRooms());
+                }
+            }
+        } catch (NoPartnersFoundException_Exception ex) {
+            System.out.println("partner not found!/n");
         }
     }
 
     private static void viewAllPartnerReservation() {
-        //instantiating web service _service class and assigning port
-        WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
-        WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
-
-        System.out.println("\nViewing all my reservations!");
-        System.out.println("----------------------------\n");
-        List<Booking> bookings = currentPartner.getBookings();
-        if (bookings.isEmpty()) {
-            System.out.print("No existing reservations!\n");
-            return;
-        }
-        for (Booking b : bookings) {
-            System.out.println("Booking ID: " + b.getBookingId());
-            System.out.println("Start Date: " + b.getCheckInDate());
-            System.out.println("End Date: " + b.getCheckOutDate());
-            System.out.println("Room Type: " + b.getRoomType());
-            System.out.println("Number of rooms: " + b.getNumberOfRooms());
-            System.out.println("");
+        try {
+            //instantiating web service _service class and assigning port
+            WebServiceSessionBean_Service service = new WebServiceSessionBean_Service();
+            WebServiceSessionBean port = service.getWebServiceSessionBeanPort();
+            
+            System.out.println("\nViewing all my reservations!");
+            System.out.println("----------------------------\n");
+            List<Booking> bookings = port.retrievePartnerByPartnerId(currentPartner.getPartnerId()).getBookings();
+            if(bookings.isEmpty()) {
+                System.out.print("No existing reservations!\n");
+                return;
+            }
+            for (Booking b : bookings) {
+                System.out.println("Booking ID: " + b.getBookingId());
+                System.out.println("Start Date: " + b.getCheckInDate());
+                System.out.println("End Date: " + b.getCheckOutDate());
+                System.out.println("Room Type: " + b.getRoomType());
+                System.out.println("Number of rooms: " + b.getNumberOfRooms());
+                System.out.println("");
+            }
+        } catch (NoPartnersFoundException_Exception ex) {
+            System.out.println("partner not found!/n");
         }
 
     }
