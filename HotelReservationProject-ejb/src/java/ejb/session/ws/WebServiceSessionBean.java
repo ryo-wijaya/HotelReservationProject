@@ -9,13 +9,20 @@ import ejb.session.stateless.BookingSessionBeanLocal;
 import ejb.session.stateless.PartnerSessionBeanLocal;
 import ejb.session.stateless.RoomSessionBeanLocal;
 import ejb.session.stateless.RoomTypeSessionBeanLocal;
+import entity.Booking;
 import entity.Partner;
+import entity.RoomType;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import util.exceptions.LoginCredentialsInvalidException;
+import util.exceptions.RoomNotFoundException;
 
 /**
  *
@@ -33,6 +40,9 @@ public class WebServiceSessionBean {
 
     @EJB
     private PartnerSessionBeanLocal partnerSessionBean;
+    
+    @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
+    private EntityManager em;
 
     @EJB
     private BookingSessionBeanLocal bookingSessionBean;
@@ -43,8 +53,19 @@ public class WebServiceSessionBean {
      * This is a sample web service operation
      */
     @WebMethod(operationName = "doLogin")
-    public Partner doLogin(@WebParam String username, @WebParam String password) throws LoginCredentialsInvalidException {
-        return partnerSessionBean.partnerLogin(username, password);
+    public Partner doLogin(@WebParam(name = "username") String username, @WebParam(name = "password") String password) throws LoginCredentialsInvalidException {
+        Partner partner = partnerSessionBean.partnerLogin(username, password);
+        em.detach(partner);
+        List<Booking> bookings = partner.getBookings();
+        for(Booking booking : bookings) {
+            em.detach(booking);
+            booking.setPartner(null);
+        }
+        return partner;
     }
     
+    @WebMethod(operationName = "walkInSearchRoom")
+    public List<RoomType> walkInSearchRoom(@WebParam(name = "startDate") Date startDate, @WebParam(name = "endDate") Date endDate) throws LoginCredentialsInvalidException, RoomNotFoundException {
+        return roomSessionBean.walkInSearchRoom(startDate, endDate);
+    }
 }
