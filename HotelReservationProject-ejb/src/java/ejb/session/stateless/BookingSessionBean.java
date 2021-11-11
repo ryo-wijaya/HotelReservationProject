@@ -266,7 +266,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     @Override
     public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.bookingExceptionType = :inBookingExceptionType");
-        query.setParameter("inPreBooking", BookingExceptionType.TYPE1);
+        query.setParameter("inPreBookingExceptionType", BookingExceptionType.TYPE1);
         List<Booking> bookings = query.getResultList();
         if (!bookings.isEmpty()) {
             for (Booking b : bookings) {
@@ -284,7 +284,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     @Override
     public List<Booking> retrieveTypeTwoBookings() throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.bookingExceptionType = :inBookingExceptionType");
-        query.setParameter("inPreBooking", BookingExceptionType.TYPE2);
+        query.setParameter("inPreBookingExceptionType", BookingExceptionType.TYPE2);
         List<Booking> bookings = query.getResultList();
         if (!bookings.isEmpty()) {
             for (Booking b : bookings) {

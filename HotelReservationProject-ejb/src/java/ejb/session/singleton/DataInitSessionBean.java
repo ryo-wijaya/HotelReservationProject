@@ -82,8 +82,9 @@ public class DataInitSessionBean {
         employeeSessionBeanLocal.createNewEmployee(employee);
         
         
-        
+        /*
         try{
+            
             RoomType roomType = new RoomType("Grand Suite", "Grand Suite", "GRAND", 3, 6);
             roomType.setNextHigherRoomType("None");
             em.persist(roomType);
@@ -120,5 +121,6 @@ public class DataInitSessionBean {
         }
         
         System.out.println("Successfully deployed");
+*/
     }
 }
