@@ -55,6 +55,14 @@ public class RoomType implements Serializable {
         enabled = true;
         roomInventory = 0;
     }
+    
+    public RoomType(String roomName, Integer roomInventory) {
+        listOfRoomRates = new ArrayList<>();
+        amenities = new ArrayList<>();
+        enabled = true;
+        roomInventory = roomInventory;
+        roomName = roomName;
+    }
 
     public RoomType(String roomName, String description, String roomSize, Integer beds, Integer capacity) {
         this();
