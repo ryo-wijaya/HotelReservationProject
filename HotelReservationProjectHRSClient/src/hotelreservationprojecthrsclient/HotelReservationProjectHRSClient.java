@@ -47,12 +47,13 @@ import ws.client.WebServiceSessionBean_Service;
  */
 public class HotelReservationProjectHRSClient {
 
-    private static Partner currentPartner;
+    //private static Partner currentPartner;
 
     public static void main(String[] args) {
-        runMainMenu();
+        //runMainMenu();
     }
 
+    
     public static void runMainMenu() {
 
         Scanner sc = new Scanner(System.in);
@@ -244,10 +245,10 @@ public class HotelReservationProjectHRSClient {
             //Iterating over each Room Type and Inventory mapping
             //Iterating over each Room Type and Inventory mapping
             for (Map.Entry<Long, Integer> pair : map.entrySet()) {
-                roomType = roomTypeSessionBeanRemote.getRoomTypeById(pair.getKey());
+                roomType = port.getRoomTypeById(pair.getKey());
                 if (pair.getValue() >= numOfRooms) {
                     System.out.println("Room Type: " + roomType.getRoomName() + " | " + "Number Of Rooms Left: " + pair.getValue() + " | price for the number of days: " 
-                        + bookingSessionBeanRemote.getRateForOnlineBooking(roomType.getRoomTypeId(), startDateString, endDateString, numOfRooms));
+                        + port.getRateForOnlineBooking(roomType.getRoomTypeId(), startDateString, endDateString, numOfRooms));
                 }
             }
 
@@ -391,4 +392,5 @@ public class HotelReservationProjectHRSClient {
         }
 
     }
+
 }

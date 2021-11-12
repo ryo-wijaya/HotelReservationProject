@@ -105,10 +105,10 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         //add bean validators
         em.merge(room);
     }
-    
+
     public void updateRoomStatus(long roomId) throws RoomNotFoundException {
         Room room = getRoomById(roomId);
-        if(room.getRoomStatus() == false) {
+        if (room.getRoomStatus() == false) {
             room.setRoomStatus(Boolean.TRUE);
         } else {
             room.setRoomStatus(Boolean.FALSE);
@@ -216,7 +216,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         // Mapping from Room Type ID to number of free rooms left
         // Remember to do the check in the clients
         HashMap<Long, Integer> map = new HashMap<>();
-        
+
         try {
             //pre-processing step
             List<RoomType> roomTypes = roomTypeSessionBeanLocal.retrieveRoomTypes();
@@ -224,25 +224,39 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 //The map now contains every single Room Type mapped to its current inventory
                 map.put(rt.getRoomTypeId(), rt.getRoomInventory());
             }
-            
+
             List<Booking> bookings = bookingSessionBeanLocal.retrieveBookings();
             for (Booking b : bookings) {
-                System.out.println("Booking id: "+ b.getBookingId());
+                System.out.println("Booking id: " + b.getBookingId());
                 // If the search date interval clashes with the booking in question
                 if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) {
+
                     // Updating the number of free rooms for that specific Room Type
-                    System.out.println("Booking id: "+ b.getBookingId() + " Booking number of rooms: " + b.getNumberOfRooms());
+                    System.out.println("Booking id: " + b.getBookingId() + " Booking number of rooms: " + b.getNumberOfRooms());
                     Long roomTypeToUpdate = b.getRoomType().getRoomTypeId();
                     map.replace(roomTypeToUpdate, map.get(roomTypeToUpdate) - b.getNumberOfRooms());
                 }
             }
+
+            //THIS PART IS ADDED
+            //subtracting all rooms where status == true (THIS MEANS THE ROOM STATUS IS NOT FREE)
+            List<Room> allRooms = this.retrieveRooms();
+            for (Room r : allRooms) {
+                Long roomTypeIdOfRoom = r.getRoomType().getRoomTypeId();
+
+                if (r.getRoomStatus()) {
+                    if (map.get(roomTypeIdOfRoom) > 0) {
+                        map.replace(roomTypeIdOfRoom, map.get(roomTypeIdOfRoom) - 1);
+                    }
+                }
+            }
+
         } catch (BookingNotFoundException ex) {
             return map;
-        }
-        catch (RoomTypeNotFoundException ex) {
+        } catch (RoomTypeNotFoundException | RoomNotFoundException ex) {
             throw new RoomTypeNotFoundException();
         }
-        
+
         return map;
     }
 
@@ -276,7 +290,15 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
         try {
             for (Room r : rooms) {
-                thisRoomWillBeFree = true;
+                
+                //ADDED THE BOTTOM 5 LINES TO CHECK ROOM STATUS
+                if (r.getRoomStatus()) {
+                    thisRoomWillBeFree = false;
+                } else {
+                    thisRoomWillBeFree = true;
+                }
+                
+                
                 for (Booking b : r.getBookings()) {
                     if (startDate.compareTo(b.getCheckOutDate()) < 0) { //if startDate is before a room's booking's checkout date (coz if its after we good to go)
                         if (endDate.compareTo(b.getCheckInDate()) > 0) { //if endDate stop at a room's booking's checkin date
@@ -312,7 +334,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 }
             }
 
-            if (booking.getNumberOfUnallocatedRooms()!= 0 && booking.getBookingExceptionType() == BookingExceptionType.NONE) {
+            if (booking.getNumberOfUnallocatedRooms() != 0 && booking.getBookingExceptionType() == BookingExceptionType.NONE) {
                 this.findARoomAndAddToIt(bookingId);
             }
 
