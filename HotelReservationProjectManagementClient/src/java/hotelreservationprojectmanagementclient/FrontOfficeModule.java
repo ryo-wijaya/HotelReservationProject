@@ -169,7 +169,8 @@ public class FrontOfficeModule {
             System.out.println("\nYou are now reserving a Room for a walk-in customer");
             System.out.println("---------------------------------------------------\n");
             Booking availableBooking = walkInSearchRoom(sc);
-            RoomType roomType = availableBooking.getRoomType();
+            System.out.println("Please enter a room type name> ");
+            RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(sc.nextLine().trim());
             Date checkIn = availableBooking.getCheckInDate();
             Date checkOut = availableBooking.getCheckOutDate();
             Integer numOfRoom = availableBooking.getNumberOfRooms();

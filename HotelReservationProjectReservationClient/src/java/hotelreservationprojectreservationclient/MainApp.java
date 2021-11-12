@@ -256,7 +256,8 @@ public class MainApp {
             System.out.println("\nYou are now reserving a Hotel Room");
             System.out.println("------------------------------------\n");
             Booking availableBooking = searchHotelRoom();
-            RoomType roomType = availableBooking.getRoomType();
+            System.out.println("Please enter a room type name> ");
+            RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(sc.nextLine().trim());
             Date checkIn = availableBooking.getCheckInDate();
             Date checkOut = availableBooking.getCheckOutDate();
             Integer numOfRoom = availableBooking.getNumberOfRooms();
