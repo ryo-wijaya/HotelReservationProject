@@ -137,6 +137,7 @@ public class FrontOfficeModule {
                 }
             }
             
+            
             // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
             HashMap<Long, Integer> map = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
 

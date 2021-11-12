@@ -46,6 +46,7 @@ public class Booking implements Serializable {
     private Date checkOutDate;
     private Boolean preBooking;
     private Integer numberOfRooms;
+    private Integer numberOfUnallocatedRooms;
     private BookingExceptionType bookingExceptionType;
     
     // many to one relationship with customer
@@ -76,10 +77,19 @@ public class Booking implements Serializable {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.numberOfRooms = numberOfRooms;
+        this.numberOfUnallocatedRooms = numberOfRooms;
     }
 
     public BookingExceptionType getBookingExceptionType() {
         return bookingExceptionType;
+    }
+
+    public Integer getNumberOfUnallocatedRooms() {
+        return numberOfUnallocatedRooms;
+    }
+
+    public void setNumberOfUnallocatedRooms(Integer numberOfUnallocatedRooms) {
+        this.numberOfUnallocatedRooms = numberOfUnallocatedRooms;
     }
 
     public void setBookingExceptionType(BookingExceptionType bookingExceptionType) {

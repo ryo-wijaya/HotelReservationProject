@@ -287,7 +287,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 if (thisRoomWillBeFree) {
                     r.addBookings(booking);
                     booking.addRoom(r);
-                    booking.setNumberOfRooms(booking.getNumberOfRooms() - 1);
+                    booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
                     break;
                 }
             } //thisRoomWillBeFree will end up TRUE if a booking was made, and FALSE if no available rooms exist
@@ -312,7 +312,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 }
             }
 
-            if (booking.getNumberOfRooms() != 0 && booking.getBookingExceptionType() == BookingExceptionType.NONE) {
+            if (booking.getNumberOfUnallocatedRooms()!= 0 && booking.getBookingExceptionType() == BookingExceptionType.NONE) {
                 this.findARoomAndAddToIt(bookingId);
             }
 
