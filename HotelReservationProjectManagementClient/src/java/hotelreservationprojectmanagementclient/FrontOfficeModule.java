@@ -69,7 +69,7 @@ public class FrontOfficeModule {
             System.out.println("\n-You are currently logged in as a Guest Relation Officer-");
             System.out.println("---------------------------------------------------------\n");
             System.out.println("1. Walk-in Search Room");
-            System.out.println("2. Walk-in Reserver Room");
+            System.out.println("2. Walk-in Reserve Room");
             System.out.println("3. Check-in Guest");
             System.out.println("4. Check-out Guest");
             System.out.println("5. Logout");
