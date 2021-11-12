@@ -299,7 +299,8 @@ public class HotelReservationProjectHRSClient {
             System.out.println("\nYou are now reserving a Hotel Room");
             System.out.println("------------------------------------\n");
             Booking availableBooking = searchRoom();
-            RoomType roomType = availableBooking.getRoomType();
+            System.out.println("Please enter a room type name> ");
+            RoomType roomType = port.getRoomTypeByName(sc.nextLine().trim());
             checkIn = availableBooking.getCheckInDate();
             checkOut = availableBooking.getCheckOutDate();
             Date checkInDate = checkIn.toGregorianCalendar().getTime();
