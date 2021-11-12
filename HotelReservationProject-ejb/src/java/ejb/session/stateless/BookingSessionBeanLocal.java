@@ -46,6 +46,6 @@ public interface BookingSessionBeanLocal {
 
     public long createNewBookingWithPartner(Booking booking, Long roomTypeId, Long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException;
     
-    public Double getRateForOnlineBooking(Booking booking) throws RoomRateNotFoundException;
+    public Double getRateForOnlineBooking(Long roomTypeId, Date startDate, Date endDate, Integer numOfRoom) throws RoomRateNotFoundException;
     
 }

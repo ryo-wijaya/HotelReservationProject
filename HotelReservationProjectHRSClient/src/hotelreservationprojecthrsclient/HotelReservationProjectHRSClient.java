@@ -227,22 +227,8 @@ public class HotelReservationProjectHRSClient {
                 return null;
             }
 
-           // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
-            HashMap<Long, Integer> map = port.walkInSearchRoom(start, end);
-
-            //Iterating over each Room Type and Inventory mapping
-            for (Map.Entry<Long, Integer> pair : map.entrySet()) {
-                System.out.println("Room Type: " + port.getRoomTypeById(pair.getKey()).getRoomName() + " | "
-                    + "Number Of Rooms Left: " + pair.getValue());
-            }
-
-            System.out.println("\nInput a Room Type Name> ");
-            roomTypeName = sc.nextLine().trim();
-            RoomType realRoomType = port.getRoomTypeByName(roomTypeName);
-
-            System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
-
             while (numOfRooms != 404) {
+                System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
                 try {
                     numOfRooms = Integer.parseInt(sc.nextLine().trim());
                     break;
@@ -251,9 +237,18 @@ public class HotelReservationProjectHRSClient {
                     System.out.println("Enter a valid number!");
                 }
             }
+            
+           // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
+            HashMap<Long, Integer> map = port.walkInSearchRoom(start, end);
 
-            if (numOfRooms > map.get(realRoomType.getRoomTypeId())) { //checking if the user chose a room number not exceeding the available room type
-                return null;
+            //Iterating over each Room Type and Inventory mapping
+            //Iterating over each Room Type and Inventory mapping
+            for (Map.Entry<Long, Integer> pair : map.entrySet()) {
+                roomType = roomTypeSessionBeanRemote.getRoomTypeById(pair.getKey());
+                if (pair.getValue() >= numOfRooms) {
+                    System.out.println("Room Type: " + roomType.getRoomName() + " | " + "Number Of Rooms Left: " + pair.getValue() + " | price for the number of days: " 
+                        + bookingSessionBeanRemote.getRateForOnlineBooking(roomType.getRoomTypeId(), startDateString, endDateString, numOfRooms));
+                }
             }
 
             Booking booking = new Booking();
@@ -264,11 +259,7 @@ public class HotelReservationProjectHRSClient {
             booking.setNumberOfRooms(numOfRooms);
             booking.setCheckInDate(start);
             booking.setCheckOutDate(end);
-            booking.setRoomType(realRoomType);
 
-            Double price = port.getRateForOnlineBooking(booking);  //use web service bean
-
-            System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;
 
         } catch (DatatypeConfigurationException ex) {

@@ -204,16 +204,11 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     }
 
     @Override
-    public Double getRateForOnlineBooking(Booking booking) throws RoomRateNotFoundException {
+    public Double getRateForOnlineBooking(Long roomTypeId, Date startDate, Date endDate, Integer numOfRoom) throws RoomRateNotFoundException {
         Double price = 0.0;
         try {
-            System.out.println("booking.getRoomType(): " + booking.getRoomType());
-            System.out.println("roomtype's ID: " + booking.getRoomType().getRoomTypeId());
-            List<RoomRate> roomRates = roomRateSessionBeanLocal.getRoomRateByRoomType(booking.getRoomType().getRoomTypeId());
-            RoomType roomType = booking.getRoomType();
-            Integer numOfRooms = booking.getNumberOfRooms();
-            Date startDate = booking.getCheckInDate();
-            Date endDate = booking.getCheckOutDate();
+            RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);
+            List<RoomRate> roomRates = roomRateSessionBeanLocal.getRoomRateByRoomType(roomType.getRoomTypeId());
             RoomRate normalRate = null;
 
             while (startDate.before(endDate)) {
@@ -232,13 +227,13 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
                 }
 
                 if (peakRate != null) {
-                    price = price + (peakRate.getPrice() * booking.getNumberOfRooms());
+                    price = price + (peakRate.getPrice() * numOfRoom);
                 } else if (promotionRate != null) {
-                    price = price + (promotionRate.getPrice() * booking.getNumberOfRooms());
+                    price = price + (promotionRate.getPrice() * numOfRoom);
                 } else {
                     //No peak or promotion rate
-                    normalRate = roomRateSessionBeanLocal.getNormalRateForRoomType(booking.getRoomType().getRoomTypeId());
-                    price = price + (normalRate.getPrice() * booking.getNumberOfRooms());
+                    normalRate = roomRateSessionBeanLocal.getNormalRateForRoomType(roomTypeId);
+                    price = price + (normalRate.getPrice() * numOfRoom);
                 }
 
                 //increment date by 1

@@ -114,8 +114,9 @@ public class WebServiceSessionBean {
     }
 
     @WebMethod(operationName = "getRateForOnlineBooking")
-    public Double getRateForOnlineBooking(@WebParam(name = "booking") Booking booking) throws RoomRateNotFoundException {
-        return bookingSessionBean.getRateForOnlineBooking(booking);
+    public Double getRateForOnlineBooking(@WebParam(name = "roomTypeId") Long roomTypeId, @WebParam(name = "startDate") Date startDate, 
+            @WebParam(name = "endDate") Date endDate, @WebParam(name = "numOfRooms") Integer numOfRooms) throws RoomRateNotFoundException {
+        return bookingSessionBean.getRateForOnlineBooking(roomTypeId, startDate, endDate, numOfRooms);
     }
     
     @WebMethod(operationName = "retrievePartnerByPartnerId")
@@ -134,5 +135,4 @@ public class WebServiceSessionBean {
     public void findARoomAndAddToIt(@WebParam(name = "bookingId") long bookingId) throws RoomNotFoundException, BookingNotFoundException {
         roomSessionBean.findARoomAndAddToIt(bookingId);
     }
-    
 }
