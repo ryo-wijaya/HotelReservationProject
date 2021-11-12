@@ -171,11 +171,11 @@ public class FrontOfficeModule {
             Booking availableBooking = walkInSearchRoom(sc);
             System.out.print("Please enter a room type name> ");
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(sc.nextLine().trim());
-            Date checkIn = availableBooking.getCheckInDate();
-            Date checkOut = availableBooking.getCheckOutDate();
-            Integer numOfRoom = availableBooking.getNumberOfRooms();
-            Booking booking = new Booking(numOfRoom, checkIn, checkOut);
-            long bookingId = bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
+            //Date checkIn = availableBooking.getCheckInDate();
+            //Date checkOut = availableBooking.getCheckOutDate();
+            //Integer numOfRoom = availableBooking.getNumberOfRooms();
+            //Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+            long bookingId = bookingSessionBeanRemote.createNewBooking(availableBooking, roomType.getRoomTypeId());
             System.out.print("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
             Double rtime = 0.0;
@@ -189,7 +189,7 @@ public class FrontOfficeModule {
                     System.out.println("Enter a valid number!");
                 }
             }
-            if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
+            if(availableBooking.getCheckInDate().equals(cDate) && rtime >= 2){
                 roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
             }
             
