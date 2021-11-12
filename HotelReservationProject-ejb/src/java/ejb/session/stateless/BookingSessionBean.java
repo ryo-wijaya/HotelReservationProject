@@ -173,10 +173,11 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     }
 
     @Override
-    public Double getPublishRatePriceOfBooking(Booking booking) throws RoomRateNotFoundException {
+    public Double getPublishRatePriceOfBooking(Long roomTypeId, Date startDate, Date endDate, Integer numOfRooms) throws RoomRateNotFoundException {
+        
+        try {
         Double price = 0.0;
-        RoomType roomType = booking.getRoomType();
-        Integer numOfRooms = booking.getNumberOfRooms();
+        RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);
         RoomRate publishedRate = null;
 
         for (RoomRate rr : roomType.getListOfRoomRates()) {
@@ -189,11 +190,16 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
             throw new RoomRateNotFoundException();
         }
         
-        long diff = booking.getCheckOutDate().getTime() -  booking.getCheckInDate().getTime();
+        long diff = endDate.getTime() -  startDate.getTime();
         TimeUnit time = TimeUnit.DAYS; 
         long diffrence = time.convert(diff, TimeUnit.MILLISECONDS);
         price = publishedRate.getPrice() * numOfRooms * diffrence;
         return price;
+        
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("This exception should not execute");
+            throw new RoomRateNotFoundException();
+        }
     }
 
     @Override

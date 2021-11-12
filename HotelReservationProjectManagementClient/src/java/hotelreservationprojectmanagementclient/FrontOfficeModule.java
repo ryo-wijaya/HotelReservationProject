@@ -131,15 +131,9 @@ public class FrontOfficeModule {
 
             //Iterating over each Room Type and Inventory mapping
             for (Map.Entry<Long, Integer> pair : map.entrySet()) {
-                System.out.println("Room Type: " + roomTypeSessionBeanRemote.getRoomTypeById(pair.getKey()).getRoomName() + " | "
-                        + "Number Of Rooms Left: " + pair.getValue());
-            }
-
-            System.out.println("\nInput a Room Type Name> ");
-            roomTypeName = sc.nextLine().trim();
-            RoomType realRoomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
-            if("None".equals(roomTypeName)) {
-                return null;
+                roomType = roomTypeSessionBeanRemote.getRoomTypeById(pair.getKey());
+                System.out.println("Room Type: " + roomType.getRoomName() + " | " + "Number Of Rooms Left: " + pair.getValue() + " | price for the number of days: " 
+                        + bookingSessionBeanRemote.getPublishRatePriceOfBooking(roomType.getRoomTypeId(), startDateString, endDateString, numOfRooms));
             }
 
             System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
@@ -154,16 +148,8 @@ public class FrontOfficeModule {
                 }
             }
 
-            if (numOfRooms > map.get(realRoomType.getRoomTypeId())) { //checking if the user chose a room number not exceeding the available room type
-                return null;
-            }
-
             Booking booking = new Booking(numOfRooms, startDateString, endDateString);
-            booking.setRoomType(realRoomType);
 
-            Double price = bookingSessionBeanRemote.getPublishRatePriceOfBooking(booking);
-
-            System.out.println("\n Price for a booking like this would be: " + price + "\n");
             return booking;
             
         } catch (ParseException ex) {

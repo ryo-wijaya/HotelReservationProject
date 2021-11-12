@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Booking;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import util.exceptions.BookingNotFoundException;
@@ -33,7 +34,7 @@ public interface BookingSessionBeanLocal {
 
     public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException;
 
-    public Double getPublishRatePriceOfBooking(Booking booking) throws RoomRateNotFoundException;
+    public Double getPublishRatePriceOfBooking(Long roomTypeId, Date startDate, Date endDate, Integer numOfRooms) throws RoomRateNotFoundException;
 
     public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException;
 
