@@ -56,6 +56,7 @@ public class Booking implements Serializable {
     private Partner partner;
     
     @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private RoomType roomType;
 
     // Many to many relationship with rooms

@@ -302,7 +302,7 @@ public class HotelOperationModule {
                 lowerRoomType.setNextHigherRoomType(newRoomType.getRoomName());
                 roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
             } catch (RoomTypeNotFoundException ex) {
-                System.out.println("for tetsing! DELETE LATER Lower Room Type is not found!");
+                //this should not trigger, placeholder exception
             }
 
             //adding amenities
