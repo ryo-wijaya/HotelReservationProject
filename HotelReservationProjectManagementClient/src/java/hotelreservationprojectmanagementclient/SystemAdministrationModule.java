@@ -38,7 +38,7 @@ public class SystemAdministrationModule {
     }
 
     public void runMainMenu() {
-       Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         int choice;
         boolean logout = false;
         while (!logout) {
@@ -77,7 +77,7 @@ public class SystemAdministrationModule {
                 default:
                     System.out.println("Please input a valid choice!");
             }
-        } 
+        }
     }
 
     public void createNewEmployee() {
@@ -98,41 +98,33 @@ public class SystemAdministrationModule {
         System.out.print("Enter a password>");
         password = sc.next().trim();
 
-        while (!roleSettled) {
-            int roleChoice;
-
+        int roleChoice = 0;
+        
+        while (roleChoice != 404) {
             for (int i = 0; i < EmployeeRole.values().length; i++) {
                 System.out.println((i + 1) + ". " + EmployeeRole.values()[i]);
             }
-
             System.out.print("\nEnter a Role (integer), these are your choices>");
             try {
                 roleChoice = Integer.parseInt(sc.nextLine().trim());
             } catch (NumberFormatException ex) {
                 roleChoice = 404;
             }
-
-            switch (roleChoice) {
-                case 1:
-                    role = EmployeeRole.SYSTEMADMINISTRATOR;
-                    roleSettled = true;
-                    break;
-                case 2:
-                    role = EmployeeRole.OPERATIONMANAGER;
-                    roleSettled = true;
-                    break;
-                case 3:
-                    role = EmployeeRole.SALESMANAGER;
-                    roleSettled = true;
-                    break;
-                case 4:
-                    role = EmployeeRole.GUESTRELATIONSOFFICER;
-                    roleSettled = true;
-                    break;
-                default:
-                    System.out.println("Please enter a valid choice!");
-            }
         }
+
+        switch (roleChoice) {
+            case 1:
+                role = EmployeeRole.SYSTEMADMINISTRATOR;
+            case 2:
+                role = EmployeeRole.OPERATIONMANAGER;
+            case 3:
+                role = EmployeeRole.SALESMANAGER;
+            case 4:
+                role = EmployeeRole.GUESTRELATIONSOFFICER;
+            default:
+                System.out.println("Please enter a valid choice!");
+        }
+
         Employee newEmployee = new Employee(name, username, password, role);
         employeeSessionBeanRemote.createNewEmployee(newEmployee);
         System.out.println("Employee successfully created!");
@@ -168,32 +160,28 @@ public class SystemAdministrationModule {
         System.out.print("Enter a password>");
         password = sc.next().trim();
 
-        while (!roleSettled) {
-            int roleChoice;
+        int roleChoice = 0;
 
+        while (roleChoice != 404) {
             for (int i = 0; i < PartnerType.values().length; i++) {
                 System.out.println((i + 1) + ". " + PartnerType.values()[i]);
             }
-
             System.out.print("Enter a partner type (integer), these are your choices>");
             try {
                 roleChoice = Integer.parseInt(sc.nextLine().trim());
+                break;
             } catch (NumberFormatException ex) {
                 roleChoice = 404;
             }
+        }
 
-            switch (roleChoice) {
-                case 1:
-                    type = PartnerType.PARTNEREMPLOYEE;
-                    roleSettled = true;
-                    break;
-                case 2:
-                    type = PartnerType.PARTNERRESERVATIONMANAGER;
-                    roleSettled = true;
-                    break;
-                default:
-                    System.out.println("Please enter a valid choice!");
-            }
+        switch (roleChoice) {
+            case 1:
+                type = PartnerType.PARTNEREMPLOYEE;
+            case 2:
+                type = PartnerType.PARTNERRESERVATIONMANAGER;
+            default:
+                System.out.println("Please enter a valid choice!");
         }
 
         Partner partner = new Partner(name, username, password, type);
