@@ -258,11 +258,11 @@ public class MainApp {
             Booking availableBooking = searchHotelRoom();
             System.out.print("Please enter a room type name> ");
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(sc.nextLine().trim());
-            Date checkIn = availableBooking.getCheckInDate();
-            Date checkOut = availableBooking.getCheckOutDate();
-            Integer numOfRoom = availableBooking.getNumberOfRooms();
-            Booking booking = new Booking(numOfRoom, checkIn, checkOut);
-            long bookingId = bookingSessionBeanRemote.createNewBookingWithCustomer(booking, roomType.getRoomTypeId(), currentCustomer.getCustomerId());
+            //Date checkIn = availableBooking.getCheckInDate();
+            //Date checkOut = availableBooking.getCheckOutDate();
+            //Integer numOfRoom = availableBooking.getNumberOfRooms();
+            //Booking booking = new Booking(numOfRoom, checkIn, checkOut);
+            long bookingId = bookingSessionBeanRemote.createNewBookingWithCustomer(availableBooking, roomType.getRoomTypeId(), currentCustomer.getCustomerId());
             System.out.print("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
             Double rtime = 0.0;
@@ -276,7 +276,7 @@ public class MainApp {
                     System.out.println("Enter a valid number!");
                 }
             }
-            if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
+            if(availableBooking.getCheckInDate().equals(cDate) && rtime >= 2){
                 roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
             }
             System.out.println("Hotel room(s) successfully reserved!");

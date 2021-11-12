@@ -299,7 +299,7 @@ public class HotelReservationProjectHRSClient {
             System.out.println("\nYou are now reserving a Hotel Room");
             System.out.println("------------------------------------\n");
             Booking availableBooking = searchRoom();
-            System.out.println("Please enter a room type name> ");
+            System.out.print("Please enter a room type name> ");
             RoomType roomType = port.getRoomTypeByName(sc.nextLine().trim());
             checkIn = availableBooking.getCheckInDate();
             checkOut = availableBooking.getCheckOutDate();
@@ -313,10 +313,19 @@ public class HotelReservationProjectHRSClient {
             booking.setBookingExceptionType(ws.client.BookingExceptionType.NONE);
             booking.setPreBooking(Boolean.TRUE);
             port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
-            System.out.println("What is todays date? (dd/mm/yyyy)> ");
+            System.out.print("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
-            System.out.println("What time is the reservation made");
-            Double rtime = sc.nextDouble();
+            Double rtime = 0.0;
+            while (rtime != 404.0) {
+                System.out.print("What time is the reservation made> ");
+                try {
+                    rtime = Double.parseDouble(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    rtime = 404.0;
+                    System.out.println("Enter a valid number!");
+                }
+            }
             if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
                 port.findARoomAndAddToIt(booking.getBookingId());
             }
