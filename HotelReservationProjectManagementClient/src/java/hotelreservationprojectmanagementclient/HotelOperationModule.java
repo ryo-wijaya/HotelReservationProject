@@ -303,7 +303,7 @@ public class HotelOperationModule {
                 roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
             }
             catch (RoomTypeNotFoundException ex) {
-                System.out.println("Lower Room Type is not found!");
+                System.out.println("for tetsing! DELETE LATER Lower Room Type is not found!");
             }
             
             //adding amenities

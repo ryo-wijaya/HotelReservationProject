@@ -88,34 +88,203 @@ public class DataInitSessionBean {
             RoomType roomType = new RoomType("Grand Suite", "Grand Suite", "GRAND", 3, 6);
             roomType.setNextHigherRoomType("None");
             em.persist(roomType);
+            em.flush();                    
             
             RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 500.00);
             em.persist(publishRoomRate);
+            em.flush();   
             roomType.addToListOfRoomRate(publishRoomRate);
             
             RoomRate normalRoomRate = new RoomRate(NORMALRATE, 250.00);
             em.persist(normalRoomRate);
+            em.flush();   
             roomType.addToListOfRoomRate(normalRoomRate);
             
             Room room = new Room("0105");
             em.persist(room);
+            em.flush();   
             room.setRoomType(roomType);
             
             Room room1 = new Room("0205");
             em.persist(room1);
+            em.flush();   
             room1.setRoomType(roomType);
             
             Room room2 = new Room("0305");
             em.persist(room2);
+            em.flush();   
             room2.setRoomType(roomType);
             
             Room room3 = new Room("0405");
             em.persist(room3);
+            em.flush();   
             room3.setRoomType(roomType);
             
             Room room4 = new Room("0505");
             em.persist(room4);
+            em.flush();   
             room4.setRoomType(roomType);
+            
+            roomType = new RoomType("Junior Suite", "Junior Suite", "JUNIOR", 3, 5);
+            roomType.setNextHigherRoomType("Grand Suite");
+            em.persist(roomType);
+            em.flush();
+            
+            publishRoomRate = new RoomRate(PUBLISHRATE, 400.00);
+            em.persist(publishRoomRate);
+            em.flush();   
+            roomType.addToListOfRoomRate(publishRoomRate);
+            
+            normalRoomRate = new RoomRate(NORMALRATE, 200.00);
+            em.persist(normalRoomRate);
+            em.flush();   
+            roomType.addToListOfRoomRate(normalRoomRate);
+            
+            room = new Room("0104");
+            em.persist(room);
+            em.flush();   
+            room.setRoomType(roomType);
+            
+            room1 = new Room("0204");
+            em.persist(room1);
+            em.flush();   
+            room1.setRoomType(roomType);
+            
+            room2 = new Room("0304");
+            em.persist(room2);
+            em.flush();   
+            room2.setRoomType(roomType);
+            
+            room3 = new Room("0404");
+            em.persist(room3);
+            em.flush();   
+            room3.setRoomType(roomType);
+            
+            room4 = new Room("0504");
+            em.persist(room4);
+            em.flush();   
+            room4.setRoomType(roomType);
+            
+            roomType = new RoomType("Family Room", "Family Room", "FAMILY", 3, 4);
+            roomType.setNextHigherRoomType("Junior Suite");
+            em.persist(roomType);
+            em.flush();
+            
+            publishRoomRate = new RoomRate(PUBLISHRATE, 300.00);
+            em.persist(publishRoomRate);
+            em.flush();   
+            roomType.addToListOfRoomRate(publishRoomRate);
+            
+            normalRoomRate = new RoomRate(NORMALRATE, 150.00);
+            em.persist(normalRoomRate);
+            em.flush();   
+            roomType.addToListOfRoomRate(normalRoomRate);
+            
+            room = new Room("0103");
+            em.persist(room);
+            em.flush();   
+            room.setRoomType(roomType);
+            
+            room1 = new Room("0203");
+            em.persist(room1);
+            em.flush();   
+            room1.setRoomType(roomType);
+            
+            room2 = new Room("0303");
+            em.persist(room2);
+            em.flush();   
+            room2.setRoomType(roomType);
+            
+            room3 = new Room("0403");
+            em.persist(room3);
+            em.flush();   
+            room3.setRoomType(roomType);
+            
+            room4 = new Room("0503");
+            em.persist(room4);
+            em.flush();   
+            room4.setRoomType(roomType);
+            
+            roomType = new RoomType("Premier Room", "Premier Room", "PREMIER", 2, 4);
+            roomType.setNextHigherRoomType("Family Room");
+            em.persist(roomType);
+            em.flush();
+            
+            publishRoomRate = new RoomRate(PUBLISHRATE, 200.00);
+            em.persist(publishRoomRate);
+            em.flush();   
+            roomType.addToListOfRoomRate(publishRoomRate);
+            
+            normalRoomRate = new RoomRate(NORMALRATE, 100.00);
+            em.persist(normalRoomRate);
+            em.flush();   
+            roomType.addToListOfRoomRate(normalRoomRate);
+            
+            room = new Room("0102");
+            em.persist(room);
+            em.flush();   
+            room.setRoomType(roomType);
+            
+            room1 = new Room("0202");
+            em.persist(room1);
+            em.flush();   
+            room1.setRoomType(roomType);
+            
+            room2 = new Room("0302");
+            em.persist(room2);
+            em.flush();   
+            room2.setRoomType(roomType);
+            
+            room3 = new Room("0402");
+            em.persist(room3);
+            em.flush();   
+            room3.setRoomType(roomType);
+            
+            room4 = new Room("0502");
+            em.persist(room4);
+            em.flush();   
+            room4.setRoomType(roomType);
+            
+            roomType = new RoomType("Deluxe Room", "Deluxe Room", "DELUXE", 2, 3);
+            roomType.setNextHigherRoomType("Premier Room");
+            em.persist(roomType);
+            em.flush();
+            
+            publishRoomRate = new RoomRate(PUBLISHRATE, 100.00);
+            em.persist(publishRoomRate);
+            em.flush();   
+            roomType.addToListOfRoomRate(publishRoomRate);
+            
+            normalRoomRate = new RoomRate(NORMALRATE, 50.00);
+            em.persist(normalRoomRate);
+            em.flush();   
+            roomType.addToListOfRoomRate(normalRoomRate);
+            
+            room = new Room("0101");
+            em.persist(room);
+            em.flush();   
+            room.setRoomType(roomType);
+            
+            room1 = new Room("0201");
+            em.persist(room1);
+            em.flush();   
+            room1.setRoomType(roomType);
+            
+            room2 = new Room("0301");
+            em.persist(room2);
+            em.flush();   
+            room2.setRoomType(roomType);
+            
+            room3 = new Room("0401");
+            em.persist(room3);
+            em.flush();   
+            room3.setRoomType(roomType);
+            
+            room4 = new Room("0501");
+            em.persist(room4);
+            em.flush();   
+            room4.setRoomType(roomType);
+            
         } catch (EntityInstanceExistsInCollectionException ex) {
             System.out.println("ERROR");
         }
