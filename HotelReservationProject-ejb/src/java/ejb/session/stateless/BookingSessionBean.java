@@ -65,6 +65,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
             booking.setRoomType(roomType);
             em.persist(booking);
             em.flush();
+            System.out.println("num rooms :" + booking.getNumberOfRooms());
             return booking.getBookingId();
         } else {
             throw new RoomTypeNotFoundException();
