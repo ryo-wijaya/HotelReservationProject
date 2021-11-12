@@ -42,4 +42,6 @@ public interface RoomSessionBeanLocal {
     public List<Room> retrieveRoomsByRoomType(Long roomTypeId) throws RoomNotFoundException;
 
     public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException, BookingNotFoundException;
+
+    public void updateRoomStatus(long roomId) throws RoomNotFoundException;
 }
