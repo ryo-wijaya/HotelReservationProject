@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -187,9 +188,11 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
         if (publishedRate == null) {
             throw new RoomRateNotFoundException();
         }
-
-        price = publishedRate.getPrice() * numOfRooms * ChronoUnit.DAYS.between(LocalDate.parse((CharSequence) booking.getCheckInDate()),
-                LocalDate.parse((CharSequence) booking.getCheckOutDate()));
+        
+        long diff = booking.getCheckOutDate().getTime() -  booking.getCheckInDate().getTime();
+        TimeUnit time = TimeUnit.DAYS; 
+        long diffrence = time.convert(diff, TimeUnit.MILLISECONDS);
+        price = publishedRate.getPrice() * numOfRooms * diffrence;
         return price;
     }
 

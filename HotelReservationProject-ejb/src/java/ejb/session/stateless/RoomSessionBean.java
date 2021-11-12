@@ -225,7 +225,10 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                     map.replace(roomTypeToUpdate, map.get(roomTypeToUpdate) - b.getNumberOfRooms());
                 }
             }
-        } catch (BookingNotFoundException | RoomTypeNotFoundException ex) {
+        } catch (BookingNotFoundException ex) {
+            return map;
+        }
+        catch (RoomTypeNotFoundException ex) {
             throw new RoomTypeNotFoundException();
         }
         

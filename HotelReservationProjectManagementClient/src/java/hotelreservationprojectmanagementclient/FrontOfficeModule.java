@@ -197,7 +197,7 @@ public class FrontOfficeModule {
                 roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
             }
             System.out.println("Hotel room(s) successfully reserved!");
-            System.out.println("Your Boooking Id is " + booking.getBookingId() + "\n");
+            System.out.println("Your Boooking Id is " + bookingId + "\n");
             /*List<Booking> availableRooms = walkInSearchRoom(sc);
             Integer option = 0;
             for(Booking bookings : availableRooms) {
