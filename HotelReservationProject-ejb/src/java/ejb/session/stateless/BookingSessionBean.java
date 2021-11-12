@@ -155,6 +155,25 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     }
 
     @Override
+    public List<Booking> getBookingsByCheckInDate(Date checkInDate) throws BookingNotFoundException {
+        Query query = em.createQuery("SELECT b from Booking b WHERE b.checkInDate = :inCheckInDate AND b.preBooking = :inPreBooking");
+        query.setParameter("inCheckInDate", checkInDate);
+        query.setParameter("inPreBooking", Boolean.TRUE);
+        List<Booking> bookings = query.getResultList();
+        if (!bookings.isEmpty()) {
+            for (Booking b : bookings) {
+                b.getPartner();
+                b.getRoomType();
+                b.getCustomer();
+                b.getRooms().size();
+            }
+            return bookings;
+        } else {
+            throw new BookingNotFoundException();
+        }
+    }
+    
+    @Override
     public List<Booking> getAllBookingsByCustomerId(Long customerId) throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.customer.CustomerId = :inCustomerId");
         query.setParameter("inCustomerId", customerId);
