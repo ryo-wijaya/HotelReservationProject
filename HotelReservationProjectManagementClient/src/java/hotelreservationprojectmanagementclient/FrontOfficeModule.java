@@ -125,20 +125,9 @@ public class FrontOfficeModule {
                 System.out.println("Cancelling Operation...");
                 return null;
             }
-
-            // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
-            HashMap<Long, Integer> map = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
-
-            //Iterating over each Room Type and Inventory mapping
-            for (Map.Entry<Long, Integer> pair : map.entrySet()) {
-                roomType = roomTypeSessionBeanRemote.getRoomTypeById(pair.getKey());
-                System.out.println("Room Type: " + roomType.getRoomName() + " | " + "Number Of Rooms Left: " + pair.getValue() + " | price for the number of days: " 
-                        + bookingSessionBeanRemote.getPublishRatePriceOfBooking(roomType.getRoomTypeId(), startDateString, endDateString, numOfRooms));
-            }
-
-            System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
-
+            
             while (numOfRooms != 404) {
+                System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
                 try {
                     numOfRooms = Integer.parseInt(sc.nextLine().trim());
                     break;
@@ -147,7 +136,18 @@ public class FrontOfficeModule {
                     System.out.println("Enter a valid number!");
                 }
             }
+            
+            // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
+            HashMap<Long, Integer> map = roomSessionBeanRemote.walkInSearchRoom(startDateString, endDateString);
 
+            //Iterating over each Room Type and Inventory mapping
+            for (Map.Entry<Long, Integer> pair : map.entrySet()) {
+                roomType = roomTypeSessionBeanRemote.getRoomTypeById(pair.getKey());
+                if (pair.getValue() >= numOfRooms) {
+                    System.out.println("Room Type: " + roomType.getRoomName() + " | " + "Number Of Rooms Left: " + pair.getValue() + " | price for the number of days: " 
+                        + bookingSessionBeanRemote.getPublishRatePriceOfBooking(roomType.getRoomTypeId(), startDateString, endDateString, numOfRooms));
+                }
+            }
             Booking booking = new Booking(numOfRooms, startDateString, endDateString);
 
             return booking;
@@ -169,48 +169,32 @@ public class FrontOfficeModule {
             System.out.println("\nYou are now reserving a Room for a walk-in customer");
             System.out.println("---------------------------------------------------\n");
             Booking availableBooking = walkInSearchRoom(sc);
-            System.out.println("Please enter a room type name> ");
+            System.out.print("Please enter a room type name> ");
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(sc.nextLine().trim());
             Date checkIn = availableBooking.getCheckInDate();
             Date checkOut = availableBooking.getCheckOutDate();
             Integer numOfRoom = availableBooking.getNumberOfRooms();
             Booking booking = new Booking(numOfRoom, checkIn, checkOut);
             long bookingId = bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
-            System.out.println("What is todays date? (dd/mm/yyyy)> ");
+            System.out.print("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
-            System.out.println("What time is the reservation made");
-            Double rtime = sc.nextDouble();
+            Double rtime = 0.0;
+            while (rtime != 404.0) {
+                System.out.print("What time is the reservation made> ");
+                try {
+                    rtime = Double.parseDouble(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    rtime = 404.0;
+                    System.out.println("Enter a valid number!");
+                }
+            }
             if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
                 roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
             }
+            
             System.out.println("Hotel room(s) successfully reserved!");
             System.out.println("Your Boooking Id is " + bookingId + "\n");
-            /*List<Booking> availableRooms = walkInSearchRoom(sc);
-            Integer option = 0;
-            for(Booking bookings : availableRooms) {
-            System.out.println("\nOption " + (option + 1) + ".");
-            System.out.println("Rate Type name: " + bookings.getRoomType().getRoomName());
-            }
-            Integer response = 0;
-            while (true) {
-            try {
-            System.out.print("Please Select an Option given above> ");
-            response = sc.nextInt();
-            if (response < 1 || response > availableRooms.size()) {
-            System.out.print("Invalid input> ");
-            } else {
-            RoomType roomType = availableRooms.get(response - 1).getRoomType();
-            Date checkIn = availableRooms.get(response - 1).getCheckInDate();
-            Date checkOut = availableRooms.get(response - 1).getCheckInDate();
-            Integer numOfRoom = availableRooms.get(response - 1).getNumberOfRooms();
-            Booking booking = new Booking(numOfRoom, checkIn, checkOut);
-            bookingSessionBeanRemote.createNewBooking(booking, roomType.getRoomTypeId());
-            }
-            }
-            catch (RoomTypeNotFoundException ex) {
-            System.out.print("Invalid Room Type!");
-            }
-            }*/
         } catch (RoomTypeNotFoundException ex) {
             System.out.print("Invalid Room Type!");
         } catch (ParseException ex) {
