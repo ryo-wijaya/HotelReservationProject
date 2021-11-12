@@ -227,9 +227,11 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             
             List<Booking> bookings = bookingSessionBeanLocal.retrieveBookings();
             for (Booking b : bookings) {
+                System.out.println("Booking id: "+ b.getBookingId());
                 // If the search date interval clashes with the booking in question
                 if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) {
                     // Updating the number of free rooms for that specific Room Type
+                    System.out.println("Booking id: "+ b.getBookingId() + " Booking number of rooms: " + b.getNumberOfRooms());
                     Long roomTypeToUpdate = b.getRoomType().getRoomTypeId();
                     map.replace(roomTypeToUpdate, map.get(roomTypeToUpdate) - b.getNumberOfRooms());
                 }
