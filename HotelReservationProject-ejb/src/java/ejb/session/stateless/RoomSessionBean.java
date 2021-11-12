@@ -275,6 +275,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 }
                 if (thisRoomWillBeFree) {
                     r.addBookings(booking);
+                    booking.addRoom(r);
                     booking.setNumberOfRooms(booking.getNumberOfRooms() - 1);
                     break;
                 }
