@@ -105,6 +105,15 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         //add bean validators
         em.merge(room);
     }
+    
+    public void updateRoomStatus(long roomId) throws RoomNotFoundException {
+        Room room = getRoomById(roomId);
+        if(room.getRoomStatus() == false) {
+            room.setRoomStatus(Boolean.TRUE);
+        } else {
+            room.setRoomStatus(Boolean.FALSE);
+        }
+    }
 
     //deleting a roomType involves deleting all its associated RoomRates
     @Override

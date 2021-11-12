@@ -229,8 +229,8 @@ public class FrontOfficeModule {
             List<Room> rooms = booking.getRooms();
             for (Room room : rooms) {
                 System.out.println("Room Number: " + room.getRoomNumber());
-                room.setRoomStatus(Boolean.FALSE);
-                roomSessionBeanRemote.updateRoom(room);
+                //room.setRoomStatus(true);
+                roomSessionBeanRemote.updateRoomStatus(room.getRoomId());
             }
             System.out.println("Check in completed!");
             System.out.println("-----------------\n");
@@ -263,7 +263,7 @@ public class FrontOfficeModule {
             System.out.println("Check out Date: " + booking.getCheckOutDate());
             List<Room> rooms = booking.getRooms();
             for (Room room : rooms) {
-                room.setRoomStatus(Boolean.TRUE);
+                room.setRoomStatus(false);
                 roomSessionBeanRemote.updateRoom(room);
             }
             System.out.println("Check out completed!");
