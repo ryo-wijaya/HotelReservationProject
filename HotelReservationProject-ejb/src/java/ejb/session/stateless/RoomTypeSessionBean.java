@@ -10,6 +10,8 @@ import entity.RoomRate;
 import entity.RoomType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -183,18 +185,26 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     */
     
     @Override
-    public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName) {
-        Query query1 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomName = :inOldName");
-        Query query2 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.NextHigherRoomType = :inNewName");
-        query1.setParameter("inOldName", oldRoomTypeName);
-        query2.setParameter("inNewName", oldRoomTypeName);
-        
-        RoomType roomTypeWithNewName = (RoomType) query1.getSingleResult();
-        roomTypeWithNewName.setRoomName(newRoomTypeName);
-        
-        List<RoomType> roomTypesToChange = query2.getResultList();
-        for (RoomType rt : roomTypesToChange) {
+    public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName) throws RoomTypeNotFoundException{
+        try {
+            Query query1 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomName = :inOldName");
+            Query query2 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.NextHigherRoomType = :inOldName");
+            query1.setParameter("inOldName", oldRoomTypeName);
+            query2.setParameter("inOldName", oldRoomTypeName);
+            
+            RoomType roomTypeWithNewName = getRoomTypeByName(oldRoomTypeName);
+            //RoomType roomTypeWithNewName = (RoomType) query1.getSingleResult();
+            roomTypeWithNewName.setRoomName(newRoomTypeName);
+            
+            RoomType roomTypesToChange = (RoomType)query2.getSingleResult();
+            roomTypesToChange.setNextHigherRoomType(newRoomTypeName);
+            /*
+            List<RoomType> roomTypesToChange = query2.getResultList();
+            for (RoomType rt : roomTypesToChange) {
             rt.setNextHigherRoomType(newRoomTypeName);
+            }*/
+        } catch (RoomTypeNotFoundException ex) {
+            throw new RoomTypeNotFoundException();
         }
     }
     

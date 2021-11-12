@@ -104,26 +104,31 @@ public class DataInitSessionBean {
             em.persist(room);
             em.flush();   
             room.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             Room room1 = new Room("0205");
             em.persist(room1);
             em.flush();   
             room1.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             Room room2 = new Room("0305");
             em.persist(room2);
             em.flush();   
             room2.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             Room room3 = new Room("0405");
             em.persist(room3);
             em.flush();   
             room3.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             Room room4 = new Room("0505");
             em.persist(room4);
             em.flush();   
             room4.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             roomType = new RoomType("Junior Suite", "Junior Suite", "JUNIOR", 3, 5);
             roomType.setNextHigherRoomType("Grand Suite");
@@ -144,26 +149,31 @@ public class DataInitSessionBean {
             em.persist(room);
             em.flush();   
             room.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room1 = new Room("0204");
             em.persist(room1);
             em.flush();   
             room1.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room2 = new Room("0304");
             em.persist(room2);
             em.flush();   
             room2.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room3 = new Room("0404");
             em.persist(room3);
             em.flush();   
             room3.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room4 = new Room("0504");
             em.persist(room4);
             em.flush();   
             room4.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             roomType = new RoomType("Family Room", "Family Room", "FAMILY", 3, 4);
             roomType.setNextHigherRoomType("Junior Suite");
@@ -184,26 +194,31 @@ public class DataInitSessionBean {
             em.persist(room);
             em.flush();   
             room.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room1 = new Room("0203");
             em.persist(room1);
             em.flush();   
             room1.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room2 = new Room("0303");
             em.persist(room2);
             em.flush();   
             room2.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room3 = new Room("0403");
             em.persist(room3);
             em.flush();   
             room3.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room4 = new Room("0503");
             em.persist(room4);
             em.flush();   
             room4.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             roomType = new RoomType("Premier Room", "Premier Room", "PREMIER", 2, 4);
             roomType.setNextHigherRoomType("Family Room");
@@ -224,26 +239,31 @@ public class DataInitSessionBean {
             em.persist(room);
             em.flush();   
             room.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room1 = new Room("0202");
             em.persist(room1);
             em.flush();   
             room1.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room2 = new Room("0302");
             em.persist(room2);
             em.flush();   
             room2.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room3 = new Room("0402");
             em.persist(room3);
             em.flush();   
             room3.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room4 = new Room("0502");
             em.persist(room4);
             em.flush();   
             room4.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             roomType = new RoomType("Deluxe Room", "Deluxe Room", "DELUXE", 2, 3);
             roomType.setNextHigherRoomType("Premier Room");
@@ -264,26 +284,31 @@ public class DataInitSessionBean {
             em.persist(room);
             em.flush();   
             room.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room1 = new Room("0201");
             em.persist(room1);
             em.flush();   
             room1.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room2 = new Room("0301");
             em.persist(room2);
             em.flush();   
             room2.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room3 = new Room("0401");
             em.persist(room3);
             em.flush();   
             room3.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
             room4 = new Room("0501");
             em.persist(room4);
             em.flush();   
             room4.setRoomType(roomType);
+            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
             
         } catch (EntityInstanceExistsInCollectionException ex) {
             System.out.println("ERROR");

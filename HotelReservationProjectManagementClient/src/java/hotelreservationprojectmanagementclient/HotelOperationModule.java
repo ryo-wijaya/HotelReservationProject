@@ -298,9 +298,9 @@ public class HotelOperationModule {
             }
             
             try{
-                RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(nextHigherRoomTypeName);
-                lowerRoomType.setNextHigherRoomType(newRoomType.getRoomName());
-                roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
+            RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(nextHigherRoomTypeName);
+            lowerRoomType.setNextHigherRoomType(newRoomType.getRoomName());
+            roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
             }
             catch (RoomTypeNotFoundException ex) {
                 System.out.println("for tetsing! DELETE LATER Lower Room Type is not found!");

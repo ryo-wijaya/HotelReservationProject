@@ -34,7 +34,7 @@ public interface RoomTypeSessionBeanRemote {
     
     public List<RoomRate> getRoomRateByRoomNameAndRateType(String roomName, RateType rateType) throws RoomTypeNotFoundException;
     
-    public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName);
+    public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName)throws RoomTypeNotFoundException;
     
     public RoomType getTheLowerRoomType(String roomTypeName)throws RoomTypeNotFoundException;
 }
