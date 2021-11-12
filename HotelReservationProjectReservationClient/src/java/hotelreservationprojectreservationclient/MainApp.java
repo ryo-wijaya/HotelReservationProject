@@ -256,17 +256,26 @@ public class MainApp {
             System.out.println("\nYou are now reserving a Hotel Room");
             System.out.println("------------------------------------\n");
             Booking availableBooking = searchHotelRoom();
-            System.out.println("Please enter a room type name> ");
+            System.out.print("Please enter a room type name> ");
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(sc.nextLine().trim());
             Date checkIn = availableBooking.getCheckInDate();
             Date checkOut = availableBooking.getCheckOutDate();
             Integer numOfRoom = availableBooking.getNumberOfRooms();
             Booking booking = new Booking(numOfRoom, checkIn, checkOut);
             long bookingId = bookingSessionBeanRemote.createNewBookingWithCustomer(booking, roomType.getRoomTypeId(), currentCustomer.getCustomerId());
-            System.out.println("What is todays date? (dd/mm/yyyy)> ");
+            System.out.print("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
-            System.out.println("What time is the reservation made");
-            Double rtime = sc.nextDouble();
+            Double rtime = 0.0;
+            while (rtime != 404.0) {
+                System.out.print("What time is the reservation made> ");
+                try {
+                    rtime = Double.parseDouble(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    rtime = 404.0;
+                    System.out.println("Enter a valid number!");
+                }
+            }
             if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
                 roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
             }
