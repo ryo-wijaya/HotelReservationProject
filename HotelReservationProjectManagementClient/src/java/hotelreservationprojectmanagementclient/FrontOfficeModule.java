@@ -138,6 +138,9 @@ public class FrontOfficeModule {
             System.out.println("\nInput a Room Type Name> ");
             roomTypeName = sc.nextLine().trim();
             RoomType realRoomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
+            if("None".equals(roomTypeName)) {
+                return null;
+            }
 
             System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
 

@@ -297,15 +297,14 @@ public class HotelOperationModule {
                 newRoomType.setNextHigherRoomType("None");
             }
             
-            try{
-            RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(nextHigherRoomTypeName);
-            lowerRoomType.setNextHigherRoomType(newRoomType.getRoomName());
-            roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
-            }
-            catch (RoomTypeNotFoundException ex) {
+            try {
+                RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(nextHigherRoomTypeName);
+                lowerRoomType.setNextHigherRoomType(newRoomType.getRoomName());
+                roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
+            } catch (RoomTypeNotFoundException ex) {
                 System.out.println("for tetsing! DELETE LATER Lower Room Type is not found!");
             }
-            
+
             //adding amenities
             boolean hasMoreAmenities = true;
             while (hasMoreAmenities) {
