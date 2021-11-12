@@ -187,22 +187,15 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     @Override
     public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName) throws RoomTypeNotFoundException{
         try {
-            Query query1 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomName = :inOldName");
             Query query2 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.NextHigherRoomType = :inOldName");
-            query1.setParameter("inOldName", oldRoomTypeName);
             query2.setParameter("inOldName", oldRoomTypeName);
-            
-            RoomType roomTypeWithNewName = getRoomTypeByName(oldRoomTypeName);
-            //RoomType roomTypeWithNewName = (RoomType) query1.getSingleResult();
-            roomTypeWithNewName.setRoomName(newRoomTypeName);
             
             RoomType roomTypesToChange = (RoomType)query2.getSingleResult();
             roomTypesToChange.setNextHigherRoomType(newRoomTypeName);
-            /*
-            List<RoomType> roomTypesToChange = query2.getResultList();
-            for (RoomType rt : roomTypesToChange) {
-            rt.setNextHigherRoomType(newRoomTypeName);
-            }*/
+            
+            RoomType roomTypeWithNewName = getRoomTypeByName(oldRoomTypeName);
+            roomTypeWithNewName.setRoomName(newRoomTypeName);
+
         } catch (RoomTypeNotFoundException ex) {
             throw new RoomTypeNotFoundException();
         }

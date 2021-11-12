@@ -110,10 +110,6 @@ public class RoomType implements Serializable {
         return roomName;
     }
 
-    public void setRoomName(String roomName) {
-        this.setRoomName(roomName);
-    }
-
     public List<RoomRate> getListOfRoomRates() {
         return listOfRoomRates;
     }
@@ -238,5 +234,12 @@ public class RoomType implements Serializable {
      */
     public void setNextHigherRoomType(String NextHigherRoomType) {
         this.NextHigherRoomType = NextHigherRoomType;
+    }
+
+    /**
+     * @param roomName the roomName to set
+     */
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 }
