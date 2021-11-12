@@ -35,7 +35,7 @@ public class RoomType implements Serializable {
     //@NotNull
     //@Size(min = 1, max = 16)
     private String roomName;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     //@NotNull
     private String NextHigherRoomType;
     private Boolean enabled;

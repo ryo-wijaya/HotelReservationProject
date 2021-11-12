@@ -35,4 +35,6 @@ public interface RoomTypeSessionBeanLocal {
     public List<RoomRate> getRoomRateByRoomNameAndRateType(String roomName, RateType rateType) throws RoomTypeNotFoundException;
 
     public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName);
+
+    public RoomType getTheLowerRoomType(String roomTypeName)throws RoomTypeNotFoundException;
 }

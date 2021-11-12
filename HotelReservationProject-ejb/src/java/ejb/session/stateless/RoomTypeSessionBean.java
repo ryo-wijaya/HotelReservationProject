@@ -186,8 +186,8 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName) {
         Query query1 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.roomName = :inOldName");
         Query query2 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.NextHigherRoomType = :inNewName");
-        query1.setParameter("inOldName", newRoomTypeName);
-        query2.setParameter("inNewName", newRoomTypeName);
+        query1.setParameter("inOldName", oldRoomTypeName);
+        query2.setParameter("inNewName", oldRoomTypeName);
         
         RoomType roomTypeWithNewName = (RoomType) query1.getSingleResult();
         roomTypeWithNewName.setRoomName(newRoomTypeName);
@@ -195,6 +195,19 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         List<RoomType> roomTypesToChange = query2.getResultList();
         for (RoomType rt : roomTypesToChange) {
             rt.setNextHigherRoomType(newRoomTypeName);
+        }
+    }
+    
+    @Override
+    public RoomType getTheLowerRoomType(String roomTypeName)throws RoomTypeNotFoundException {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.NextHigherRoomType = :inRoomType");
+        query.setParameter("inRoomType", roomTypeName);
+        try {
+            RoomType roomType = (RoomType) query.getSingleResult();
+            roomType.getListOfRoomRates().size();
+            return roomType;
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new RoomTypeNotFoundException();
         }
     }
 }

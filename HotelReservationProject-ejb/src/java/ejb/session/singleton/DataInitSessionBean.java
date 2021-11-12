@@ -82,18 +82,18 @@ public class DataInitSessionBean {
         employeeSessionBeanLocal.createNewEmployee(employee);
         
         
-        /*
+        
         try{
             
             RoomType roomType = new RoomType("Grand Suite", "Grand Suite", "GRAND", 3, 6);
             roomType.setNextHigherRoomType("None");
             em.persist(roomType);
             
-            RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 100.00);
+            RoomRate publishRoomRate = new RoomRate(PUBLISHRATE, 500.00);
             em.persist(publishRoomRate);
             roomType.addToListOfRoomRate(publishRoomRate);
             
-            RoomRate normalRoomRate = new RoomRate(NORMALRATE, 50.00);
+            RoomRate normalRoomRate = new RoomRate(NORMALRATE, 250.00);
             em.persist(normalRoomRate);
             roomType.addToListOfRoomRate(normalRoomRate);
             
@@ -121,6 +121,5 @@ public class DataInitSessionBean {
         }
         
         System.out.println("Successfully deployed");
-*/
     }
 }

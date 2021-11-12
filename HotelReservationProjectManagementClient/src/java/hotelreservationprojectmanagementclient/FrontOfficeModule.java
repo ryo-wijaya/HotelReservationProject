@@ -115,9 +115,9 @@ public class FrontOfficeModule {
             String roomTypeName;
             RoomType roomType;
             int numOfRooms = 0;
-            System.out.print("Enter Departure Date (dd/mm/yyyy)> ");
+            System.out.print("Enter Check In Date (dd/mm/yyyy)> ");
             startDateString = inputDateFormat.parse(sc.nextLine().trim());
-            System.out.print("Enter Return Date (dd/mm/yyyy)> ");
+            System.out.print("Enter Check Out Date (dd/mm/yyyy)> ");
             endDateString = inputDateFormat.parse(sc.nextLine().trim());
 
             if (startDateString.compareTo(endDateString) > 0) {
@@ -194,6 +194,7 @@ public class FrontOfficeModule {
                 roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
             }
             System.out.println("Hotel room(s) successfully reserved!");
+            System.out.println("Your Boooking Id is " + booking.getBookingId() + "\n");
             /*List<Booking> availableRooms = walkInSearchRoom(sc);
             Integer option = 0;
             for(Booking bookings : availableRooms) {

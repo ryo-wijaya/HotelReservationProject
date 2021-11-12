@@ -296,7 +296,16 @@ public class HotelOperationModule {
             } else {
                 newRoomType.setNextHigherRoomType("None");
             }
-
+            
+            try{
+                RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(nextHigherRoomTypeName);
+                lowerRoomType.setNextHigherRoomType(newRoomType.getRoomName());
+                roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
+            }
+            catch (RoomTypeNotFoundException ex) {
+                System.out.println("Lower Room Type is not found!");
+            }
+            
             //adding amenities
             boolean hasMoreAmenities = true;
             while (hasMoreAmenities) {
@@ -453,6 +462,15 @@ public class HotelOperationModule {
             System.out.print("Enter 'Y' to confirm deletion>");
             String response = sc.nextLine().trim();
             if ("Y".equals(response)) {
+                try{
+                    RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(roomType.getRoomName());
+                    String higherRoomType = roomType.getNextHigherRoomType();
+                    lowerRoomType.setNextHigherRoomType(higherRoomType);
+                    roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
+                }
+                catch (RoomTypeNotFoundException ex) {
+                    System.out.println("no lower room type name");
+                }
                 roomTypeSessionBeanRemote.deleteRoomType(roomType.getRoomTypeId());
                 System.out.println("Room Type successfully deleted!");
             } else {
@@ -928,12 +946,14 @@ public class HotelOperationModule {
                 System.out.println("");
 
                 for (RoomRate rr : rt.getListOfRoomRates()) {
-                    System.out.println("------------------------------------");
-                    System.out.println("Rate Type: " + rr.getRateType());
-                    System.out.println("Rate Per Night: " + rr.getPrice());
-                    System.out.println("Start Date: " + rr.getStartDate());
-                    System.out.println("End Date: " + rr.getEndDate());
-                    System.out.println("------------------------------------");
+                    if (rr.getEnabled() == true) {
+                        System.out.println("------------------------------------");
+                        System.out.println("Rate Type: " + rr.getRateType());
+                        System.out.println("Rate Per Night: " + rr.getPrice());
+                        System.out.println("Start Date: " + rr.getStartDate());
+                        System.out.println("End Date: " + rr.getEndDate());
+                        System.out.println("------------------------------------");
+                    }
                 }
             }
         } catch (RoomTypeNotFoundException ex) {
