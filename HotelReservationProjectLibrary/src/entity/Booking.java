@@ -20,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import util.enumeration.BookingExceptionType;
 import util.exceptions.EntityInstanceExistsInCollectionException;
@@ -36,19 +37,25 @@ public class Booking implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
-    //@Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    //@NotNull
+    @NotNull
     private Date checkInDate;
-    //@Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    //@NotNull
+    @NotNull
     private Date checkOutDate;
+    @Column(nullable = false)
     private Boolean preBooking;
+    @Column(nullable = false)
     private Integer numberOfRooms;
+    @Column(nullable = false)
     private Integer numberOfUnallocatedRooms;
+    @Column(nullable = false)
     private BookingExceptionType bookingExceptionType;
+    @Column(nullable = false)
     private Integer numOfTypeOnes;
+    @Column(nullable = false)
     private Integer numOfTypeTwos;
     
     // many to one relationship with customer

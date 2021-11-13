@@ -23,6 +23,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import util.enumeration.BookingExceptionType;
 import util.enumeration.RateType;
 import util.exceptions.BookingNotFoundException;
@@ -57,7 +59,20 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
 
     @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
     private EntityManager em;
+    
+    //private final ValidatorFactory validatorFactory;
+    //private final Validator validator;
 
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
+
+    public BookingSessionBean(ValidatorFactory validatorFactory, Validator validator) {
+        this.validatorFactory = validatorFactory;
+        this.validator = validator;
+    }
+    
+    
+    
     @Override
     public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException {
         RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);

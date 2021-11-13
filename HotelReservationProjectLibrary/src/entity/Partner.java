@@ -15,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import util.enumeration.PartnerType;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.EntityInstanceMissingInCollectionException;
@@ -31,20 +33,19 @@ public class Partner implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long partnerId;
     @Column(nullable = false, length = 64)
-    //@NotNull
-    //@Size(min = 1, max = 64)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String name;
-    @Column(nullable = false, length = 16, unique = true)
-    //@NotNull
-    //@Size(min = 1, max = 16)
+    @Column(nullable = false, length = 64, unique = true)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String userName;
     @Column(nullable = false, length = 16)
-    //@NotNull
-    //@Size(min = 1, max = 16)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String password;
-    //@Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    //@NotNull
+    @NotNull
     private PartnerType partnerType;
     
     private @OneToMany(mappedBy = "partner", fetch = FetchType.LAZY)
