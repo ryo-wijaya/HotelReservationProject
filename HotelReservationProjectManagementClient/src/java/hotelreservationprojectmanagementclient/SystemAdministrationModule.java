@@ -8,17 +8,26 @@ package hotelreservationprojectmanagementclient;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
+import entity.Customer;
 import entity.Employee;
 import entity.Partner;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import util.enumeration.EmployeeRole;
 import util.enumeration.PartnerType;
 import util.exceptions.EmployeeNotFoundException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.NoPartnersFoundException;
 import util.exceptions.NonUniqueCredentialsException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -29,9 +38,18 @@ public class SystemAdministrationModule {
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
     private Employee employee;
+    
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
+
+    public SystemAdministrationModule() {
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
+    }
 
     public SystemAdministrationModule(EmployeeSessionBeanRemote employeeSessionBeanRemote,
             PartnerSessionBeanRemote partnerSessionBeanRemote, Employee employee) {
+        this();
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.employee = employee;
@@ -134,8 +152,19 @@ public class SystemAdministrationModule {
             }
         }
         Employee newEmployee = new Employee(name, username, password, role);
-        employeeSessionBeanRemote.createNewEmployee(newEmployee);
-        System.out.println("Employee successfully created!");
+        Set<ConstraintViolation<Employee>> constraintViolations = validator.validate(newEmployee);
+        if (constraintViolations.isEmpty()) {
+            try {
+                employeeSessionBeanRemote.createNewEmployee(newEmployee);
+                System.out.println("Employee successfully created!");
+            } catch (SQLIntegrityViolationException ex) {
+                System.out.print("User name exists!");
+            } catch (UnknownPersistenceException ex) {
+                System.out.println("An unknown error has occurred while creating the new staff!: " + ex.getMessage() + "\n");
+            } catch (InputDataValidationException ex) {
+                System.out.println(ex.getMessage() + "\n");
+            }
+        }
     }
 
     public void viewAllEmployees() {

@@ -219,8 +219,12 @@ public class FrontOfficeModule {
             if(constraintViolations.isEmpty()) {
                 try {
                     bookingId = bookingSessionBeanRemote.createNewBooking(availableBooking, roomType.getRoomTypeId());
-                } catch (SQLIntegrityViolationException | UnknownPersistenceException | InputDataValidationException ex) {
+                } catch (SQLIntegrityViolationException ex) {
                     System.out.print("Invalid booking contraints!");
+                } catch (UnknownPersistenceException ex) {
+                    System.out.println("An unknown error has occurred while creating the new staff!: " + ex.getMessage() + "\n");
+                } catch (InputDataValidationException ex) {
+                    System.out.println(ex.getMessage() + "\n");
                 }
             }
             System.out.print("What is todays date? (dd/mm/yyyy)> ");

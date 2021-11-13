@@ -9,7 +9,10 @@ import entity.Customer;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exceptions.CustomerNotFoundException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.LoginCredentialsInvalidException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -20,7 +23,7 @@ public interface CustomerSessionBeanRemote {
     
     public Customer retrieveCustomerByCustomerId(Long customerId)throws CustomerNotFoundException;
     
-    public long registerAsCustomer(Customer newCustomer);
+    public long registerAsCustomer(Customer newCustomer) throws SQLIntegrityViolationException, UnknownPersistenceException, InputDataValidationException;
     
     public List<Customer> retrieveAllCustomer();
     

@@ -5,14 +5,24 @@
  */
 package ejb.session.stateless;
 
+import entity.Booking;
 import entity.Customer;
 import java.util.List;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import util.exceptions.CustomerNotFoundException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.LoginCredentialsInvalidException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -24,20 +34,50 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
     @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
     private EntityManager em;
 
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
+    
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 
     public CustomerSessionBean() {
+        this.validatorFactory = Validation.buildDefaultValidatorFactory();
+        this.validator = validatorFactory.getValidator();
     }
     
     // create noew customer
     @Override
-    public long registerAsCustomer(Customer newCustomer)
-    {
-        em.persist(newCustomer);
-        em.flush();
-        return newCustomer.getCustomerId();
-        // throw customer username exits exception. unkownPersistenceexepction
+    public long registerAsCustomer(Customer newCustomer) throws SQLIntegrityViolationException, UnknownPersistenceException, InputDataValidationException {
+        Set<ConstraintViolation<Customer>> constraintViolations = validator.validate(newCustomer);
+        if (constraintViolations.isEmpty()) {
+            try {
+                em.persist(newCustomer);
+                em.flush();
+                return newCustomer.getCustomerId();
+            } catch (PersistenceException ex) {
+                if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
+                    if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
+                        throw new SQLIntegrityViolationException(ex.getMessage());
+                    } else {
+                        throw new UnknownPersistenceException(ex.getMessage());
+                    }
+                } else {
+                    throw new UnknownPersistenceException(ex.getMessage());
+                }
+            }
+        } else {
+            throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+        }
+    }
+    
+    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Customer>> constraintViolations) {
+        String msg = "Input data validation error!:";
+
+        for (ConstraintViolation constraintViolation : constraintViolations) {
+            msg += "\n\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage();
+        }
+
+        return msg;
     }
     
     @Override

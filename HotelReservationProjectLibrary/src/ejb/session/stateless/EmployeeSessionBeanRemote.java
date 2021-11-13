@@ -9,7 +9,10 @@ import entity.Employee;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exceptions.EmployeeNotFoundException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.LoginCredentialsInvalidException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -18,7 +21,7 @@ import util.exceptions.LoginCredentialsInvalidException;
 @Remote
 public interface EmployeeSessionBeanRemote {
     
-    public Long createNewEmployee(Employee employee);
+    public Long createNewEmployee(Employee employee)throws SQLIntegrityViolationException, UnknownPersistenceException, InputDataValidationException;
 
     public List<Employee> retrieveAllEmployees() throws EmployeeNotFoundException;
 

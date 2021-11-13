@@ -25,15 +25,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import util.exceptions.BookingNotFoundException;
 import util.exceptions.CustomerNotFoundException;
 import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.LoginCredentialsInvalidException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -50,8 +58,17 @@ public class MainApp {
     private HotelReservationBeanRemote hotelReservationBeanRemote;
 
     private Customer currentCustomer;
+    
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
+
+    public MainApp() {
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
+    }
 
     public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, BookingSessionBeanRemote bookingSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote, HotelReservationBeanRemote hotelReservationBeanRemote) {
+        this();
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.bookingSessionBeanRemote = bookingSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
@@ -173,9 +190,20 @@ public class MainApp {
         customer.setPhoneNumber(sc.nextLine().trim());
         System.out.print("Enter Passport Number> ");
         customer.setPassportNumber(sc.nextLine().trim());
-
-        long newCustomerId = customerSessionBeanRemote.registerAsCustomer(customer);
-        System.out.println("Customer created successfully!: " + newCustomerId + "\n");
+        
+        Set<ConstraintViolation<Customer>>constraintViolations = validator.validate(customer);
+        if (constraintViolations.isEmpty()) {
+            try {
+                long newCustomerId = customerSessionBeanRemote.registerAsCustomer(customer);
+                System.out.println("Customer created successfully!: " + newCustomerId + "\n");
+            } catch (SQLIntegrityViolationException ex) {
+                System.out.print("User name exists!");
+            } catch (UnknownPersistenceException ex) {
+                System.out.println("An unknown error has occurred while creating the new staff!: " + ex.getMessage() + "\n");
+            } catch (InputDataValidationException ex) {
+                System.out.println(ex.getMessage() + "\n");
+            }
+        }
     }
 
     public Booking searchHotelRoom() {
