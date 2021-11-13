@@ -89,8 +89,8 @@ public class WebServiceSessionBean {
     }
 
     @WebMethod(operationName = "createNewBookingWithPartner")
-    public void createNewBookingWithPartner(@WebParam(name = "booking") Booking booking, @WebParam(name = "roomTypeId") Long roomTypeId, @WebParam(name = "partnerId") Long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException, BookingNotFoundException {
-        bookingSessionBean.createNewBookingWithPartner(booking, roomTypeId, partnerId);
+    public long createNewBookingWithPartner(@WebParam(name = "booking") Booking booking, @WebParam(name = "roomTypeId") Long roomTypeId, @WebParam(name = "partnerId") Long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException {
+        return bookingSessionBean.createNewBookingWithPartner(booking, roomTypeId, partnerId);
     }
 
     @WebMethod(operationName = "getAllBookingsByPartnerId")

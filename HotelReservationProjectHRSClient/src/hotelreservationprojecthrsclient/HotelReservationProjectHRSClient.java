@@ -305,7 +305,7 @@ public class HotelReservationProjectHRSClient {
             booking.setNumberOfRooms(numOfRoom);
             booking.setBookingExceptionType(ws.client.BookingExceptionType.NONE);
             booking.setPreBooking(Boolean.TRUE);
-            port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
+            long bookingId = port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
             System.out.print("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
             Double rtime = 0.0;
