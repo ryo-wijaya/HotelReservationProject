@@ -228,6 +228,7 @@ public class FrontOfficeModule {
             System.out.println("Check in Date: " + booking.getCheckInDate());
             System.out.println("Check out Date: " + booking.getCheckOutDate());
             List<Room> rooms = booking.getRooms();
+            System.out.println("");
             for (Room room : rooms) {
                 System.out.println("Room Number: " + room.getRoomNumber());
                 //room.setRoomStatus(true);

@@ -175,7 +175,7 @@ public class SystemAdministrationModule {
                 System.out.println((i + 1) + ". " + PartnerType.values()[i]);
             }
 
-            System.out.print("Enter a partner type (integer), these are your choices>");
+            System.out.print("\nEnter a partner type (integer), these are your choices>");
             try {
                 roleChoice = Integer.parseInt(sc.nextLine().trim());
             } catch (NumberFormatException ex) {
