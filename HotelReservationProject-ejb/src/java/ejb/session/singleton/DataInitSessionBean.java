@@ -73,13 +73,17 @@ public class DataInitSessionBean {
     public void loadData() {
         
         Employee employee = new Employee("admin", "sysadmin", "password", SYSTEMADMINISTRATOR);
-        employeeSessionBeanLocal.createNewEmployee(employee);
+        em.persist(employee);
+        em.flush();
         employee = new Employee("op", "opmanager", "password", OPERATIONMANAGER);
-        employeeSessionBeanLocal.createNewEmployee(employee);
+        em.persist(employee);
+        em.flush();
         employee = new Employee("sales", "salesmanager", "password", SALESMANAGER);
-        employeeSessionBeanLocal.createNewEmployee(employee);
+        em.persist(employee);
+        em.flush();
         employee = new Employee("guest", "guestrelo", "password", GUESTRELATIONSOFFICER);
-        employeeSessionBeanLocal.createNewEmployee(employee);
+        em.persist(employee);
+        em.flush();
         
         
         
