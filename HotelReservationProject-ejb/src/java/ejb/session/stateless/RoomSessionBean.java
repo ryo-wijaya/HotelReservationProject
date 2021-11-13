@@ -279,7 +279,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
     @Override
     public void findARoomAndAddToIt(Long bookingId, Boolean hasHadAnExceptionOnce) throws RoomNotFoundException, BookingNotFoundException {
-        
+
         Booking booking;
         booking = bookingSessionBeanLocal.retrieveBookingByBookingId(bookingId);
         List<Room> rooms = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
@@ -291,15 +291,14 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
         try {
             for (Room r : rooms) {
-                
+
                 //ADDED THE BOTTOM 5 LINES TO CHECK ROOM STATUS
                 if (r.getRoomStatus()) {
                     thisRoomWillBeFree = false;
                 } else {
                     thisRoomWillBeFree = true;
                 }
-                
-                
+
                 for (Booking b : r.getBookings()) {
                     if (startDate.compareTo(b.getCheckOutDate()) < 0) { //if startDate is before a room's booking's checkout date (coz if its after we good to go)
                         if (endDate.compareTo(b.getCheckInDate()) > 0) { //if endDate stop at a room's booking's checkin date
@@ -308,6 +307,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                     }
                 }
                 if (thisRoomWillBeFree) {
+                    if (hasHadAnExceptionOnce) {
+                        booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
+                    }
                     r.addBookings(booking);
                     booking.addRoom(r);
                     booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
@@ -319,7 +321,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                 String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
 
                 if (!nextHigherRoomTypeString.equals("None") && !hasHadAnExceptionOnce) {
-                    
+
                     RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
                     booking.setRoomType(nextHigherType);
                     booking.setBookingExceptionType(BookingExceptionType.ERROR);
