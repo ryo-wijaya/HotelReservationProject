@@ -317,7 +317,7 @@ public class HotelOperationModule {
                 RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(nextHigherRoomTypeName);
                 lowerRoomType.setNextHigherRoomType(newRoomType.getRoomName());
                 roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
-            } catch (RoomTypeNotFoundException ex) {
+            } catch (RoomTypeNotFoundException | InputDataValidationException ex) {
                 //this should not trigger, placeholder exception
             }
 
@@ -397,24 +397,17 @@ public class HotelOperationModule {
                 } else if (option == 2) {
                     System.out.print("Enter a next Higher Room Type for this Room Type>");
                     String newHigherType = sc.nextLine().trim();
-                    RoomType nextHigherExist = roomTypeSessionBeanRemote.getRoomTypeByName(newHigherType);
                     roomType.setNextHigherRoomType(newHigherType);
-                    roomTypeSessionBeanRemote.updateRoomType(roomType);
-                    System.out.println("Successfully updated!");
 
                 } else if (option == 3) {
                     System.out.print("Enter a new description for this Room Type>");
                     String newDescription = sc.nextLine().trim();
                     roomType.setDescription(newDescription);
-                    roomTypeSessionBeanRemote.updateRoomType(roomType);
-                    System.out.println("Successfully updated!");
 
                 } else if (option == 4) {
                     System.out.print("Enter a new size for this Room Type>");
                     String newSize = sc.nextLine().trim();
                     roomType.setRoomSize(newSize);
-                    roomTypeSessionBeanRemote.updateRoomType(roomType);
-                    System.out.println("Successfully updated!");
 
                 } else if (option == 5) {
                     int newBeds = 0;
@@ -428,8 +421,6 @@ public class HotelOperationModule {
                         }
                     }
                     roomType.setBeds(newBeds);
-                    roomTypeSessionBeanRemote.updateRoomType(roomType);
-                    System.out.println("Successfully updated!");
 
                 } else if (option == 6) {
                     int newCapacity = 0;
@@ -443,23 +434,17 @@ public class HotelOperationModule {
                         }
                     }
                     roomType.setCapacity(newCapacity);
-                    roomTypeSessionBeanRemote.updateRoomType(roomType);
-                    System.out.println("Successfully updated!");
 
                 } else if (option == 7) {
                     System.out.print("Enter a new amenity for this Room Type>");
                     String newAmenity = sc.nextLine().trim();
                     roomType.getAmenities().add(newAmenity);
-                    roomTypeSessionBeanRemote.updateRoomType(roomType);
-                    System.out.println("Successfully updated!");
 
                 } else if (option == 8) {
                     System.out.print("Type in the amenity of the Room Type you wish to delete>");
                     String amenityToDelete = sc.nextLine().trim();
                     if (roomType.getAmenities().contains(amenityToDelete)) {
                         roomType.getAmenities().remove(amenityToDelete);
-                        roomTypeSessionBeanRemote.updateRoomType(roomType);
-                        System.out.println("Successfully updated!");
                     } else {
                         System.out.println("That amenity does not belong to this Room Type!");
                     }
@@ -469,6 +454,19 @@ public class HotelOperationModule {
 
                 } else {
                     System.out.println("Please enter a valid option!");
+                }
+
+                if (option != 1) {
+                    Set<ConstraintViolation<RoomType>> constraintViolations = validator.validate(roomType);
+
+                    if (constraintViolations.isEmpty()) {
+                        try {
+                            roomTypeSessionBeanRemote.updateRoomType(roomType);
+                            System.out.println("sucessfully updated!\n");
+                        } catch (InputDataValidationException ex) {
+                            System.out.println("Invalid input given");
+                        }
+                    }
                 }
             }
         } catch (RoomTypeNotFoundException ex) {
@@ -492,7 +490,17 @@ public class HotelOperationModule {
                     RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(roomType.getRoomName());
                     String higherRoomType = roomType.getNextHigherRoomType();
                     lowerRoomType.setNextHigherRoomType(higherRoomType);
-                    roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
+                    
+                    Set<ConstraintViolation<RoomType>> constraintViolations = validator.validate(roomType);
+
+                    if (constraintViolations.isEmpty()) {
+                        try {
+                            roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
+                            System.out.println("sucessfully updated!\n");
+                        } catch (InputDataValidationException ex) {
+                            System.out.println("Invalid input given");
+                        }
+                    }
                 } catch (RoomTypeNotFoundException ex) {
                     System.out.println("no lower room type name");
                 }

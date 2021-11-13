@@ -121,48 +121,32 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         }
     }
 
-    /*
     @Override
-    public RoomType getRoomTypeByRank(int roomRank) throws RoomTypeNotFoundException {
-        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.ranking = :inRank");
-        query.setParameter("inRank", roomRank);
-        RoomType roomtype = (RoomType) query.getSingleResult();
-
-        if (roomtype != null) {
-            return roomtype;
+    public void updateRoomType(RoomType roomType) throws InputDataValidationException, RoomTypeNotFoundException {
+        if (roomType != null && roomType.getRoomTypeId() != null) {
+            
+            Set<ConstraintViolation<RoomType>>constraintViolations = validator.validate(roomType);
+            
+            if (constraintViolations.isEmpty()) {
+                
+                RoomType roomTypeToUpdate = this.getRoomTypeById(roomType.getRoomTypeId());
+                
+                roomTypeToUpdate.setRoomName(roomType.getRoomName());
+                roomTypeToUpdate.setDescription(roomType.getDescription());
+                roomTypeToUpdate.setNextHigherRoomType(roomType.getNextHigherRoomType());
+                roomTypeToUpdate.setEnabled(roomType.getEnabled());
+                roomTypeToUpdate.setAmenities(roomType.getAmenities());
+                roomTypeToUpdate.setBeds(roomType.getBeds());
+                roomTypeToUpdate.setCapacity(roomType.getCapacity());
+                roomTypeToUpdate.setListOfRoomRates(roomType.getListOfRoomRates());
+                roomTypeToUpdate.setRoomInventory(roomType.getRoomInventory());
+                roomTypeToUpdate.setRoomSize(roomType.getRoomSize());
+            } else {
+                throw new InputDataValidationException();
+            }
         } else {
             throw new RoomTypeNotFoundException();
         }
-    }
-
-    @Override
-    public List<RoomType> getRoomTypeBelowRanking(Integer ranking) {
-        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking >= :inRankng ORDER BY rt.ranking ASC");
-        query.setParameter("inRanking", ranking);
-        List<RoomType> listOfRoomTypes = query.getResultList();
-        if (listOfRoomTypes != null) {
-            return listOfRoomTypes;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public List<RoomType> getRoomTypeBetweenRanking(Integer newranking, Integer oldranking) {
-        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking >= :innewRankng AND rt.ranking < :inoldRanking ORDER BY rt.ranking ASC");
-        query.setParameter("innewRanking", newranking);
-        query.setParameter("inoldRanking", oldranking);
-        List<RoomType> listOfRoomTypes = query.getResultList();
-        if (listOfRoomTypes != null) {
-            return listOfRoomTypes;
-        } else {
-            return null;
-        }
-    }
-     */
-    @Override
-    public void updateRoomType(RoomType roomType) {
-        em.merge(roomType);
     }
 
     @Override
@@ -195,27 +179,6 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         return filteredRates;
     }
 
-    /*
-    @Override
-    public List<RoomRate> getRoomRateByRoomTypeRankAndRateType(int roomRank, RateType rateType) throws RoomRateNotFoundException {
-        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.ranking =:inRoomRank");
-        query.setParameter("inRoomRank", roomRank);
-        RoomType roomtype = (RoomType) query.getSingleResult();
-        List<RoomRate> filteredRates = new ArrayList<>();
-        
-        for (RoomRate rr : roomtype.getListOfRoomRates()) {
-            if (rr.getRateType() == rateType) {
-                filteredRates.add(rr);
-            }
-        }
-        
-        if (filteredRates.isEmpty()) {
-            throw new RoomRateNotFoundException();
-        } else {
-            return filteredRates;
-        }
-    }
-     */
     @Override
     public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName) throws RoomTypeNotFoundException {
         try {
