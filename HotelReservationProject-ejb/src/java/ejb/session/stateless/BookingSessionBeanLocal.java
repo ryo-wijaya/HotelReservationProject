@@ -12,10 +12,13 @@ import javax.ejb.Local;
 import util.exceptions.BookingNotFoundException;
 import util.exceptions.CustomerNotFoundException;
 import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.NoPartnersFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.SQLIntegrityViolationException;
 import util.exceptions.TypeOneNotFoundException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -24,7 +27,7 @@ import util.exceptions.TypeOneNotFoundException;
 @Local
 public interface BookingSessionBeanLocal {
 
-    public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException;
+    public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException, SQLIntegrityViolationException, UnknownPersistenceException, InputDataValidationException ;
 
     public List<Booking> retrieveBookings() throws BookingNotFoundException;
 

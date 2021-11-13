@@ -33,10 +33,13 @@ import util.enumeration.RateType;
 import util.exceptions.BookingNotFoundException;
 import util.exceptions.CustomerNotFoundException;
 import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.NoPartnersFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.SQLIntegrityViolationException;
 import util.exceptions.TypeOneNotFoundException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -77,7 +80,7 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     
     
     @Override
-    public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException {
+    public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException, SQLIntegrityViolationException, UnknownPersistenceException, InputDataValidationException {
         
         Set<ConstraintViolation<Booking>> constraintViolations = validator.validate(booking);
         RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);
@@ -96,13 +99,14 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                     if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
                     {
+                        throw new SQLIntegrityViolationException(ex.getMessage());
+                    } else {
                         throw new UnknownPersistenceException(ex.getMessage());
                     }
                 } else {
                     throw new UnknownPersistenceException(ex.getMessage());
                 }
             }
-
         } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
