@@ -32,25 +32,25 @@ public class Customer implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long CustomerId;
     @Column(nullable = false, length = 64)
-    //@NotNull
-    //@Size(min = 1, max = 64)
+    @NotNull
+    @Size(min = 1, max = 64)
     //pattern for email
     private String email;
-    @Column(nullable = false, length = 16, unique = true)
-    //@NotNull
-    //@Size(min = 1, max = 16)
+    @Column(nullable = false, length = 64, unique = true)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String userName;
-    @Column(nullable = false, length = 16)
-    //@NotNull
-    //@Size(min = 1, max = 16)
+    @Column(nullable = false, length = 64)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String password;
     @Column(nullable = false, length = 8, unique = true)
-    //@NotNull
-    //@Size(min = 8, max = 8)
+    @NotNull
+    @Size(min = 8, max = 8)
     private String phoneNumber;
     @Column(nullable = false, length = 8, unique = true)
-    //@NotNull
-    //@Size(min = 8, max = 8)
+    @NotNull
+    @Size(min = 8, max = 8)
     private String passportNumber;
     
     //One to many relationship with booking

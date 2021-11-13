@@ -8,8 +8,6 @@ package entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,20 +27,19 @@ public class Employee implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
     @Column(nullable = false, length = 64)
-    //@NotNull
-    //@Size(min = 1, max = 64)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String name;
-    @Column(nullable = false, length = 16, unique = true)
-    //@NotNull
-    //@Size(min = 1, max = 16)
+    @Column(nullable = false, length = 64, unique = true)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String username;
-    @Column(nullable = false, length = 16)
-    //@NotNull
-    //@Size(min = 1, max = 16)
+    @Column(nullable = false, length = 64)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String password;
-    //@Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    //@NotNull
+    @NotNull
     private EmployeeRole eRole;
 
     public Employee() {
