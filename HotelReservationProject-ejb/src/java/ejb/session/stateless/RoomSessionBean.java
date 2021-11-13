@@ -278,8 +278,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     }
 
     @Override
-    public void findARoomAndAddToIt(Long bookingId, Boolean hasHadAnExceptionOnce) throws RoomNotFoundException, BookingNotFoundException {
+    public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException, BookingNotFoundException {
 
+        /*
         Booking booking;
         booking = bookingSessionBeanLocal.retrieveBookingByBookingId(bookingId);
         List<Room> rooms = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
@@ -314,8 +315,15 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                     booking.addRoom(r);
                     booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
                     break;
+                } else {
+                    if (hasHadAnExceptionOnce) {
+                        booking.setBookingExceptionType(BookingExceptionType.ERROR);
+                        //booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
+                        booking.setNumOfTypeTwos(booking.getNumberOfUnallocatedRooms());
+                        return;
+                    }
                 }
-            } //thisRoomWillBeFree will end up TRUE if a booking was made, and FALSE if no available rooms exist
+            }
 
             if (!thisRoomWillBeFree) { //no available rooms
                 String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
@@ -325,20 +333,84 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                     RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
                     booking.setRoomType(nextHigherType);
                     booking.setBookingExceptionType(BookingExceptionType.ERROR);
-                    booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
+                    //booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
                     this.findARoomAndAddToIt(bookingId, true);
 
-                } else { //no available rooms and no available higher room types
-                    booking.setBookingExceptionType(BookingExceptionType.ERROR);
-                    booking.setNumOfTypeTwos(booking.getNumberOfUnallocatedRooms());
-                    return;
                 }
             }
 
+            //this runs when there is no exceptions
             if (booking.getNumberOfUnallocatedRooms() != 0 && booking.getBookingExceptionType() == BookingExceptionType.NONE) {
                 this.findARoomAndAddToIt(bookingId, false);
             }
+            
+            if (booking.getNumberOfUnallocatedRooms() != 0) {
+                this.findARoomAndAddToIt(bookingId, true);
+            }
 
+        } catch (EntityInstanceExistsInCollectionException | RoomTypeNotFoundException ex) {
+            throw new RoomNotFoundException();
+        }
+         */
+        //----------------------------------------------------------------------------------
+        Booking booking;
+        booking = bookingSessionBeanLocal.retrieveBookingByBookingId(bookingId);
+        List<Room> rooms = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
+        Date startDate = booking.getCheckInDate();
+        Date endDate = booking.getCheckOutDate();
+        Boolean thisRoomWillBeFree = true;
+
+        try {
+            for (Room r : rooms) {
+
+                //ADDED THE BOTTOM 5 LINES TO CHECK ROOM STATUS
+                if (r.getRoomStatus()) {
+                    thisRoomWillBeFree = false;
+                } else {
+                    thisRoomWillBeFree = true;
+                }
+
+                for (Booking b : r.getBookings()) {
+                    if (startDate.compareTo(b.getCheckOutDate()) < 0) { //if startDate is before a room's booking's checkout date (coz if its after we good to go)
+                        if (endDate.compareTo(b.getCheckInDate()) > 0) { //if endDate stop at a room's booking's checkin date
+                            thisRoomWillBeFree = false; //THIS MEANS THAT THERES CLASH
+                            break;
+                        }
+                    }
+                }
+
+                if (thisRoomWillBeFree) {
+
+                    r.addBookings(booking);
+                    booking.addRoom(r);
+                    booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
+                    
+                    if (booking.getBookingExceptionType() == BookingExceptionType.ERROR) {
+                        //add to number of type 1, this is the number of rooms that are successfully upgraded
+                        booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
+                    }
+ 
+                    if (booking.getNumberOfUnallocatedRooms() > 0) {
+                        // whether its a type NONE or type 1, if the room is free we want to continue allocating other rooms
+                        this.findARoomAndAddToIt(bookingId);
+                    }
+                    
+                } else {
+                    
+                    if (booking.getBookingExceptionType() == BookingExceptionType.ERROR) {
+                        // bottom line is once room is not free and an upgrade has already been checked for we gtfo
+                        booking.setNumOfTypeTwos(booking.getNumberOfUnallocatedRooms());
+                        return;
+                    } else {
+                        // this is if room is not free and we have not started checking for a possible upgrade yet
+                        booking.setBookingExceptionType(BookingExceptionType.ERROR);
+                        String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
+                        RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
+                        booking.setRoomType(nextHigherType);
+                        this.findARoomAndAddToIt(bookingId);
+                    }
+                }
+            }
         } catch (EntityInstanceExistsInCollectionException | RoomTypeNotFoundException ex) {
             throw new RoomNotFoundException();
         }

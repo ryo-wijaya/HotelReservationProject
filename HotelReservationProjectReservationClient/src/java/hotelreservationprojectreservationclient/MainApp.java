@@ -268,7 +268,7 @@ public class MainApp {
                 }
             }
             if(availableBooking.getCheckInDate().equals(cDate) && rtime >= 2){
-                roomSessionBeanRemote.findARoomAndAddToIt(bookingId, false);
+                roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
             }
             System.out.println("Booking ID is: " + bookingId);
             System.out.println("Hotel room(s) successfully reserved!");

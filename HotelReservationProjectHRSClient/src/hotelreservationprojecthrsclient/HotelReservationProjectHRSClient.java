@@ -319,7 +319,7 @@ public class HotelReservationProjectHRSClient {
                 }
             }
             if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
-                port.findARoomAndAddToIt(booking.getBookingId(), false);
+                port.findARoomAndAddToIt(booking.getBookingId());
             }
             System.out.println("Booking ID is: " + bookingId);
             System.out.println("Hotel room(s) successfully reserved!");

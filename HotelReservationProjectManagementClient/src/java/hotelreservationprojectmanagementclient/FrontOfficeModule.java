@@ -118,7 +118,7 @@ public class FrontOfficeModule {
             Date checkInDate = inputDateFormat.parse(sc.nextLine().trim());
             List<Booking> bookings = bookingSessionBeanRemote.getBookingsByCheckInDate(checkInDate);
             for(Booking booking : bookings) {
-                roomSessionBeanRemote.findARoomAndAddToIt(booking.getBookingId(), false);
+                roomSessionBeanRemote.findARoomAndAddToIt(booking.getBookingId());
             }
             
             System.out.println("Succesfully allocated!");
@@ -219,7 +219,7 @@ public class FrontOfficeModule {
                 }
             }
             if(availableBooking.getCheckInDate().equals(cDate) && rtime >= 2){
-                roomSessionBeanRemote.findARoomAndAddToIt(bookingId, false);
+                roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
             }
             
             System.out.println("Hotel room(s) successfully reserved!");

@@ -132,8 +132,8 @@ public class WebServiceSessionBean {
     }
     
     @WebMethod(operationName = "findARoomAndAddToIt")
-    public void findARoomAndAddToIt(@WebParam(name = "bookingId") Long bookingId, @WebParam(name = "hasHadAnExceptionOnce") Boolean hasHadAnExceptionOnce) 
+    public void findARoomAndAddToIt(@WebParam(name = "bookingId") Long bookingId) 
             throws RoomNotFoundException, BookingNotFoundException {
-        roomSessionBean.findARoomAndAddToIt(bookingId, false);
+        roomSessionBean.findARoomAndAddToIt(bookingId);
     }
 }

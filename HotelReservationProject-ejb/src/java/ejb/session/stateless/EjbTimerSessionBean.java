@@ -39,7 +39,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
         try {
             List<Booking> bookings = bookingSessionBeanLocal.retrieveUnallocatedBookings();
             for (Booking b : bookings) {
-                roomSessionBeanLocal.findARoomAndAddToIt(b.getBookingId(), false);
+                roomSessionBeanLocal.findARoomAndAddToIt(b.getBookingId());
             }
         } catch (BookingNotFoundException ex) {
             System.out.println("No bookings to allocate!");
