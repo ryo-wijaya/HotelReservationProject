@@ -36,6 +36,10 @@
 
 <xs:element name="getRateForOnlineBookingResponse" type="tns:getRateForOnlineBookingResponse"/>
 
+<xs:element name="getRoomTypeById" type="tns:getRoomTypeById"/>
+
+<xs:element name="getRoomTypeByIdResponse" type="tns:getRoomTypeByIdResponse"/>
+
 <xs:element name="getRoomTypeByName" type="tns:getRoomTypeByName"/>
 
 <xs:element name="getRoomTypeByNameResponse" type="tns:getRoomTypeByNameResponse"/>
@@ -96,8 +100,8 @@
 <xs:complexType name="createNewBookingWithPartner">
 <xs:sequence>
 <xs:element name="booking" type="tns:booking" minOccurs="0"/>
-<xs:element name="roomTypeId" type="xs:long"/>
-<xs:element name="partnerId" type="xs:long"/>
+<xs:element name="roomTypeId" type="xs:long" minOccurs="0"/>
+<xs:element name="partnerId" type="xs:long" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -108,7 +112,10 @@
 <xs:element name="checkInDate" type="xs:dateTime" minOccurs="0"/>
 <xs:element name="checkOutDate" type="xs:dateTime" minOccurs="0"/>
 <xs:element name="customer" type="tns:customer" minOccurs="0"/>
+<xs:element name="numOfTypeOnes" type="xs:int" minOccurs="0"/>
+<xs:element name="numOfTypeTwos" type="xs:int" minOccurs="0"/>
 <xs:element name="numberOfRooms" type="xs:int" minOccurs="0"/>
+<xs:element name="numberOfUnallocatedRooms" type="xs:int" minOccurs="0"/>
 <xs:element name="partner" type="tns:partner" minOccurs="0"/>
 <xs:element name="preBooking" type="xs:boolean" minOccurs="0"/>
 <xs:element name="roomType" type="tns:roomType" minOccurs="0"/>
@@ -174,7 +181,10 @@
 
 <xs:complexType name="getRateForOnlineBooking">
 <xs:sequence>
-<xs:element name="booking" type="tns:booking" minOccurs="0"/>
+<xs:element name="roomTypeId" type="xs:long" minOccurs="0"/>
+<xs:element name="startDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="endDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="numOfRooms" type="xs:int" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -211,7 +221,7 @@
 
 <xs:complexType name="findARoomAndAddToIt">
 <xs:sequence>
-<xs:element name="bookingId" type="xs:long"/>
+<xs:element name="bookingId" type="xs:long" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -234,13 +244,17 @@
 
 <xs:complexType name="walkInSearchRoomResponse">
 <xs:sequence>
-<xs:element name="return" type="tns:roomType" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="return" type="tns:hashMapWrapper" minOccurs="0"/>
 </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="hashMapWrapper">
+<xs:sequence/>
 </xs:complexType>
 
 <xs:complexType name="getAllBookingsByPartnerId">
 <xs:sequence>
-<xs:element name="partnerId" type="xs:long"/>
+<xs:element name="partnerId" type="xs:long" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -258,13 +272,25 @@
 
 <xs:complexType name="retrievePartnerByPartnerId">
 <xs:sequence>
-<xs:element name="partnerId" type="xs:long"/>
+<xs:element name="partnerId" type="xs:long" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
 <xs:complexType name="retrievePartnerByPartnerIdResponse">
 <xs:sequence>
 <xs:element name="return" type="tns:partner" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getRoomTypeById">
+<xs:sequence>
+<xs:element name="roomTypeId" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getRoomTypeByIdResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:roomType" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
@@ -280,8 +306,7 @@
 <xs:simpleType name="bookingExceptionType">
 <xs:restriction base="xs:string">
 <xs:enumeration value="NONE"/>
-<xs:enumeration value="TYPE1"/>
-<xs:enumeration value="TYPE2"/>
+<xs:enumeration value="ERROR"/>
 </xs:restriction>
 </xs:simpleType>
 

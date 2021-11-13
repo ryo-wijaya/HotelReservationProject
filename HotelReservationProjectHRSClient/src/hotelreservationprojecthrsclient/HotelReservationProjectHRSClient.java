@@ -26,6 +26,7 @@ import ws.client.BookingNotFoundException_Exception;
 import ws.client.EntityInstanceExistsInCollectionException;
 import ws.client.EntityInstanceExistsInCollectionException_Exception;
 import ws.client.EntityInstanceMissingInCollectionException_Exception;
+import ws.client.HashMapWrapper;
 import ws.client.LoginCredentialsInvalidException;
 import ws.client.LoginCredentialsInvalidException_Exception;
 import ws.client.NoPartnersFoundException_Exception;
@@ -47,12 +48,12 @@ import ws.client.WebServiceSessionBean_Service;
  */
 public class HotelReservationProjectHRSClient {
 
-    //private static Partner currentPartner;
+    private static Partner currentPartner;
 
     public static void main(String[] args) {
         //runMainMenu();
     }
-/*
+
     
     public static void runMainMenu() {
 
@@ -240,7 +241,7 @@ public class HotelReservationProjectHRSClient {
             }
             
            // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
-            HashMap<Long, Integer> map = port.walkInSearchRoom(start, end);
+            HashMapWrapper map = port.walkInSearchRoom(start, end);
 
             //Iterating over each Room Type and Inventory mapping
             //Iterating over each Room Type and Inventory mapping
@@ -392,6 +393,5 @@ public class HotelReservationProjectHRSClient {
             System.out.println("partner not found!/n");
         }
 
-    }*/
-
+    }
 }
