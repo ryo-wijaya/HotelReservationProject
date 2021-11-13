@@ -48,4 +48,6 @@ public interface BookingSessionBeanLocal {
     
     public Double getRateForOnlineBooking(Long roomTypeId, Date startDate, Date endDate, Integer numOfRoom) throws RoomRateNotFoundException;
     
+    public List<Booking> getBookingsByCheckInDate(Date checkInDate) throws BookingNotFoundException;
+    
 }

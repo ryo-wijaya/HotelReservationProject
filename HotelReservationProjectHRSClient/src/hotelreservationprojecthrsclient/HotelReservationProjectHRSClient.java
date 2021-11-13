@@ -52,7 +52,7 @@ public class HotelReservationProjectHRSClient {
     public static void main(String[] args) {
         //runMainMenu();
     }
-
+/*
     
     public static void runMainMenu() {
 
@@ -391,6 +391,6 @@ public class HotelReservationProjectHRSClient {
             System.out.println("partner not found!/n");
         }
 
-    }
+    }*/
 
 }

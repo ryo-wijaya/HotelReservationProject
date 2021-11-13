@@ -72,7 +72,8 @@ public class FrontOfficeModule {
             System.out.println("2. Walk-in Reserve Room");
             System.out.println("3. Check-in Guest");
             System.out.println("4. Check-out Guest");
-            System.out.println("5. Logout");
+            System.out.println("5. Mannual Allocation");
+            System.out.println("6. Logout");
 
             System.out.print("Please select an option>");
 
@@ -96,6 +97,9 @@ public class FrontOfficeModule {
                     this.checkoutGuest(sc);
                     break;
                 case 5:
+                    this.mannualAllocation(sc);
+                    break;
+                case 6:
                     logout = true;
                     break;
                 default:
@@ -104,6 +108,27 @@ public class FrontOfficeModule {
         }
     }
 
+    private void mannualAllocation(Scanner sc) {
+        try {
+            System.out.println("\nYou are now mannually allocating a booking");
+            System.out.println("---------------------------------------------------\n");
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+            System.out.print("Enter Check In Date (dd/mm/yyyy)> ");
+            Date checkInDate = inputDateFormat.parse(sc.nextLine().trim());
+            List<Booking> bookings = bookingSessionBeanRemote.getBookingsByCheckInDate(checkInDate);
+            for(Booking booking : bookings) {
+                roomSessionBeanRemote.findARoomAndAddToIt(booking.getBookingId());
+            }
+        } catch (ParseException ex) {
+            System.out.println("Invalid Date!");
+        } catch (BookingNotFoundException ex) {
+            Logger.getLogger(FrontOfficeModule.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RoomNotFoundException ex) {
+            Logger.getLogger(FrontOfficeModule.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private Booking walkInSearchRoom(Scanner sc) {
         try {
             System.out.println("\nYou are now searching a Room for a walk-in customer");
@@ -232,14 +257,12 @@ public class FrontOfficeModule {
             for (Room room : rooms) {
                 System.out.println("Room Number: " + room.getRoomNumber());
                 //room.setRoomStatus(true);
-                roomSessionBeanRemote.updateRoomStatus(room.getRoomId());
+                //roomSessionBeanRemote.updateRoomStatus(room.getRoomId());
             }
             System.out.println("Check in completed!");
             System.out.println("-----------------\n");
         } catch (BookingNotFoundException ex) {
             System.out.println("Booking does not exists!");
-        } catch (RoomNotFoundException ex) {
-            System.out.println("Room not found!");
         }
     }
 

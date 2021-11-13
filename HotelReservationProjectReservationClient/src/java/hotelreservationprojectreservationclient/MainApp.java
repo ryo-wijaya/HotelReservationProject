@@ -292,7 +292,7 @@ public class MainApp {
             Long bookingId;
             System.out.println("\nViewing my reservation details!");
             System.out.println("-------------------------------\n");
-            List<Booking> bookings = customerSessionBeanRemote.retrieveCustomerByCustomerId(currentCustomer.getCustomerId()).getBookings();
+            List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByCustomerId(currentCustomer.getCustomerId());
             if (bookings.isEmpty()) {
                 System.out.print("No existing reservations!\n");
                 return;
@@ -311,31 +311,35 @@ public class MainApp {
                     System.out.println("Booking Id: " + booking.getBookingId());
                     System.out.println("Check In Date: " + booking.getCheckInDate());
                     System.out.println("Check Out Date: " + booking.getCheckOutDate());
-                    System.out.println("Room Type: " + booking.getRoomType());
+                    System.out.println("Room Type: " + booking.getRoomType().getRoomName());
                     System.out.println("Number of rooms: " + booking.getNumberOfRooms());
                 }
             }
-        } catch (CustomerNotFoundException ex) {
-            System.out.println("customer not found");
+        } catch (BookingNotFoundException ex) {
+            System.out.println("No booking record found!");
         }
     }
 
     public void viewAllMyReservations() {
-        System.out.println("\nViewing all my reservations!");
-        System.out.println("----------------------------\n");
-        //List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByCustomerId(currentCustomer.getCustomerId());
-        List<Booking> bookings = currentCustomer.getBookings();
-        if (bookings.isEmpty()) {
-            System.out.print("No existing reservations!\n");
-            return;
-        }
-        for (Booking b : bookings) {
-            System.out.println("Booking ID: " + b.getBookingId());
-            System.out.println("Start Date: " + b.getCheckInDate());
-            System.out.println("End Date: " + b.getCheckOutDate());
-            System.out.println("Room Type: " + b.getRoomType());
-            System.out.println("Number of rooms: " + b.getNumberOfRooms());
-            System.out.println("");
+        try {
+            System.out.println("\nViewing all my reservations!");
+            System.out.println("----------------------------\n");
+            List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByCustomerId(currentCustomer.getCustomerId());
+            //List<Booking> bookings = currentCustomer.getBookings();
+            if (bookings.isEmpty()) {
+                System.out.print("No existing reservations!\n");
+                return;
+            }
+            for (Booking b : bookings) {
+                System.out.println("Booking ID: " + b.getBookingId());
+                System.out.println("Start Date: " + b.getCheckInDate());
+                System.out.println("End Date: " + b.getCheckOutDate());
+                System.out.println("Room Type: " + b.getRoomType().getRoomName());
+                System.out.println("Number of rooms: " + b.getNumberOfRooms());
+                System.out.println("");
+            }
+        } catch (BookingNotFoundException ex) {
+            System.out.println("No existing reservations");
         }
     }
 }
