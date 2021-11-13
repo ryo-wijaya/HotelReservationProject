@@ -490,7 +490,7 @@ public class HotelOperationModule {
                     RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(roomType.getRoomName());
                     String higherRoomType = roomType.getNextHigherRoomType();
                     lowerRoomType.setNextHigherRoomType(higherRoomType);
-                    
+
                     Set<ConstraintViolation<RoomType>> constraintViolations = validator.validate(roomType);
 
                     if (constraintViolations.isEmpty()) {
@@ -576,7 +576,6 @@ public class HotelOperationModule {
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Invalid Room Type");
         }
-
     }
 
     private void updateARoom(Scanner sc) {
@@ -877,15 +876,11 @@ public class HotelOperationModule {
                     }
                 }
                 roomRateToEdit.setRateType(newRate);
-                roomRateSessionBeanRemote.updateRoomRate(roomRateToEdit);
-                System.out.println("Successfully Updated");
 
             } else if (editOption == 2) { //editing a price
                 System.out.println("The old rate is: $" + roomRateToEdit.getPrice());
                 double newPrice = sc.nextDouble();
                 roomRateToEdit.setPrice(newPrice);
-                roomRateSessionBeanRemote.updateRoomRate(roomRateToEdit);
-                System.out.println("Successfully Updated");
 
             } else if (editOption == 3) { //editing a start date
                 while (true) {
@@ -907,9 +902,23 @@ public class HotelOperationModule {
                         System.out.println("Invalid date input!\n");
                     }
                 }
-                roomRateSessionBeanRemote.updateRoomRate(roomRateToEdit);
-                System.out.println("Successfully Updated");
             }
+
+            Set<ConstraintViolation<RoomRate>> constraintViolations = validator.validate(roomRateToEdit);
+            
+            if (constraintViolations.isEmpty()) {
+                try {
+                    roomRateSessionBeanRemote.updateRoomRate(roomRateToEdit);
+                    System.out.println("sucessfully updated!\n");
+                } catch (InputDataValidationException ex) {
+                    System.out.println("Invalid input given");
+                } catch (RoomRateNotFoundException ex) {
+                    System.out.println("Room Rate not found!");
+                } catch (RoomTypeNotFoundException ex) {
+                    System.out.println("Room Type not found");
+                }
+            }
+
             System.out.println("Do you have anything else to edit? (yes/no)");
             while (true) {
                 String choice = sc.nextLine().trim();

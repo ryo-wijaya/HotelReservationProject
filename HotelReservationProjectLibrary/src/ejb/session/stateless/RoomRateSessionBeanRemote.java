@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Remote;
 import util.enumeration.RateType;
 import util.exceptions.FailedToCreateRoomRateException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 
@@ -26,7 +27,7 @@ public interface RoomRateSessionBeanRemote {
     
     public Long createNewRoomRate(RoomRate roomRate, Long roomTypeId) throws FailedToCreateRoomRateException;
     
-    public void updateRoomRate(RoomRate roomRate);
+    public void updateRoomRate(RoomRate roomRate) throws InputDataValidationException, RoomRateNotFoundException, RoomTypeNotFoundException;
     
     public List<RoomRate> getRoomRateByRoomType(Long roomTypeId) throws RoomTypeNotFoundException, RoomRateNotFoundException;
     
