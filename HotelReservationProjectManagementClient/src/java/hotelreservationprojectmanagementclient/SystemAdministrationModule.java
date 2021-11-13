@@ -226,10 +226,18 @@ public class SystemAdministrationModule {
         }
 
         Partner partner = new Partner(name, username, password, type);
-        try {
-            partnerSessionBeanRemote.createNewPartner(partner);
-        } catch (NonUniqueCredentialsException ex) {
-            System.out.println("NonUnique Credentials!");
+        Set<ConstraintViolation<Partner>> constraintViolations = validator.validate(partner);
+        if (constraintViolations.isEmpty()) {
+            try {
+                partnerSessionBeanRemote.createNewPartner(partner);
+                System.out.println("Partner successfully created!");
+            } catch (SQLIntegrityViolationException ex) {
+                System.out.print("User name exists!");
+            } catch (UnknownPersistenceException ex) {
+                System.out.println("An unknown error has occurred while creating the new staff!: " + ex.getMessage() + "\n");
+            } catch (InputDataValidationException ex) {
+                System.out.println(ex.getMessage() + "\n");
+            }
         }
     }
 
