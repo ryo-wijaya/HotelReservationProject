@@ -17,12 +17,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.BookingExceptionType;
@@ -75,18 +78,46 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     
     @Override
     public long createNewBooking(Booking booking, Long roomTypeId) throws RoomTypeNotFoundException {
+        
+        Set<ConstraintViolation<Booking>> constraintViolations = validator.validate(booking);
         RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);
-        if (roomType.getEnabled()) {
-            booking.setRoomType(roomType);
-            em.persist(booking);
-            em.flush();
-            System.out.println("num rooms :" + booking.getNumberOfRooms());
-            return booking.getBookingId();
+        if (constraintViolations.isEmpty()) {
+            try {
+                if (roomType.getEnabled()) {
+                    booking.setRoomType(roomType);
+                    em.persist(booking);
+                    em.flush();
+                    System.out.println("num rooms :" + booking.getNumberOfRooms());
+                    return booking.getBookingId();
+                } else {
+                    throw new RoomTypeNotFoundException();
+                }
+            } catch (PersistenceException ex) {
+                if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
+                    if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
+                    {
+                        throw new UnknownPersistenceException(ex.getMessage());
+                    }
+                } else {
+                    throw new UnknownPersistenceException(ex.getMessage());
+                }
+            }
+
         } else {
-            throw new RoomTypeNotFoundException();
+            throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
-    
+
+    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Booking>> constraintViolations) {
+        String msg = "Input data validation error!:";
+
+        for (ConstraintViolation constraintViolation : constraintViolations) {
+            msg += "\n\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage();
+        }
+
+        return msg;
+    }
+
     @Override
     public long createNewBookingWithCustomer(Booking booking, Long roomTypeId, Long customerId) throws RoomTypeNotFoundException, CustomerNotFoundException, EntityInstanceExistsInCollectionException {
         RoomType roomType = roomTypeSessionBean.getRoomTypeById(roomTypeId);
