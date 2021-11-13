@@ -38,10 +38,6 @@ public interface BookingSessionBeanLocal {
 
     public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException;
 
-    public List<Booking> retrieveTypeTwoBookings() throws BookingNotFoundException;
-
-    public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException;
-
     public long createNewBookingWithCustomer(Booking booking, Long roomTypeId, Long customerId) throws RoomTypeNotFoundException, CustomerNotFoundException, EntityInstanceExistsInCollectionException;
 
     public long createNewBookingWithPartner(Booking booking, Long roomTypeId, Long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException;
@@ -49,5 +45,7 @@ public interface BookingSessionBeanLocal {
     public Double getRateForOnlineBooking(Long roomTypeId, Date startDate, Date endDate, Integer numOfRoom) throws RoomRateNotFoundException;
     
     public List<Booking> getBookingsByCheckInDate(Date checkInDate) throws BookingNotFoundException;
+
+    public List<Booking> rettrieveErrorBooking() throws BookingNotFoundException;
     
 }

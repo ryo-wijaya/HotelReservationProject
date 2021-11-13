@@ -37,10 +37,6 @@ public interface BookingSessionBeanRemote {
     public Double getPublishRatePriceOfBooking(Long roomTypeId, Date startDate, Date endDate, Integer numOfRooms) throws RoomRateNotFoundException;
 
     public List<Booking> retrieveUnallocatedBookings() throws BookingNotFoundException;
-
-    public List<Booking> retrieveTypeTwoBookings() throws BookingNotFoundException;
-
-    public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException;
     
     public Double getRateForOnlineBooking(Long roomTypeId, Date startDate, Date endDate, Integer numOfRoom) throws RoomRateNotFoundException;
             
@@ -49,4 +45,6 @@ public interface BookingSessionBeanRemote {
     public long createNewBookingWithPartner(Booking booking, Long roomTypeId, Long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException;
 
     public List<Booking> getBookingsByCheckInDate(Date checkInDate) throws BookingNotFoundException;
+
+    public List<Booking> rettrieveErrorBooking() throws BookingNotFoundException;
 }

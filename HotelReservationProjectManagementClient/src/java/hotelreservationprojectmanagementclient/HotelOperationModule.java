@@ -642,31 +642,22 @@ public class HotelOperationModule {
             
             System.out.println("\n-You are now viewing a Room Allocation Exception Report-");
             System.out.println("--------------------------------------------------------\n");
-            System.out.println("Exception Type 1: List of Booking IDs where a room was upgraded\n");
-            List<Booking> typeOneBookings = bookingSessionBeanRemote.retrieveTypeOneBookings();
-            Integer count = 0;
-            for (Booking booking : typeOneBookings) {
-                count++;
-                System.out.println(count + ": Booking ID " + booking.getBookingId());
+            List<Booking> errorBookings = bookingSessionBeanRemote.rettrieveErrorBooking();
+            for (Booking booking : errorBookings) {
+                if(booking.getNumOfTypeOnes() > 0 || booking.getNumOfTypeTwos() > 0) {
+                    System.out.println("Booking ID " + booking.getBookingId());
+                    if(booking.getNumOfTypeOnes() > 0) {
+                        System.out.println("Number of Type 1: " + booking.getNumOfTypeOnes());
+                    }
+                    if(booking.getNumOfTypeTwos() > 0) {
+                        System.out.println("Number of Type 2: " + booking.getNumOfTypeTwos());
+                    }
+                    System.out.println("--------------------------------------------------------\n");
+                }
             }
-            System.out.println("--------------------------------------------------------\n");
-        } catch (TypeOneNotFoundException ex) {
-            System.out.println("No Type One Exception Report");
-        }
-        try {
-            Integer count = 0;
-            System.out.println("--------------------------------------------------------\n");
-            System.out.println("Exception Type 2: List of Booking IDs where no upgrade is available\n");
-            List<Booking> typeTwoBookings = bookingSessionBeanRemote.retrieveTypeTwoBookings();
-            count = 0;
-            for (Booking booking : typeTwoBookings) {
-                count++;
-                System.out.println(count + ": Booking ID " + booking.getBookingId());
-            }
-            System.out.println("--------------------------------------------------------\n");
         } catch (BookingNotFoundException ex) {
-            System.out.println("No Type Two Exception Report");
-        } 
+            System.out.println("No Exception Report");
+        }
     }
 
     private void createNewRoomRate(Scanner sc) {

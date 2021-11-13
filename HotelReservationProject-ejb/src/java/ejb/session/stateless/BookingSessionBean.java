@@ -289,27 +289,8 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
             throw new BookingNotFoundException();
         }
     }
-
-    @Override
-    public List<Booking> retrieveTypeOneBookings() throws TypeOneNotFoundException {
-        Query query = em.createQuery("SELECT b from Booking b WHERE b.bookingExceptionType = :inBookingExceptionType");
-        query.setParameter("inBookingExceptionType", BookingExceptionType.ERROR);
-        List<Booking> bookings = query.getResultList();
-        if (!bookings.isEmpty()) {
-            for (Booking b : bookings) {
-                b.getPartner();
-                b.getRoomType();
-                b.getCustomer();
-                b.getRooms().size();
-            }
-            return bookings;
-        } else {
-            throw new TypeOneNotFoundException();
-        }
-    }
-
-    @Override
-    public List<Booking> retrieveTypeTwoBookings() throws BookingNotFoundException {
+    
+    public List<Booking> rettrieveErrorBooking() throws BookingNotFoundException {
         Query query = em.createQuery("SELECT b from Booking b WHERE b.bookingExceptionType = :inBookingExceptionType");
         query.setParameter("inBookingExceptionType", BookingExceptionType.ERROR);
         List<Booking> bookings = query.getResultList();
