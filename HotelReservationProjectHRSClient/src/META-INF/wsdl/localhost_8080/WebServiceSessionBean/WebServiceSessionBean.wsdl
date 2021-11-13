@@ -121,7 +121,6 @@
 <fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/createNewBookingWithPartner/Fault/RoomTypeNotFoundException"/>
 <fault message="tns:EntityInstanceExistsInCollectionException" name="EntityInstanceExistsInCollectionException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/createNewBookingWithPartner/Fault/EntityInstanceExistsInCollectionException"/>
 <fault message="tns:NoPartnersFoundException" name="NoPartnersFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/createNewBookingWithPartner/Fault/NoPartnersFoundException"/>
-<fault message="tns:BookingNotFoundException" name="BookingNotFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/createNewBookingWithPartner/Fault/BookingNotFoundException"/>
 </operation>
 <operation name="getRoomTypeById">
 <input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/getRoomTypeByIdRequest" message="tns:getRoomTypeById"/>
@@ -231,9 +230,6 @@
 </fault>
 <fault name="NoPartnersFoundException">
 <soap:fault name="NoPartnersFoundException" use="literal"/>
-</fault>
-<fault name="BookingNotFoundException">
-<soap:fault name="BookingNotFoundException" use="literal"/>
 </fault>
 </operation>
 <operation name="getRoomTypeById">

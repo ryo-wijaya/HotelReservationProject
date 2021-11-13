@@ -48,10 +48,10 @@ import ws.client.WebServiceSessionBean_Service;
  */
 public class HotelReservationProjectHRSClient {
 
-    //private static Partner currentPartner;
+    private static Partner currentPartner;
 
     public static void main(String[] args) {
-        //runMainMenu();
+        runMainMenu();
     }
 
     
@@ -242,16 +242,15 @@ public class HotelReservationProjectHRSClient {
             
            // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
             HashMapWrapper wrappedMap = port.walkInSearchRoom(start, end);
-            HashMap<Long, Integer> map = wrappedMap.getMap();
-            Entry.
+            Map<Long, Integer> myMap = (Map<Long, Integer>) wrappedMap.getMap();
 
             //Iterating over each Room Type and Inventory mapping
             //Iterating over each Room Type and Inventory mapping
-            for (Map.Entry<Long, Integer> pair : map.entrySet()) {
+            for (Map.Entry<Long, Integer> pair : myMap.entrySet()) {
                 roomType = port.getRoomTypeById(pair.getKey());
                 if (pair.getValue() >= numOfRooms) {
                     System.out.println("Room Type: " + roomType.getRoomName() + " | " + "Number Of Rooms Left: " + pair.getValue() + " | price for the number of days: " 
-                        + port.getRateForOnlineBooking(roomType.getRoomTypeId(), startDateString, endDateString, numOfRooms));
+                        + port.getRateForOnlineBooking(roomType.getRoomTypeId(), start, end, numOfRooms));
                 }
             }
 
@@ -273,7 +272,9 @@ public class HotelReservationProjectHRSClient {
         } catch (RoomTypeNotFoundException_Exception ex) {
             System.out.println("No published rate found!");
         } catch (RoomNotFoundException_Exception ex) {
-            System.out.println("Room Rate Not Found");
+            System.out.println("Room not Found");
+        } catch (RoomRateNotFoundException_Exception ex) {
+            System.out.println("Room Rate not found!");
         }
         return null;
     }
@@ -307,7 +308,7 @@ public class HotelReservationProjectHRSClient {
             booking.setNumberOfRooms(numOfRoom);
             booking.setBookingExceptionType(ws.client.BookingExceptionType.NONE);
             booking.setPreBooking(Boolean.TRUE);
-            port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
+            long bookingId = port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
             System.out.print("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
             Double rtime = 0.0;

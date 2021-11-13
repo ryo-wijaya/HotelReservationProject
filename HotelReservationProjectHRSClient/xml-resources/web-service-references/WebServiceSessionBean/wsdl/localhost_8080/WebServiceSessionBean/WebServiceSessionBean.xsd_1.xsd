@@ -158,7 +158,9 @@
 </xs:complexType>
 
 <xs:complexType name="createNewBookingWithPartnerResponse">
-<xs:sequence/>
+<xs:sequence>
+<xs:element name="return" type="xs:long"/>
+</xs:sequence>
 </xs:complexType>
 
 <xs:complexType name="EntityInstanceExistsInCollectionException">
@@ -168,12 +170,6 @@
 </xs:complexType>
 
 <xs:complexType name="NoPartnersFoundException">
-<xs:sequence>
-<xs:element name="message" type="xs:string" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="BookingNotFoundException">
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>
@@ -230,6 +226,12 @@
 </xs:complexType>
 
 <xs:complexType name="RoomNotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="BookingNotFoundException">
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>
