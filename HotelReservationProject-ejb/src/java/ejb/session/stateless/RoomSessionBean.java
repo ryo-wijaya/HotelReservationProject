@@ -359,17 +359,15 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         Date startDate = booking.getCheckInDate();
         Date endDate = booking.getCheckOutDate();
         Boolean thisRoomWillBeFree = true;
-
+        //Integer totalAmountOfRooms = booking.getNumberOfUnallocatedRooms();
         try {
             for (Room r : rooms) {
-
                 //ADDED THE BOTTOM 5 LINES TO CHECK ROOM STATUS
                 if (r.getRoomStatus()) {
                     thisRoomWillBeFree = false;
                 } else {
                     thisRoomWillBeFree = true;
                 }
-
                 for (Booking b : r.getBookings()) {
                     if (startDate.compareTo(b.getCheckOutDate()) < 0) { //if startDate is before a room's booking's checkout date (coz if its after we good to go)
                         if (endDate.compareTo(b.getCheckInDate()) > 0) { //if endDate stop at a room's booking's checkin date
@@ -378,38 +376,47 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                         }
                     }
                 }
-
                 if (thisRoomWillBeFree) {
 
                     r.addBookings(booking);
                     booking.addRoom(r);
                     booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
                     
-                    if (booking.getBookingExceptionType() == BookingExceptionType.ERROR) {
-                        //add to number of type 1, this is the number of rooms that are successfully upgraded
+                }
+            }
+            if (booking.getNumberOfUnallocatedRooms() > 0) {
+                thisRoomWillBeFree = true;
+                List<Room> rooms2 = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
+                booking.setBookingExceptionType(BookingExceptionType.ERROR);
+                String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
+                RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
+                booking.setRoomType(nextHigherType);
+                
+                for (Room r : rooms2) {
+                    //ADDED THE BOTTOM 5 LINES TO CHECK ROOM STATUS
+                    if (r.getRoomStatus()) {
+                        thisRoomWillBeFree = false;
+                    } else {
+                        thisRoomWillBeFree = true;
+                    }
+                    for (Booking b : r.getBookings()) {
+                        if (startDate.compareTo(b.getCheckOutDate()) < 0) { //if startDate is before a room's booking's checkout date (coz if its after we good to go)
+                            if (endDate.compareTo(b.getCheckInDate()) > 0) { //if endDate stop at a room's booking's checkin date
+                                thisRoomWillBeFree = false; //THIS MEANS THAT THERES CLASH
+                                break;
+                            }
+                        }
+                    }
+                    if (thisRoomWillBeFree) {
+                        r.addBookings(booking);
+                        booking.addRoom(r);
+                        booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
                         booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
                     }
- 
-                    if (booking.getNumberOfUnallocatedRooms() > 0) {
-                        // whether its a type NONE or type 1, if the room is free we want to continue allocating other rooms
-                        this.findARoomAndAddToIt(bookingId);
-                    }
-                    
-                } else {
-                    
-                    if (booking.getBookingExceptionType() == BookingExceptionType.ERROR) {
-                        // bottom line is once room is not free and an upgrade has already been checked for we gtfo
-                        booking.setNumOfTypeTwos(booking.getNumberOfUnallocatedRooms());
-                        return;
-                    } else {
-                        // this is if room is not free and we have not started checking for a possible upgrade yet
-                        booking.setBookingExceptionType(BookingExceptionType.ERROR);
-                        String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
-                        RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
-                        booking.setRoomType(nextHigherType);
-                        this.findARoomAndAddToIt(bookingId);
-                    }
                 }
+            }
+            if (booking.getNumberOfUnallocatedRooms() > 0) {
+                booking.setNumOfTypeTwos(booking.getNumberOfUnallocatedRooms());
             }
         } catch (EntityInstanceExistsInCollectionException | RoomTypeNotFoundException ex) {
             throw new RoomNotFoundException();
