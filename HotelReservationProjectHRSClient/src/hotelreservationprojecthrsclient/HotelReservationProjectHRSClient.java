@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.Port;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -339,7 +341,7 @@ public class HotelReservationProjectHRSClient {
             Long bookingId;
             System.out.println("\nViewing my reservation details!");
             System.out.println("-------------------------------\n");
-            List<Booking> bookings = port.retrievePartnerByPartnerId(currentPartner.getPartnerId()).getBookings();
+            List<Booking> bookings = port.retrieveBookingByBookingId(currentPartner.getPartnerId());
             
             System.out.print("Enter a Booking ID>");
             if (bookings.isEmpty()) {
@@ -363,8 +365,8 @@ public class HotelReservationProjectHRSClient {
                     System.out.println("Number of rooms: " + booking.getNumberOfRooms());
                 }
             }
-        } catch (NoPartnersFoundException_Exception ex) {
-            System.out.println("partner not found!/n");
+        } catch (BookingNotFoundException_Exception ex) {
+            System.out.print("No existing partner!\n");
         }
     }
 
@@ -376,7 +378,7 @@ public class HotelReservationProjectHRSClient {
             
             System.out.println("\nViewing all my reservations!");
             System.out.println("----------------------------\n");
-            List<Booking> bookings = port.retrievePartnerByPartnerId(currentPartner.getPartnerId()).getBookings();
+            List<Booking> bookings = port.retrieveBookingByBookingId(currentPartner.getPartnerId());
             if(bookings.isEmpty()) {
                 System.out.print("No existing reservations!\n");
                 return;

@@ -22,6 +22,15 @@
 <message name="NoPartnersFoundException">
 <part name="fault" element="tns:NoPartnersFoundException"/>
 </message>
+<message name="retrieveBookingByBookingId">
+<part name="parameters" element="tns:retrieveBookingByBookingId"/>
+</message>
+<message name="retrieveBookingByBookingIdResponse">
+<part name="parameters" element="tns:retrieveBookingByBookingIdResponse"/>
+</message>
+<message name="BookingNotFoundException">
+<part name="fault" element="tns:BookingNotFoundException"/>
+</message>
 <message name="createNewBookingWithPartner">
 <part name="parameters" element="tns:createNewBookingWithPartner"/>
 </message>
@@ -48,9 +57,6 @@
 </message>
 <message name="RoomNotFoundException">
 <part name="fault" element="tns:RoomNotFoundException"/>
-</message>
-<message name="BookingNotFoundException">
-<part name="fault" element="tns:BookingNotFoundException"/>
 </message>
 <message name="getRateForOnlineBooking">
 <part name="parameters" element="tns:getRateForOnlineBooking"/>
@@ -92,6 +98,11 @@
 <input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/retrievePartnerByPartnerIdRequest" message="tns:retrievePartnerByPartnerId"/>
 <output wsam:Action="http://ws.session.ejb/WebServiceSessionBean/retrievePartnerByPartnerIdResponse" message="tns:retrievePartnerByPartnerIdResponse"/>
 <fault message="tns:NoPartnersFoundException" name="NoPartnersFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/retrievePartnerByPartnerId/Fault/NoPartnersFoundException"/>
+</operation>
+<operation name="retrieveBookingByBookingId">
+<input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/retrieveBookingByBookingIdRequest" message="tns:retrieveBookingByBookingId"/>
+<output wsam:Action="http://ws.session.ejb/WebServiceSessionBean/retrieveBookingByBookingIdResponse" message="tns:retrieveBookingByBookingIdResponse"/>
+<fault message="tns:BookingNotFoundException" name="BookingNotFoundException" wsam:Action="http://ws.session.ejb/WebServiceSessionBean/retrieveBookingByBookingId/Fault/BookingNotFoundException"/>
 </operation>
 <operation name="createNewBookingWithPartner">
 <input wsam:Action="http://ws.session.ejb/WebServiceSessionBean/createNewBookingWithPartnerRequest" message="tns:createNewBookingWithPartner"/>
@@ -158,6 +169,18 @@
 </output>
 <fault name="NoPartnersFoundException">
 <soap:fault name="NoPartnersFoundException" use="literal"/>
+</fault>
+</operation>
+<operation name="retrieveBookingByBookingId">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="BookingNotFoundException">
+<soap:fault name="BookingNotFoundException" use="literal"/>
 </fault>
 </operation>
 <operation name="createNewBookingWithPartner">

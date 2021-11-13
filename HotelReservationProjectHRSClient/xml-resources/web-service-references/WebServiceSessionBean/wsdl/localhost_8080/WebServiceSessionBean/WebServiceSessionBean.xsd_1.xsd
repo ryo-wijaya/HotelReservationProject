@@ -44,6 +44,10 @@
 
 <xs:element name="getRoomTypeByNameResponse" type="tns:getRoomTypeByNameResponse"/>
 
+<xs:element name="retrieveBookingByBookingId" type="tns:retrieveBookingByBookingId"/>
+
+<xs:element name="retrieveBookingByBookingIdResponse" type="tns:retrieveBookingByBookingIdResponse"/>
+
 <xs:element name="retrievePartnerByPartnerId" type="tns:retrievePartnerByPartnerId"/>
 
 <xs:element name="retrievePartnerByPartnerIdResponse" type="tns:retrievePartnerByPartnerIdResponse"/>
@@ -196,6 +200,24 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="retrieveBookingByBookingId">
+<xs:sequence>
+<xs:element name="bookingId" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="retrieveBookingByBookingIdResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:booking" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="BookingNotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="doLogin">
 <xs:sequence>
 <xs:element name="username" type="xs:string" minOccurs="0"/>
@@ -226,12 +248,6 @@
 </xs:complexType>
 
 <xs:complexType name="RoomNotFoundException">
-<xs:sequence>
-<xs:element name="message" type="xs:string" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="BookingNotFoundException">
 <xs:sequence>
 <xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>

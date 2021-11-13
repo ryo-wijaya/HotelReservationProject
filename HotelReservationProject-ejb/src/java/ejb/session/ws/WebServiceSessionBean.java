@@ -138,4 +138,9 @@ public class WebServiceSessionBean {
             throws RoomNotFoundException, BookingNotFoundException {
         roomSessionBean.findARoomAndAddToIt(bookingId);
     }
+    
+    @WebMethod(operationName = "retrieveBookingByBookingId")
+    public List<Booking> retrieveBookingByBookingId(@WebParam(name = "bookingId")Long partnerId) throws BookingNotFoundException {
+        return bookingSessionBean.getAllBookingsByPartnerId(partnerId);
+    }
 }
