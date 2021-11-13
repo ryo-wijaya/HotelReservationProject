@@ -72,7 +72,7 @@ public class FrontOfficeModule {
             System.out.println("2. Walk-in Reserve Room");
             System.out.println("3. Check-in Guest");
             System.out.println("4. Check-out Guest");
-            System.out.println("5. Mannual Allocation");
+            System.out.println("5. Manual Allocation");
             System.out.println("6. Logout");
 
             System.out.print("Please select an option>");
@@ -118,8 +118,11 @@ public class FrontOfficeModule {
             Date checkInDate = inputDateFormat.parse(sc.nextLine().trim());
             List<Booking> bookings = bookingSessionBeanRemote.getBookingsByCheckInDate(checkInDate);
             for(Booking booking : bookings) {
-                roomSessionBeanRemote.findARoomAndAddToIt(booking.getBookingId());
+                roomSessionBeanRemote.findARoomAndAddToIt(booking.getBookingId(), false);
             }
+            
+            System.out.println("Succesfully allocated!");
+            
         } catch (ParseException ex) {
             System.out.println("Invalid Date!");
         } catch (BookingNotFoundException ex) {
@@ -216,7 +219,7 @@ public class FrontOfficeModule {
                 }
             }
             if(availableBooking.getCheckInDate().equals(cDate) && rtime >= 2){
-                roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
+                roomSessionBeanRemote.findARoomAndAddToIt(bookingId, false);
             }
             
             System.out.println("Hotel room(s) successfully reserved!");

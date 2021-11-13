@@ -268,9 +268,11 @@ public class MainApp {
                 }
             }
             if(availableBooking.getCheckInDate().equals(cDate) && rtime >= 2){
-                roomSessionBeanRemote.findARoomAndAddToIt(bookingId);
+                roomSessionBeanRemote.findARoomAndAddToIt(bookingId, false);
             }
+            System.out.println("Booking ID is: " + bookingId);
             System.out.println("Hotel room(s) successfully reserved!");
+            
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Room type not found!");
         } catch (CustomerNotFoundException ex) {

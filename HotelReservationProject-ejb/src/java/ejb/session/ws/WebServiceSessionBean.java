@@ -87,12 +87,12 @@ public class WebServiceSessionBean {
     }
 
     @WebMethod(operationName = "createNewBookingWithPartner")
-    public void createNewBookingWithPartner(@WebParam(name = "booking") Booking booking, @WebParam(name = "roomTypeId") long roomTypeId, @WebParam(name = "partnerId") long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException, BookingNotFoundException {
+    public void createNewBookingWithPartner(@WebParam(name = "booking") Booking booking, @WebParam(name = "roomTypeId") Long roomTypeId, @WebParam(name = "partnerId") Long partnerId) throws RoomTypeNotFoundException, EntityInstanceExistsInCollectionException, NoPartnersFoundException, BookingNotFoundException {
         bookingSessionBean.createNewBookingWithPartner(booking, roomTypeId, partnerId);
     }
 
     @WebMethod(operationName = "getAllBookingsByPartnerId")
-    public List<Booking> getAllBookingsByPartnerId(@WebParam(name = "partnerId") long partnerId) throws BookingNotFoundException, EntityInstanceMissingInCollectionException {
+    public List<Booking> getAllBookingsByPartnerId(@WebParam(name = "partnerId") Long partnerId) throws BookingNotFoundException, EntityInstanceMissingInCollectionException {
         List<Booking> bookings = bookingSessionBean.getAllBookingsByPartnerId(partnerId);
         for (Booking booking : bookings) {
             em.detach(booking);
@@ -120,7 +120,7 @@ public class WebServiceSessionBean {
     }
     
     @WebMethod(operationName = "retrievePartnerByPartnerId")
-    public Partner retrievePartnerByPartnerId(@WebParam(name = "partnerId") long partnerId) throws NoPartnersFoundException {
+    public Partner retrievePartnerByPartnerId(@WebParam(name = "partnerId") Long partnerId) throws NoPartnersFoundException {
         Partner partner = partnerSessionBean.retrievePartnerByPartnerId(partnerId);
         em.detach(partner);
         List<Booking> bookings = partner.getBookings();
@@ -132,7 +132,8 @@ public class WebServiceSessionBean {
     }
     
     @WebMethod(operationName = "findARoomAndAddToIt")
-    public void findARoomAndAddToIt(@WebParam(name = "bookingId") long bookingId) throws RoomNotFoundException, BookingNotFoundException {
-        roomSessionBean.findARoomAndAddToIt(bookingId);
+    public void findARoomAndAddToIt(@WebParam(name = "bookingId") Long bookingId, @WebParam(name = "hasHadAnExceptionOnce") Boolean hasHadAnExceptionOnce) 
+            throws RoomNotFoundException, BookingNotFoundException {
+        roomSessionBean.findARoomAndAddToIt(bookingId, false);
     }
 }

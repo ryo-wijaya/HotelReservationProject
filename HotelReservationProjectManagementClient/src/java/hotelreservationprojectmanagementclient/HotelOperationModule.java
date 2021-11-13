@@ -573,10 +573,10 @@ public class HotelOperationModule {
 
                 } else if (option == 2) {
                     if (room.getRoomStatus()) {
-                        System.out.println("Room status changed from in-use to not-in-use");
+                        System.out.println("Room status changed from unavailable to available");
                         room.setRoomStatus(false);
                     } else {
-                        System.out.println("Room changed from not-in-use to in-use");
+                        System.out.println("Room changed from available to unavailable");
                         room.setRoomStatus(true);
                     }
                     roomSessionBeanRemote.updateRoom(room);

@@ -278,7 +278,8 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     }
 
     @Override
-    public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException, BookingNotFoundException {
+    public void findARoomAndAddToIt(Long bookingId, Boolean hasHadAnExceptionOnce) throws RoomNotFoundException, BookingNotFoundException {
+        
         Booking booking;
         booking = bookingSessionBeanLocal.retrieveBookingByBookingId(bookingId);
         List<Room> rooms = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
@@ -317,13 +318,13 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             if (!thisRoomWillBeFree) { //no available rooms
                 String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
 
-                if (!nextHigherRoomTypeString.equals("None")) {
-
+                if (!nextHigherRoomTypeString.equals("None") && !hasHadAnExceptionOnce) {
+                    
                     RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
                     booking.setRoomType(nextHigherType);
                     booking.setBookingExceptionType(BookingExceptionType.ERROR);
                     booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
-                    this.findARoomAndAddToIt(bookingId);
+                    this.findARoomAndAddToIt(bookingId, true);
 
                 } else { //no available rooms and no available higher room types
                     booking.setBookingExceptionType(BookingExceptionType.ERROR);
@@ -333,7 +334,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             }
 
             if (booking.getNumberOfUnallocatedRooms() != 0 && booking.getBookingExceptionType() == BookingExceptionType.NONE) {
-                this.findARoomAndAddToIt(bookingId);
+                this.findARoomAndAddToIt(bookingId, false);
             }
 
         } catch (EntityInstanceExistsInCollectionException | RoomTypeNotFoundException ex) {

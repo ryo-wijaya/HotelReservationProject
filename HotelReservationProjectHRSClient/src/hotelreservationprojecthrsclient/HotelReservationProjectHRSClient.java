@@ -319,8 +319,9 @@ public class HotelReservationProjectHRSClient {
                 }
             }
             if(booking.getCheckInDate().equals(cDate) && rtime >= 2){
-                port.findARoomAndAddToIt(booking.getBookingId());
+                port.findARoomAndAddToIt(booking.getBookingId(), false);
             }
+            System.out.println("Booking ID is: " + bookingId);
             System.out.println("Hotel room(s) successfully reserved!");
         } catch (BookingNotFoundException_Exception | EntityInstanceExistsInCollectionException_Exception | NoPartnersFoundException_Exception | RoomTypeNotFoundException_Exception | ParseException | RoomNotFoundException_Exception ex) {
             System.out.println("ERROR!");
