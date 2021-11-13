@@ -138,74 +138,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         List<Room> rooms = query.getResultList();
         return rooms.isEmpty();
     }
-
-    /*
-    @Override
-    public List<RoomType> walkInSearchRoom(Date startDate, Date endDate) throws RoomNotFoundException {
-
-        //The way to make this method alot simpler is to make RoomType - Room bidirectional - NOTE IN CASE THIS DOESNT WORK
-        List<Room> rooms = this.retrieveRooms();
-        List<RoomType> freeRoomTypes = new ArrayList<>();
-        HashSet<String> set = new HashSet<String>();
-
-        try {
-
-            for (Room r : rooms) {
-                Boolean thisRoomWillBeFree = true;
-                for (Booking b : r.getBookings()) {
-                    if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) { //THIS MEANS THAT THERES CLASH
-                        thisRoomWillBeFree = false;
-                        break;
-
-                    }
-                }
-                if (thisRoomWillBeFree) {
-                    set.add(r.getRoomType().getRoomName()); //these are the room types that are free
-                }
-            }
-
-            for (String s : set) {
-                //Making a copy of the Room Type but with an UPDATED inventory (total inventory - dates its booked)
-                //set current inventory to current inventory
-                freeRoomTypes.add(new RoomType(s, roomTypeSessionBeanLocal.getRoomTypeByName(s).getRoomInventory()));
-
-            }
-
-            for (Room r : rooms) {
-                for (Booking b : r.getBookings()) {
-                    if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) { //THIS MEANS THAT THERES CLASH
-                        for (RoomType rt : freeRoomTypes) { //if that room is of the room type, decremenet its inventory by 1
-                            if (rt.getRoomName().equals(r.getRoomType().getRoomName())) {
-                                rt.setRoomInventory(rt.getRoomInventory() - 1);
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-
-            //CHECKING ALL PRE BOOKINGS FOR NUMBER OF ROOMS BOOKED ON THAT DATE AND MINUSING IT FROM INVENTORY OF THE FAKEROOMTYPE RETURNED
-            for (RoomType rt : freeRoomTypes) {
-
-                Query query = em.createQuery("SELECT b FROM Booking b WHERE b.preBooking = :inPreBooking AND b.roomType.roomTypeId = :inRoomTypeId");
-                query.setParameter("inPreBooking", Boolean.TRUE);
-                query.setParameter("inRoomTypeId", rt.getRoomTypeId());
-                List<Booking> bookings = query.getResultList(); //list of bookings of the same room type
-
-                for (Booking b : bookings) {
-                    if (startDate.before(b.getCheckOutDate()) && endDate.after(b.getCheckInDate())) { //THIS MEANS THAT THERES CLASH
-                        rt.setRoomInventory(rt.getRoomInventory() - b.getNumberOfRooms());
-                        break;
-                    }
-                }
-            }
-            return freeRoomTypes;
-        } catch (RoomTypeNotFoundException ex) {
-            throw new RoomNotFoundException();
-        }
-    }
     
-     */
     @Override
     public HashMap<Long, Integer> walkInSearchRoom(Date startDate, Date endDate) throws RoomTypeNotFoundException {
         // New and improved method, unlike the shitty monstrocity above
@@ -279,80 +212,6 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
     @Override
     public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException, BookingNotFoundException {
-
-        /*
-        Booking booking;
-        booking = bookingSessionBeanLocal.retrieveBookingByBookingId(bookingId);
-        List<Room> rooms = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
-        Date startDate = booking.getCheckInDate();
-        Date endDate = booking.getCheckOutDate();
-        Boolean thisRoomWillBeFree = true;
-
-        booking.setPreBooking(false);
-
-        try {
-            for (Room r : rooms) {
-
-                //ADDED THE BOTTOM 5 LINES TO CHECK ROOM STATUS
-                if (r.getRoomStatus()) {
-                    thisRoomWillBeFree = false;
-                } else {
-                    thisRoomWillBeFree = true;
-                }
-
-                for (Booking b : r.getBookings()) {
-                    if (startDate.compareTo(b.getCheckOutDate()) < 0) { //if startDate is before a room's booking's checkout date (coz if its after we good to go)
-                        if (endDate.compareTo(b.getCheckInDate()) > 0) { //if endDate stop at a room's booking's checkin date
-                            thisRoomWillBeFree = false; //THIS MEANS THAT THERES CLASH
-                        }
-                    }
-                }
-                if (thisRoomWillBeFree) {
-                    if (hasHadAnExceptionOnce) {
-                        booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
-                    }
-                    r.addBookings(booking);
-                    booking.addRoom(r);
-                    booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
-                    break;
-                } else {
-                    if (hasHadAnExceptionOnce) {
-                        booking.setBookingExceptionType(BookingExceptionType.ERROR);
-                        //booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
-                        booking.setNumOfTypeTwos(booking.getNumberOfUnallocatedRooms());
-                        return;
-                    }
-                }
-            }
-
-            if (!thisRoomWillBeFree) { //no available rooms
-                String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
-
-                if (!nextHigherRoomTypeString.equals("None") && !hasHadAnExceptionOnce) {
-
-                    RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
-                    booking.setRoomType(nextHigherType);
-                    booking.setBookingExceptionType(BookingExceptionType.ERROR);
-                    //booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
-                    this.findARoomAndAddToIt(bookingId, true);
-
-                }
-            }
-
-            //this runs when there is no exceptions
-            if (booking.getNumberOfUnallocatedRooms() != 0 && booking.getBookingExceptionType() == BookingExceptionType.NONE) {
-                this.findARoomAndAddToIt(bookingId, false);
-            }
-            
-            if (booking.getNumberOfUnallocatedRooms() != 0) {
-                this.findARoomAndAddToIt(bookingId, true);
-            }
-
-        } catch (EntityInstanceExistsInCollectionException | RoomTypeNotFoundException ex) {
-            throw new RoomNotFoundException();
-        }
-         */
-        //----------------------------------------------------------------------------------
         Booking booking;
         booking = bookingSessionBeanLocal.retrieveBookingByBookingId(bookingId);
         List<Room> rooms = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
@@ -386,12 +245,11 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
             }
             if (booking.getNumberOfUnallocatedRooms() > 0) {
                 thisRoomWillBeFree = true;
-                List<Room> rooms2 = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
                 booking.setBookingExceptionType(BookingExceptionType.ERROR);
                 String nextHigherRoomTypeString = booking.getRoomType().getNextHigherRoomType();
                 RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
                 booking.setRoomType(nextHigherType);
-                
+                List<Room> rooms2 = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
                 for (Room r : rooms2) {
                     //ADDED THE BOTTOM 5 LINES TO CHECK ROOM STATUS
                     if (r.getRoomStatus()) {
