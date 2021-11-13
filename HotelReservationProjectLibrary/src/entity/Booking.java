@@ -48,6 +48,8 @@ public class Booking implements Serializable {
     private Integer numberOfRooms;
     private Integer numberOfUnallocatedRooms;
     private BookingExceptionType bookingExceptionType;
+    private Integer numOfTypeOnes;
+    private Integer numOfTypeTwos;
     
     // many to one relationship with customer
     @ManyToOne(fetch = FetchType.LAZY, cascade = {})
@@ -70,6 +72,8 @@ public class Booking implements Serializable {
         bookingExceptionType = BookingExceptionType.NONE;
         this.checkInDate = null;
         this.checkOutDate = null;
+        this.numOfTypeOnes = 0;
+        this.numOfTypeTwos = 0;
     }
 
     public Booking(Integer numberOfRooms, Date checkInDate, Date checkOutDate) {
@@ -90,6 +94,22 @@ public class Booking implements Serializable {
 
     public void setNumberOfUnallocatedRooms(Integer numberOfUnallocatedRooms) {
         this.numberOfUnallocatedRooms = numberOfUnallocatedRooms;
+    }
+
+    public Integer getNumOfTypeOnes() {
+        return numOfTypeOnes;
+    }
+
+    public void setNumOfTypeOnes(Integer numOfTypeOnes) {
+        this.numOfTypeOnes = numOfTypeOnes;
+    }
+
+    public Integer getNumOfTypeTwos() {
+        return numOfTypeTwos;
+    }
+
+    public void setNumOfTypeTwos(Integer numOfTypeTwos) {
+        this.numOfTypeTwos = numOfTypeTwos;
     }
 
     public void setBookingExceptionType(BookingExceptionType bookingExceptionType) {

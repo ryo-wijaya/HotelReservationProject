@@ -623,9 +623,9 @@ public class HotelOperationModule {
             for (Room r : rooms) {
                 String status;
                 if (r.getRoomStatus()) {
-                    status = "Occupied";
+                    status = "Unavailable";
                 } else {
-                    status = "Empty";
+                    status = "Available";
                 }
                 System.out.println("Room number: " + r.getRoomNumber() + " | Room Type: " + r.getRoomType().getRoomName() + " | Room status: " + status);
             }
@@ -753,6 +753,7 @@ public class HotelOperationModule {
                 }
 
                 roomRateSessionBeanRemote.createNewRoomRate(newRate, roomType.getRoomTypeId());
+                System.out.println("Room Rate Created!");
 
             } else {
                 System.out.println("This Room Type already has either a PUBLISHEDRATE or a NORMALRATE");
