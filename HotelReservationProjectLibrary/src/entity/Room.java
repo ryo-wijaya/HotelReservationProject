@@ -34,10 +34,12 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
     @Column(nullable = false, length = 4, unique = true)
-    //@NotNull
-    //@Size(min = 4, max = 4)
+    @NotNull
+    @Size(min = 4, max = 4)
     private String roomNumber;
+    @NotNull
     private Boolean roomStatus;
+    @NotNull
     private Boolean enabled;
     
     @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = {})
