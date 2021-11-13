@@ -28,6 +28,8 @@ import javax.validation.ValidatorFactory;
 import util.enumeration.RateType;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -54,7 +56,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     }
 
     @Override
-    public Long createNewRoomType(RoomType roomType) {
+    public Long createNewRoomType(RoomType roomType) throws UnknownPersistenceException, SQLIntegrityViolationException {
         Set<ConstraintViolation<RoomType>> constraintViolations = validator.validate(roomType);
         if (constraintViolations.isEmpty()) {
             try {
@@ -64,15 +66,17 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                     if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
-                        
+                        throw new SQLIntegrityViolationException();
                     } else {
                         throw new UnknownPersistenceException(ex.getMessage());
                     }
+                } else {
+                    throw new UnknownPersistenceException(ex.getMessage());
                 }
             }
+        } else {
+            throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
-
-        return roomType.getRoomTypeId();
     }
 
     @Override
@@ -239,5 +243,15 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new RoomTypeNotFoundException();
         }
+    }
+
+    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RoomType>> constraintViolations) {
+        String msg = "Input data validation error!:";
+
+        for (ConstraintViolation constraintViolation : constraintViolations) {
+            msg += "\n\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage();
+        }
+
+        return msg;
     }
 }
