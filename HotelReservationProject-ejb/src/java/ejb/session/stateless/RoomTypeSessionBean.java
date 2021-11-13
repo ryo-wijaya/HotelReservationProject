@@ -10,6 +10,7 @@ import entity.RoomRate;
 import entity.RoomType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -18,7 +19,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import util.enumeration.RateType;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
@@ -39,10 +45,33 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
     private EntityManager em;
 
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
+
+    public RoomTypeSessionBean() {
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
+    }
+
     @Override
     public Long createNewRoomType(RoomType roomType) {
-        em.persist(roomType);
-        em.flush();
+        Set<ConstraintViolation<RoomType>> constraintViolations = validator.validate(roomType);
+        if (constraintViolations.isEmpty()) {
+            try {
+                em.persist(roomType);
+                em.flush();
+                return roomType.getRoomTypeId();
+            } catch (PersistenceException ex) {
+                if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
+                    if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
+                        
+                    } else {
+                        throw new UnknownPersistenceException(ex.getMessage());
+                    }
+                }
+            }
+        }
+
         return roomType.getRoomTypeId();
     }
 
@@ -77,7 +106,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomTypeName AND r.enabled =:inEnabled");
         query.setParameter("inEnabled", Boolean.TRUE);
         query.setParameter("inRoomTypeName", roomTypeName);
-        
+
         try {
             RoomType roomType = (RoomType) query.getSingleResult();
             roomType.getListOfRoomRates().size();
@@ -125,13 +154,12 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             return null;
         }
     }
-    */
-
+     */
     @Override
     public void updateRoomType(RoomType roomType) {
         em.merge(roomType);
     }
- 
+
     @Override
     public void deleteRoomType(Long id) throws RoomTypeNotFoundException {
         boolean roomTypeEmpty = roomSessionBean.checkForRoomTypeUsage(getRoomTypeById(id).getRoomName());
@@ -146,9 +174,9 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             } catch (RoomTypeNotFoundException | RoomRateNotFoundException ex) {
                 throw new RoomTypeNotFoundException();
             }
-        } 
+        }
     }
-    
+
     @Override
     public List<RoomRate> getRoomRateByRoomNameAndRateType(String roomName, RateType rateType) throws RoomTypeNotFoundException {
         RoomType roomType = getRoomTypeByName(roomName);
@@ -161,7 +189,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
         }
         return filteredRates;
     }
-    
+
     /*
     @Override
     public List<RoomRate> getRoomRateByRoomTypeRankAndRateType(int roomRank, RateType rateType) throws RoomRateNotFoundException {
@@ -182,17 +210,16 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             return filteredRates;
         }
     }
-    */
-    
+     */
     @Override
-    public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName) throws RoomTypeNotFoundException{
+    public void changeNextHigherRoomTypeNameForAChangedRoomTypeName(String oldRoomTypeName, String newRoomTypeName) throws RoomTypeNotFoundException {
         try {
             Query query2 = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.NextHigherRoomType = :inOldName");
             query2.setParameter("inOldName", oldRoomTypeName);
-            
-            RoomType roomTypesToChange = (RoomType)query2.getSingleResult();
+
+            RoomType roomTypesToChange = (RoomType) query2.getSingleResult();
             roomTypesToChange.setNextHigherRoomType(newRoomTypeName);
-            
+
             RoomType roomTypeWithNewName = getRoomTypeByName(oldRoomTypeName);
             roomTypeWithNewName.setRoomName(newRoomTypeName);
 
@@ -200,9 +227,9 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
             throw new RoomTypeNotFoundException();
         }
     }
-    
+
     @Override
-    public RoomType getTheLowerRoomType(String roomTypeName)throws RoomTypeNotFoundException {
+    public RoomType getTheLowerRoomType(String roomTypeName) throws RoomTypeNotFoundException {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.NextHigherRoomType = :inRoomType");
         query.setParameter("inRoomType", roomTypeName);
         try {

@@ -15,7 +15,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import util.exceptions.EntityInstanceExistsInCollectionException;
 import util.exceptions.EntityInstanceMissingInCollectionException;
@@ -32,18 +34,22 @@ public class RoomType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
     @Column(nullable = false, length = 24, unique = true)
-    //@NotNull
-    //@Size(min = 1, max = 16)
+    @NotNull
+    @Size(min = 1, max = 64)
     private String roomName;
     @Column(nullable = false)
-    //@NotNull
+    @NotNull
     private String NextHigherRoomType;
+    @NotNull
     private Boolean enabled;
+    @Size(min = 1, max = 240)
     private String description;
+    @Size(min = 1, max = 240)
     private String roomSize;
     private Integer beds;
     private Integer capacity;
     private List<String> amenities;
+    @PositiveOrZero
     private Integer roomInventory;
     
     @OneToMany(cascade = {}, fetch = FetchType.LAZY)
