@@ -23,12 +23,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -44,13 +52,19 @@ public class FrontOfficeModule {
     private HotelReservationBeanRemote hotelReservationBeanRemote;
     private BookingSessionBeanRemote bookingSessionBeanRemote;
     private Employee employee;
+    
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
 
     public FrontOfficeModule() {
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
     }
 
     public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote,
             RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote,
             HotelReservationBeanRemote hotelReservationBeanRemote, BookingSessionBeanRemote bookingSessionBeanRemote, Employee employee) {
+        this();
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.customerSessionBeanRemote = customerSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
@@ -194,17 +208,21 @@ public class FrontOfficeModule {
     private void walkInReserveRoom(Scanner sc) {
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
         SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        long bookingId = 0;
         try {
             System.out.println("\nYou are now reserving a Room for a walk-in customer");
             System.out.println("---------------------------------------------------\n");
             Booking availableBooking = walkInSearchRoom(sc);
             System.out.print("Please enter a room type name> ");
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(sc.nextLine().trim());
-            //Date checkIn = availableBooking.getCheckInDate();
-            //Date checkOut = availableBooking.getCheckOutDate();
-            //Integer numOfRoom = availableBooking.getNumberOfRooms();
-            //Booking booking = new Booking(numOfRoom, checkIn, checkOut);
-            long bookingId = bookingSessionBeanRemote.createNewBooking(availableBooking, roomType.getRoomTypeId());
+            Set<ConstraintViolation<Booking>>constraintViolations = validator.validate(availableBooking);
+            if(constraintViolations.isEmpty()) {
+                try {
+                    bookingId = bookingSessionBeanRemote.createNewBooking(availableBooking, roomType.getRoomTypeId());
+                } catch (SQLIntegrityViolationException | UnknownPersistenceException | InputDataValidationException ex) {
+                    System.out.print("Invalid booking contraints!");
+                }
+            }
             System.out.print("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
             Double rtime = 0.0;
@@ -229,9 +247,9 @@ public class FrontOfficeModule {
         } catch (ParseException ex) {
             System.out.print("Invalid Date!");
         } catch (RoomNotFoundException ex) {
-            System.out.print("Room not found!");
+            Logger.getLogger(FrontOfficeModule.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BookingNotFoundException ex) {
-            System.out.print("Booking not found!");
+            Logger.getLogger(FrontOfficeModule.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
