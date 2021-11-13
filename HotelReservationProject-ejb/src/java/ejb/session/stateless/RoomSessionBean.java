@@ -319,18 +319,16 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
 
                 if (!nextHigherRoomTypeString.equals("None")) {
 
-                    if (booking.getBookingExceptionType() == BookingExceptionType.TYPE1) {
-                        booking.setBookingExceptionType(BookingExceptionType.TYPE2);
-                        return;
-                    }
-
                     RoomType nextHigherType = roomTypeSessionBeanLocal.getRoomTypeByName(nextHigherRoomTypeString);
                     booking.setRoomType(nextHigherType);
-                    booking.setBookingExceptionType(BookingExceptionType.TYPE1);
+                    booking.setBookingExceptionType(BookingExceptionType.ERROR);
+                    booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
                     this.findARoomAndAddToIt(bookingId);
 
                 } else { //no available rooms and no available higher room types
-                    booking.setBookingExceptionType(BookingExceptionType.TYPE2);
+                    booking.setBookingExceptionType(BookingExceptionType.ERROR);
+                    booking.setNumOfTypeTwos(booking.getNumberOfUnallocatedRooms());
+                    return;
                 }
             }
 
