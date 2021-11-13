@@ -53,7 +53,7 @@ public class HotelReservationProjectHRSClient {
     private static Partner currentPartner;
 
     public static void main(String[] args) {
-        //runMainMenu();
+        runMainMenu();
     }
 
     
@@ -243,15 +243,16 @@ public class HotelReservationProjectHRSClient {
             }
             
            // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
-            HashMapWrapper map = port.walkInSearchRoom(start, end);
+            HashMapWrapper wrappedMap = port.walkInSearchRoom(start, end);
+            Map<Long, Integer> myMap = (Map<Long, Integer>) wrappedMap.getMap();
 
             //Iterating over each Room Type and Inventory mapping
             //Iterating over each Room Type and Inventory mapping
-            for (Map.Entry<Long, Integer> pair : map.entrySet()) {
+            for (Map.Entry<Long, Integer> pair : myMap.entrySet()) {
                 roomType = port.getRoomTypeById(pair.getKey());
                 if (pair.getValue() >= numOfRooms) {
                     System.out.println("Room Type: " + roomType.getRoomName() + " | " + "Number Of Rooms Left: " + pair.getValue() + " | price for the number of days: " 
-                        + port.getRateForOnlineBooking(roomType.getRoomTypeId(), startDateString, endDateString, numOfRooms));
+                        + port.getRateForOnlineBooking(roomType.getRoomTypeId(), start, end, numOfRooms));
                 }
             }
 
@@ -272,8 +273,10 @@ public class HotelReservationProjectHRSClient {
             System.out.println("Invalid date input!");
         } catch (RoomTypeNotFoundException_Exception ex) {
             System.out.println("No published rate found!");
+        } catch (RoomNotFoundException_Exception ex) {
+            System.out.println("Room not Found");
         } catch (RoomRateNotFoundException_Exception ex) {
-            System.out.println("Room Rate Not Found");
+            System.out.println("Room Rate not found!");
         }
         return null;
     }
@@ -293,18 +296,38 @@ public class HotelReservationProjectHRSClient {
             XMLGregorianCalendar checkOut;
             System.out.println("\nYou are now reserving a Hotel Room");
             System.out.println("------------------------------------\n");
-            Booking availableBooking = searchRoom();
+
             System.out.print("Please enter a room type name> ");
             RoomType roomType = port.getRoomTypeByName(sc.nextLine().trim());
-            checkIn = availableBooking.getCheckInDate();
-            checkOut = availableBooking.getCheckOutDate();
-            Date checkInDate = checkIn.toGregorianCalendar().getTime();
-            Date checkOutDate = checkOut.toGregorianCalendar().getTime();
-            Integer numOfRoom = availableBooking.getNumberOfRooms();
+            
+            Date startDateString;
+            Date endDateString;
+            XMLGregorianCalendar start = null;
+            XMLGregorianCalendar end = null;
+            String roomTypeName;
+            int numOfRooms = 0;
+            while (numOfRooms != 404) {
+                System.out.print("Input the number of rooms you want (that are of this Room Type)> ");
+                try {
+                    numOfRooms = Integer.parseInt(sc.nextLine().trim());
+                    break;
+                } catch (NumberFormatException ex) {
+                    numOfRooms = 404;
+                    System.out.println("Enter a valid number!");
+                }
+            }
+            System.out.print("Enter Check In Date (dd/mm/yyyy)> ");
+            startDateString = inputDateFormat.parse(sc.nextLine().trim());
+            gc.setTime(startDateString);
+            start = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
+            System.out.print("Enter Check Out Date (dd/mm/yyyy)> ");
+            endDateString = inputDateFormat.parse(sc.nextLine().trim());
+            gc.setTime(endDateString);
+            end = DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
             Booking booking = new Booking();
-            booking.setCheckInDate(checkIn);
-            booking.setCheckOutDate(checkOut);
-            booking.setNumberOfRooms(numOfRoom);
+            booking.setCheckInDate(start);
+            booking.setCheckOutDate(end);
+            booking.setNumberOfRooms(numOfRooms);
             booking.setBookingExceptionType(ws.client.BookingExceptionType.NONE);
             booking.setPreBooking(Boolean.TRUE);
             long bookingId = port.createNewBookingWithPartner(booking, roomType.getRoomTypeId(), currentPartner.getPartnerId());
@@ -328,6 +351,8 @@ public class HotelReservationProjectHRSClient {
             System.out.println("Hotel room(s) successfully reserved!");
         } catch (BookingNotFoundException_Exception | EntityInstanceExistsInCollectionException_Exception | NoPartnersFoundException_Exception | RoomTypeNotFoundException_Exception | ParseException | RoomNotFoundException_Exception ex) {
             System.out.println("ERROR!");
+        } catch (DatatypeConfigurationException ex) {
+            Logger.getLogger(HotelReservationProjectHRSClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -361,12 +386,12 @@ public class HotelReservationProjectHRSClient {
                     System.out.println("Booking Id: " + booking.getBookingId());
                     System.out.println("Check In Date: " + booking.getCheckInDate());
                     System.out.println("Check Out Date: " + booking.getCheckOutDate());
-                    System.out.println("Room Type: " + booking.getRoomType());
+                    System.out.println("Room Type: " + booking.getRoomType().getRoomName());
                     System.out.println("Number of rooms: " + booking.getNumberOfRooms());
                 }
             }
         } catch (BookingNotFoundException_Exception ex) {
-            System.out.print("No existing partner!\n");
+            System.out.print("No existing reservation!\n");
         }
     }
 
@@ -387,13 +412,14 @@ public class HotelReservationProjectHRSClient {
                 System.out.println("Booking ID: " + b.getBookingId());
                 System.out.println("Start Date: " + b.getCheckInDate());
                 System.out.println("End Date: " + b.getCheckOutDate());
-                System.out.println("Room Type: " + b.getRoomType());
+                System.out.println("Room Type: " + b.getRoomType().getRoomName());
                 System.out.println("Number of rooms: " + b.getNumberOfRooms());
                 System.out.println("");
             }
-        } catch (NoPartnersFoundException_Exception ex) {
-            System.out.println("partner not found!/n");
+        } catch (BookingNotFoundException_Exception ex) {
+            System.out.print("No existing reservations!\n");
         }
 
     }
+
 }

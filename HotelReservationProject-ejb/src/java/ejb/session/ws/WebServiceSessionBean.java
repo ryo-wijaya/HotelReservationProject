@@ -18,6 +18,8 @@ import entity.RoomType;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
@@ -141,6 +143,27 @@ public class WebServiceSessionBean {
     
     @WebMethod(operationName = "retrieveBookingByBookingId")
     public List<Booking> retrieveBookingByBookingId(@WebParam(name = "bookingId")Long partnerId) throws BookingNotFoundException {
-        return bookingSessionBean.getAllBookingsByPartnerId(partnerId);
+        List<Booking> bookings = bookingSessionBean.getAllBookingsByPartnerId(partnerId);
+        for (Booking booking : bookings) {
+            try {
+                em.detach(booking);
+                
+                Partner partner = booking.getPartner();
+                em.detach(partner);
+                partner.removeBooking(booking);
+                
+                Customer customer = booking.getCustomer();
+                em.detach(customer);
+                customer.removeBooking(booking);
+                
+                for (Room room : booking.getRooms()) {
+                    em.detach(room);
+                    room.removeBookings(booking);
+                }
+            } catch (EntityInstanceMissingInCollectionException ex) {
+                System.out.println("no bookings found!");
+            }
+        }
+        return bookings;
     }
 }
