@@ -26,6 +26,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.BookingExceptionType;
@@ -72,9 +73,9 @@ public class BookingSessionBean implements BookingSessionBeanLocal, BookingSessi
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
 
-    public BookingSessionBean(ValidatorFactory validatorFactory, Validator validator) {
-        this.validatorFactory = validatorFactory;
-        this.validator = validator;
+    public BookingSessionBean() {
+        this.validatorFactory = Validation.buildDefaultValidatorFactory();
+        this.validator = validatorFactory.getValidator();
     }
     
     
