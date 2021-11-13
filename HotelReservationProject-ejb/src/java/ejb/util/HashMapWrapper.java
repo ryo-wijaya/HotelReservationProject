@@ -17,4 +17,12 @@ public class HashMapWrapper {
     public HashMapWrapper(HashMap<Long, Integer> map) {
         this.map = map;
     }
+
+    public HashMap<Long, Integer> getMap() {
+        return map;
+    }
+
+    public void setMap(HashMap<Long, Integer> map) {
+        this.map = map;
+    }
 }

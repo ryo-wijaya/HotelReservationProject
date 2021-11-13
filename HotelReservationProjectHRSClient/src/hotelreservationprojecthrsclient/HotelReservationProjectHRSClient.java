@@ -48,7 +48,7 @@ import ws.client.WebServiceSessionBean_Service;
  */
 public class HotelReservationProjectHRSClient {
 
-    private static Partner currentPartner;
+    //private static Partner currentPartner;
 
     public static void main(String[] args) {
         //runMainMenu();
@@ -241,7 +241,9 @@ public class HotelReservationProjectHRSClient {
             }
             
            // This map contains key value pairs of RoomTypeIds to QuantityOfRoomsAvailable
-            HashMapWrapper map = port.walkInSearchRoom(start, end);
+            HashMapWrapper wrappedMap = port.walkInSearchRoom(start, end);
+            HashMap<Long, Integer> map = wrappedMap.getMap();
+            Entry.
 
             //Iterating over each Room Type and Inventory mapping
             //Iterating over each Room Type and Inventory mapping
@@ -270,7 +272,7 @@ public class HotelReservationProjectHRSClient {
             System.out.println("Invalid date input!");
         } catch (RoomTypeNotFoundException_Exception ex) {
             System.out.println("No published rate found!");
-        } catch (RoomRateNotFoundException_Exception ex) {
+        } catch (RoomNotFoundException_Exception ex) {
             System.out.println("Room Rate Not Found");
         }
         return null;
@@ -394,4 +396,5 @@ public class HotelReservationProjectHRSClient {
         }
 
     }
+
 }
