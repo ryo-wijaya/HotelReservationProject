@@ -25,8 +25,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import util.enumeration.EmployeeRole;
 import util.enumeration.RateType;
 import static util.enumeration.RateType.NORMALRATE;
@@ -35,11 +40,14 @@ import static util.enumeration.RateType.PROMOTIONRATE;
 import static util.enumeration.RateType.PUBLISHRATE;
 import util.exceptions.BookingNotFoundException;
 import util.exceptions.FailedToCreateRoomRateException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.SQLIntegrityViolationException;
 import util.exceptions.TypeOneNotFoundException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -53,12 +61,20 @@ public class HotelOperationModule {
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
 
     private Employee currentEmployee;
+
+    public HotelOperationModule() {
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
+    }
 
     public HotelOperationModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote,
             BookingSessionBeanRemote bookingSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote,
             RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentEmployee) {
+        this();
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.bookingSessionBeanRemote = bookingSessionBeanRemote;
@@ -326,8 +342,19 @@ public class HotelOperationModule {
                     }
                 }
             }
-            roomTypeSessionBeanRemote.createNewRoomType(newRoomType);
-            System.out.println("Room Type created!\n");
+
+            Set<ConstraintViolation<RoomType>> constraintViolations = validator.validate(newRoomType);
+
+            if (constraintViolations.isEmpty()) {
+                try {
+                    roomTypeSessionBeanRemote.createNewRoomType(newRoomType);
+                    System.out.println("Room Type created!\n");
+                } catch (UnknownPersistenceException ex) {
+                    System.out.println("An unknown error has occured while creating the RoomType");
+                } catch (InputDataValidationException | SQLIntegrityViolationException ex) {
+                    System.out.println("Invalid input given");
+                }
+            }
 
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("Next Higher Room Type is not found!");
