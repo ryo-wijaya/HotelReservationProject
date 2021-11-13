@@ -26,6 +26,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.enumeration.RateType;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 import util.exceptions.SQLIntegrityViolationException;
@@ -56,7 +57,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanLocal, RoomTypeSe
     }
 
     @Override
-    public Long createNewRoomType(RoomType roomType) throws UnknownPersistenceException, SQLIntegrityViolationException {
+    public Long createNewRoomType(RoomType roomType) throws UnknownPersistenceException, SQLIntegrityViolationException, InputDataValidationException {
         Set<ConstraintViolation<RoomType>> constraintViolations = validator.validate(roomType);
         if (constraintViolations.isEmpty()) {
             try {

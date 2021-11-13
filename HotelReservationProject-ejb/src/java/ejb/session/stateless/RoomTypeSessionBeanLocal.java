@@ -10,8 +10,11 @@ import entity.RoomType;
 import java.util.List;
 import javax.ejb.Local;
 import util.enumeration.RateType;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -20,7 +23,7 @@ import util.exceptions.RoomTypeNotFoundException;
 @Local
 public interface RoomTypeSessionBeanLocal {
 
-    public Long createNewRoomType(RoomType roomType);
+    public Long createNewRoomType(RoomType roomType) throws UnknownPersistenceException, SQLIntegrityViolationException, InputDataValidationException;
 
     public List<RoomType> retrieveRoomTypes() throws RoomTypeNotFoundException;
 
