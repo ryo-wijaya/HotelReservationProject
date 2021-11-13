@@ -296,7 +296,7 @@ public class HotelOperationModule {
             } else {
                 newRoomType.setNextHigherRoomType("None");
             }
-            
+
             try {
                 RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(nextHigherRoomTypeName);
                 lowerRoomType.setNextHigherRoomType(newRoomType.getRoomName());
@@ -461,13 +461,12 @@ public class HotelOperationModule {
             System.out.print("Enter 'Y' to confirm deletion>");
             String response = sc.nextLine().trim();
             if ("Y".equals(response)) {
-                try{
+                try {
                     RoomType lowerRoomType = roomTypeSessionBeanRemote.getTheLowerRoomType(roomType.getRoomName());
                     String higherRoomType = roomType.getNextHigherRoomType();
                     lowerRoomType.setNextHigherRoomType(higherRoomType);
                     roomTypeSessionBeanRemote.updateRoomType(lowerRoomType);
-                }
-                catch (RoomTypeNotFoundException ex) {
+                } catch (RoomTypeNotFoundException ex) {
                     System.out.println("no lower room type name");
                 }
                 roomTypeSessionBeanRemote.deleteRoomType(roomType.getRoomTypeId());
@@ -639,17 +638,17 @@ public class HotelOperationModule {
             //Booking probably needs another attribute - exceptionType : Enumeration, where exceptionType = {NONE, UPGRADED, NOUPGRADE}
             //All Bookings are defaulted to exceptionType = NONE
             //If during allocation a booking fails we change the type and we check for the type in this method
-            
+
             System.out.println("\n-You are now viewing a Room Allocation Exception Report-");
             System.out.println("--------------------------------------------------------\n");
             List<Booking> errorBookings = bookingSessionBeanRemote.rettrieveErrorBooking();
             for (Booking booking : errorBookings) {
-                if(booking.getNumOfTypeOnes() > 0 || booking.getNumOfTypeTwos() > 0) {
+                if (booking.getNumOfTypeOnes() > 0 || booking.getNumOfTypeTwos() > 0) {
                     System.out.println("Booking ID " + booking.getBookingId());
-                    if(booking.getNumOfTypeOnes() > 0) {
+                    if (booking.getNumOfTypeOnes() > 0) {
                         System.out.println("Number of Type 1: " + booking.getNumOfTypeOnes());
                     }
-                    if(booking.getNumOfTypeTwos() > 0) {
+                    if (booking.getNumOfTypeTwos() > 0) {
                         System.out.println("Number of Type 2: " + booking.getNumOfTypeTwos());
                     }
                     System.out.println("--------------------------------------------------------\n");
@@ -941,11 +940,14 @@ public class HotelOperationModule {
                         System.out.println("------------------------------------");
                         System.out.println("Rate Type: " + rr.getRateType());
                         System.out.println("Rate Per Night: " + rr.getPrice());
-                        System.out.println("Start Date: " + rr.getStartDate());
-                        System.out.println("End Date: " + rr.getEndDate());
+                        if (rr.getStartDate() != null) {
+                            System.out.println("Start Date: " + rr.getStartDate());
+                            System.out.println("End Date: " + rr.getEndDate());
+                        }
                         System.out.println("------------------------------------");
                     }
                 }
+                System.out.println("");
             }
         } catch (RoomTypeNotFoundException ex) {
             System.out.println("No Room Rate Exists in the database!");
