@@ -8,9 +8,12 @@ package ejb.session.stateless;
 import entity.Partner;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.LoginCredentialsInvalidException;
 import util.exceptions.NoPartnersFoundException;
 import util.exceptions.NonUniqueCredentialsException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -19,7 +22,7 @@ import util.exceptions.NonUniqueCredentialsException;
 @Remote
 public interface PartnerSessionBeanRemote {
     
-    public long createNewPartner(Partner newPartner) throws NonUniqueCredentialsException;
+    public long createNewPartner(Partner newPartner) throws SQLIntegrityViolationException, UnknownPersistenceException, InputDataValidationException;
 
     public List<Partner> retrieveAllPartners() throws NoPartnersFoundException;
 
