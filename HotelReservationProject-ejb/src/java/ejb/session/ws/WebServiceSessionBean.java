@@ -9,6 +9,7 @@ import ejb.session.stateless.BookingSessionBeanLocal;
 import ejb.session.stateless.PartnerSessionBeanLocal;
 import ejb.session.stateless.RoomSessionBeanLocal;
 import ejb.session.stateless.RoomTypeSessionBeanLocal;
+import ejb.util.HashMapWrapper;
 import entity.Booking;
 import entity.Customer;
 import entity.Partner;
@@ -72,8 +73,9 @@ public class WebServiceSessionBean {
     }
 
     @WebMethod(operationName = "walkInSearchRoom")
-    public HashMap<Long, Integer> walkInSearchRoom(@WebParam(name = "startDate") Date startDate, @WebParam(name = "endDate") Date endDate) throws RoomNotFoundException, RoomTypeNotFoundException {
-        return roomSessionBean.walkInSearchRoom(startDate, endDate);
+    public HashMapWrapper walkInSearchRoom(@WebParam(name = "startDate") Date startDate, @WebParam(name = "endDate") Date endDate) throws RoomNotFoundException, RoomTypeNotFoundException {
+        HashMapWrapper wrappedMap = new HashMapWrapper(roomSessionBean.walkInSearchRoom(startDate, endDate));
+        return wrappedMap;
     }
 
     @WebMethod(operationName = "getRoomTypeByName")
