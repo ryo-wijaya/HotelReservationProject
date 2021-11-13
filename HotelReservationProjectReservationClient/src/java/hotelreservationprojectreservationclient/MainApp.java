@@ -292,7 +292,7 @@ public class MainApp {
             Long bookingId;
             System.out.println("\nViewing my reservation details!");
             System.out.println("-------------------------------\n");
-            List<Booking> bookings = customerSessionBeanRemote.retrieveCustomerByCustomerId(currentCustomer.getCustomerId()).getBookings();
+            List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByCustomerId(currentCustomer.getCustomerId());
             if (bookings.isEmpty()) {
                 System.out.print("No existing reservations!\n");
                 return;
@@ -315,8 +315,8 @@ public class MainApp {
                     System.out.println("Number of rooms: " + booking.getNumberOfRooms());
                 }
             }
-        } catch (CustomerNotFoundException ex) {
-            System.out.println("customer not found");
+        } catch (BookingNotFoundException ex) {
+            System.out.println("No booking record found!");
         }
     }
 
