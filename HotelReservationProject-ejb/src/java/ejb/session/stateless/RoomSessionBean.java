@@ -242,6 +242,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                     booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
                     
                 }
+                if (booking.getNumberOfUnallocatedRooms() == 0) {
+                    return;
+                }
             }
             if (booking.getNumberOfUnallocatedRooms() > 0) {
                 thisRoomWillBeFree = true;
@@ -270,6 +273,9 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                         booking.addRoom(r);
                         booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
                         booking.setNumOfTypeOnes(booking.getNumOfTypeOnes() + 1);
+                    }
+                    if (booking.getNumberOfUnallocatedRooms() == 0) {
+                        return;
                     }
                 }
             }
