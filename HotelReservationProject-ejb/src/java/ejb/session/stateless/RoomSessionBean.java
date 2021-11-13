@@ -214,6 +214,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     public void findARoomAndAddToIt(Long bookingId) throws RoomNotFoundException, BookingNotFoundException {
         Booking booking;
         booking = bookingSessionBeanLocal.retrieveBookingByBookingId(bookingId);
+        booking.setPreBooking(false);
         List<Room> rooms = this.retrieveRoomsByRoomType(booking.getRoomType().getRoomTypeId());
         Date startDate = booking.getCheckInDate();
         Date endDate = booking.getCheckOutDate();
