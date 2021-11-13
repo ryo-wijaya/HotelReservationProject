@@ -10,5 +10,5 @@ package util.enumeration;
  * @author ryo20
  */
 public enum BookingExceptionType {
-    NONE, TYPE1, TYPE2
+    NONE, ERROR
 }

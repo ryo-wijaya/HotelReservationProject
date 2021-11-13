@@ -647,7 +647,7 @@ public class HotelOperationModule {
             Integer count = 0;
             for (Booking booking : typeOneBookings) {
                 count++;
-                System.out.println(count + ": " + booking.getBookingId());
+                System.out.println(count + ": Booking ID " + booking.getBookingId());
             }
             System.out.println("--------------------------------------------------------\n");
         } catch (TypeOneNotFoundException ex) {
@@ -661,7 +661,7 @@ public class HotelOperationModule {
             count = 0;
             for (Booking booking : typeTwoBookings) {
                 count++;
-                System.out.println(count + ": " + booking.getBookingId());
+                System.out.println(count + ": Booking ID " + booking.getBookingId());
             }
             System.out.println("--------------------------------------------------------\n");
         } catch (BookingNotFoundException ex) {
