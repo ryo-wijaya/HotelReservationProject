@@ -49,7 +49,6 @@ public class FrontOfficeModule {
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
-    private HotelReservationBeanRemote hotelReservationBeanRemote;
     private BookingSessionBeanRemote bookingSessionBeanRemote;
     private Employee employee;
     
@@ -63,7 +62,7 @@ public class FrontOfficeModule {
 
     public FrontOfficeModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote,
             RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote,
-            HotelReservationBeanRemote hotelReservationBeanRemote, BookingSessionBeanRemote bookingSessionBeanRemote, Employee employee) {
+            BookingSessionBeanRemote bookingSessionBeanRemote, Employee employee) {
         this();
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.customerSessionBeanRemote = customerSessionBeanRemote;
@@ -71,7 +70,6 @@ public class FrontOfficeModule {
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.bookingSessionBeanRemote = bookingSessionBeanRemote;
-        this.hotelReservationBeanRemote = hotelReservationBeanRemote;
         this.employee = employee;
     }
 

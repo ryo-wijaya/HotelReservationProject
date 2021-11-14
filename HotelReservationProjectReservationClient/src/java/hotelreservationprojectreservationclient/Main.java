@@ -13,16 +13,12 @@ import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import javax.ejb.EJB;
-import util.exceptions.EmployeeNotFoundException;
 
 /**
  *
  * @author ryo20
  */
 public class Main {
-
-    @EJB
-    private static HotelReservationBeanRemote hotelReservationBean;
 
     @EJB
     private static CustomerSessionBeanRemote customerSessionBeanRemote;
@@ -46,7 +42,7 @@ public class Main {
     
     
     public static void main(String[] args) {
-        MainApp mainApp = new MainApp(employeeSessionBeanRemote, bookingSessionBeanRemote, roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, customerSessionBeanRemote, hotelReservationBean);
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, bookingSessionBeanRemote, roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, customerSessionBeanRemote);
         mainApp.runApp();
     }
 }

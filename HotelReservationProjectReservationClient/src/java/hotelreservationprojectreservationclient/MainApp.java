@@ -51,7 +51,6 @@ public class MainApp {
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private CustomerSessionBeanRemote customerSessionBeanRemote;
-    private HotelReservationBeanRemote hotelReservationBeanRemote;
 
     private Customer currentCustomer;
     
@@ -63,7 +62,7 @@ public class MainApp {
         validator = validatorFactory.getValidator();
     }
 
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, BookingSessionBeanRemote bookingSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote, HotelReservationBeanRemote hotelReservationBeanRemote) {
+    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, BookingSessionBeanRemote bookingSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, CustomerSessionBeanRemote customerSessionBeanRemote) {
         this();
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.bookingSessionBeanRemote = bookingSessionBeanRemote;
@@ -71,7 +70,6 @@ public class MainApp {
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.customerSessionBeanRemote = customerSessionBeanRemote;
-        this.hotelReservationBeanRemote = hotelReservationBeanRemote;
     }
 
     public void runApp() {
