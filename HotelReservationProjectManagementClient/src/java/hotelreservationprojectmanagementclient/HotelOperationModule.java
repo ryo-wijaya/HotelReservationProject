@@ -5,9 +5,7 @@
  */
 package hotelreservationprojectmanagementclient;
 
-import ejb.session.stateful.HotelReservationBeanRemote;
 import ejb.session.stateless.BookingSessionBeanRemote;
-import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
@@ -21,13 +19,10 @@ import entity.RoomType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -46,7 +41,6 @@ import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomRateNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
 import util.exceptions.SQLIntegrityViolationException;
-import util.exceptions.TypeOneNotFoundException;
 import util.exceptions.UnknownPersistenceException;
 
 /**

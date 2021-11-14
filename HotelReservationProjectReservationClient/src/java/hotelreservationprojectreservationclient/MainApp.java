@@ -14,9 +14,7 @@ import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Booking;
 import entity.Customer;
-import entity.RoomType;
 import java.text.ParseException;
-import entity.Room;
 import entity.RoomType;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,8 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -277,10 +273,6 @@ public class MainApp {
             Booking availableBooking = searchHotelRoom();
             System.out.print("Please enter a room type name> ");
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(sc.nextLine().trim());
-            //Date checkIn = availableBooking.getCheckInDate();
-            //Date checkOut = availableBooking.getCheckOutDate();
-            //Integer numOfRoom = availableBooking.getNumberOfRooms();
-            //Booking booking = new Booking(numOfRoom, checkIn, checkOut);
             long bookingId = bookingSessionBeanRemote.createNewBookingWithCustomer(availableBooking, roomType.getRoomTypeId(), currentCustomer.getCustomerId());
             System.out.print("What is todays date? (dd/mm/yyyy)> ");
             Date cDate = inputDateFormat.parse(sc.nextLine().trim());
@@ -355,7 +347,6 @@ public class MainApp {
             System.out.println("\nViewing all my reservations!");
             System.out.println("----------------------------\n");
             List<Booking> bookings = bookingSessionBeanRemote.getAllBookingsByCustomerId(currentCustomer.getCustomerId());
-            //List<Booking> bookings = currentCustomer.getBookings();
             if (bookings.isEmpty()) {
                 System.out.print("No existing reservations!\n");
                 return;
