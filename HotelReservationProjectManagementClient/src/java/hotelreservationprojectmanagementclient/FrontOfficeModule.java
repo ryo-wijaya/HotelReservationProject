@@ -281,8 +281,6 @@ public class FrontOfficeModule {
             System.out.println("");
             for (Room room : rooms) {
                 System.out.println("Room Number: " + room.getRoomNumber());
-                //room.setRoomStatus(true);
-                //roomSessionBeanRemote.updateRoomStatus(room.getRoomId());
             }
             System.out.println("Check in completed!");
             System.out.println("-----------------\n");
@@ -312,16 +310,10 @@ public class FrontOfficeModule {
             System.out.println("Check in Date: " + booking.getCheckInDate());
             System.out.println("Check out Date: " + booking.getCheckOutDate());
             List<Room> rooms = booking.getRooms();
-            for (Room room : rooms) {
-                room.setRoomStatus(false);
-                roomSessionBeanRemote.updateRoom(room);
-            }
             System.out.println("Check out completed!");
             System.out.println("------------------\n");
         } catch (BookingNotFoundException ex) {
             System.out.println("Booking does not exists!");
-        } catch (RoomNotFoundException ex) {
-            System.out.println("Room not found!");
         }
     }
 }
