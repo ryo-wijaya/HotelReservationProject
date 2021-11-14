@@ -37,8 +37,10 @@ public class Room implements Serializable {
     @NotNull
     @Size(min = 4, max = 4)
     private String roomNumber;
+    @Column(nullable = false)
     @NotNull
     private Boolean roomStatus;
+    @Column(nullable = false)
     @NotNull
     private Boolean enabled;
     

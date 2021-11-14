@@ -40,13 +40,18 @@ public class RoomType implements Serializable {
     @Column(nullable = false)
     @NotNull
     private String NextHigherRoomType;
+    @Column(nullable = false)
     @NotNull
     private Boolean enabled;
+    @Column(length = 240)
     @Size(min = 1, max = 240)
     private String description;
+    @Column(length = 240)
     @Size(min = 1, max = 240)
     private String roomSize;
+    @PositiveOrZero
     private Integer beds;
+    @PositiveOrZero
     private Integer capacity;
     private List<String> amenities;
     @PositiveOrZero
