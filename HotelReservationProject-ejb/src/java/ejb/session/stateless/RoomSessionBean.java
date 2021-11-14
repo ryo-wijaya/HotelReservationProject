@@ -135,11 +135,29 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     }
 
     @Override
-    public void updateRoom(Room room) throws RoomNotFoundException {
-        //add bean validators
-        em.merge(room);
+    public void updateRoom(Room room) throws InputDataValidationException, RoomNotFoundException {
+        if (room != null && room.getRoomId() != null) {
+            
+            Set<ConstraintViolation<Room>> constraintViolations = validator.validate(room);
+
+            if (constraintViolations.isEmpty()) {
+
+                Room roomToUpdate = this.getRoomById(room.getRoomId());
+                
+                roomToUpdate.setRoomNumber(room.getRoomNumber());
+                roomToUpdate.setRoomStatus(room.getRoomStatus());
+                roomToUpdate.setRoomType(room.getRoomType());
+                roomToUpdate.setEnabled(room.isEnabled());
+                roomToUpdate.setBookings(room.getBookings());
+            } else {
+                throw new InputDataValidationException();
+            }
+        } else {
+            throw new RoomNotFoundException();
+        }
     }
 
+    @Override
     public void updateRoomStatus(long roomId) throws RoomNotFoundException {
         Room room = getRoomById(roomId);
         if (room.getRoomStatus() == false) {

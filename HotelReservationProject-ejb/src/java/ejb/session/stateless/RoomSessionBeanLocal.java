@@ -34,7 +34,7 @@ public interface RoomSessionBeanLocal {
     
     public void deleteRoomByRoomNumber(String roomNumber) throws RoomNotFoundException, RoomIsTiedToABookingDeletionException;
 
-    public void updateRoom(Room room) throws RoomNotFoundException;
+    public void updateRoom(Room room) throws InputDataValidationException, RoomNotFoundException;
 
     public Room getRoomByRoomNumber(String roomNumber) throws RoomNotFoundException;
 

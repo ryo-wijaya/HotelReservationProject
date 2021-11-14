@@ -617,8 +617,6 @@ public class HotelOperationModule {
                     System.out.print("Please enter a new room number>");
                     String newRoomNumber = sc.nextLine().trim();
                     room.setRoomNumber(newRoomNumber);
-                    roomSessionBeanRemote.updateRoom(room);
-                    System.out.println("Successfully updated!");
 
                 } else if (option == 2) {
                     if (room.getRoomStatus()) {
@@ -628,13 +626,22 @@ public class HotelOperationModule {
                         System.out.println("Room changed from available to unavailable");
                         room.setRoomStatus(true);
                     }
-                    roomSessionBeanRemote.updateRoom(room);
-                    System.out.println("Successfully updated!");
 
                 } else if (option == 3) {
                     break;
                 } else {
                     System.out.println("Please input a valid option!");
+                }
+
+                Set<ConstraintViolation<Room>> constraintViolations = validator.validate(room);
+
+                if (constraintViolations.isEmpty()) {
+                    try {
+                        roomSessionBeanRemote.updateRoom(room);
+                        System.out.println("sucessfully updated!\n");
+                    } catch (InputDataValidationException ex) {
+                        System.out.println("Invalid input given");
+                    }
                 }
             }
         } catch (RoomNotFoundException ex) {
