@@ -570,7 +570,22 @@ public class HotelOperationModule {
             String roomTypeName = sc.nextLine();
             RoomType roomType = roomTypeSessionBeanRemote.getRoomTypeByName(roomTypeName);
             Room room = new Room(roomNumber);
-            roomSessionBeanRemote.createNewRoom(room, roomType.getRoomTypeId());
+
+            Set<ConstraintViolation<Room>> constraintViolations = validator.validate(room);
+
+            if (constraintViolations.isEmpty()) {
+                try {
+                    roomSessionBeanRemote.createNewRoom(room, roomType.getRoomTypeId());
+                    System.out.println("sucessfully updated!\n");
+                } catch (InputDataValidationException | SQLIntegrityViolationException ex) {
+                    System.out.println("Invalid input given");
+                } catch (RoomTypeNotFoundException ex) {
+                    System.out.println("Room Type not found!");
+                } catch (UnknownPersistenceException ex) {
+                    System.out.println("An unknown error occured while persisting this data!");
+                }
+            }
+
             System.out.println("\nRoom Successfully created\n");
 
         } catch (RoomTypeNotFoundException ex) {
@@ -905,7 +920,7 @@ public class HotelOperationModule {
             }
 
             Set<ConstraintViolation<RoomRate>> constraintViolations = validator.validate(roomRateToEdit);
-            
+
             if (constraintViolations.isEmpty()) {
                 try {
                     roomRateSessionBeanRemote.updateRoomRate(roomRateToEdit);

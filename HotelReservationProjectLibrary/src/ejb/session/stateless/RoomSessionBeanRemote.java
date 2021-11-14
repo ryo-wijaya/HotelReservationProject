@@ -12,9 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exceptions.BookingNotFoundException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -23,7 +26,7 @@ import util.exceptions.RoomTypeNotFoundException;
 @Remote
 public interface RoomSessionBeanRemote {
 
-    public Long createNewRoom(Room room, Long roomTypeId) throws RoomTypeNotFoundException;
+    public Long createNewRoom(Room room, Long roomTypeId) throws UnknownPersistenceException, SQLIntegrityViolationException, InputDataValidationException, RoomTypeNotFoundException;
 
     public List<Room> retrieveRooms() throws RoomNotFoundException;
 

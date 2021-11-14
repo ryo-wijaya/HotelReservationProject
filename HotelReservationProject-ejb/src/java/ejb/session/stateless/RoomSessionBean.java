@@ -13,19 +13,28 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import util.enumeration.BookingExceptionType;
 import util.exceptions.BookingNotFoundException;
 import util.exceptions.EntityInstanceExistsInCollectionException;
+import util.exceptions.InputDataValidationException;
 import util.exceptions.RoomIsTiedToABookingDeletionException;
 import util.exceptions.RoomNotFoundException;
 import util.exceptions.RoomTypeNotFoundException;
+import util.exceptions.SQLIntegrityViolationException;
+import util.exceptions.UnknownPersistenceException;
 
 /**
  *
@@ -43,17 +52,42 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
     @PersistenceContext(unitName = "HotelReservationProject-ejbPU")
     private EntityManager em;
 
+    private final ValidatorFactory validatorFactory;
+    private final Validator validator;
+
+    public RoomSessionBean() {
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
+    }
+
     @Override
-    public Long createNewRoom(Room room, Long roomTypeId) throws RoomTypeNotFoundException {
-        RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
-        if (roomType.getEnabled()) {
-            room.setRoomType(roomType);
-            roomType.setRoomInventory(roomType.getRoomInventory() + 1);
-            em.persist(room);
-            em.flush();
-            return room.getRoomId();
+    public Long createNewRoom(Room room, Long roomTypeId) throws UnknownPersistenceException, SQLIntegrityViolationException, InputDataValidationException, RoomTypeNotFoundException {
+        Set<ConstraintViolation<Room>> constraintViolations = validator.validate(room);
+        if (constraintViolations.isEmpty()) {
+            try {
+                RoomType roomType = roomTypeSessionBeanLocal.getRoomTypeById(roomTypeId);
+                if (roomType.getEnabled()) {
+                    room.setRoomType(roomType);
+                    roomType.setRoomInventory(roomType.getRoomInventory() + 1);
+                    em.persist(room);
+                    em.flush();
+                    return room.getRoomId();
+                } else {
+                    return null;
+                }
+            } catch (PersistenceException ex) {
+                if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
+                    if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
+                        throw new SQLIntegrityViolationException();
+                    } else {
+                        throw new UnknownPersistenceException(ex.getMessage());
+                    }
+                } else {
+                    throw new UnknownPersistenceException(ex.getMessage());
+                }
+            }
         } else {
-            throw new RoomTypeNotFoundException();
+            throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
 
@@ -138,7 +172,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         List<Room> rooms = query.getResultList();
         return rooms.isEmpty();
     }
-    
+
     @Override
     public HashMap<Long, Integer> walkInSearchRoom(Date startDate, Date endDate) throws RoomTypeNotFoundException {
         // New and improved method, unlike the shitty monstrocity above
@@ -241,7 +275,7 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
                     r.addBookings(booking);
                     booking.addRoom(r);
                     booking.setNumberOfUnallocatedRooms(booking.getNumberOfUnallocatedRooms() - 1);
-                    
+
                 }
                 if (booking.getNumberOfUnallocatedRooms() == 0) {
                     return;
@@ -286,5 +320,15 @@ public class RoomSessionBean implements RoomSessionBeanLocal, RoomSessionBeanRem
         } catch (EntityInstanceExistsInCollectionException | RoomTypeNotFoundException ex) {
             throw new RoomNotFoundException();
         }
+    }
+
+    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Room>> constraintViolations) {
+        String msg = "Input data validation error!:";
+
+        for (ConstraintViolation constraintViolation : constraintViolations) {
+            msg += "\n\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage();
+        }
+
+        return msg;
     }
 }
