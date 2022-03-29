@@ -16,4 +16,8 @@ The system will also (additional business rules):
 
 ### Technologies used
 * Jakarta EE Platform
+* GlassFish application server (Oracle)
 * SOAP (Simple Object Access Protocol) web services that separate client applications can use to call back-end methods made available (for partner organisations)
+
+### How to run
+Build and deploy project and run any of the java application clients
