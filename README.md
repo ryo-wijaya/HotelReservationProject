@@ -21,3 +21,4 @@ The system will also (additional business rules):
 
 ### How to run
 Build and deploy project and run any of the native java / java enterprise application clients
+Preloaded data: System Administrator with username: "sysadmin" and password: "password"
