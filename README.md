@@ -20,4 +20,4 @@ The system will also (additional business rules):
 * SOAP (Simple Object Access Protocol) web services that separate client applications can use to call back-end methods made available (for partner organisations)
 
 ### How to run
-Build and deploy project and run any of the java application clients
+Build and deploy project and run any of the native java / java enterprise application clients
